@@ -175,12 +175,27 @@ final class MarkupEscapist {
             if (!literal || c >= CHARS_WITH_LITERAL_ESCAPES_LEN || CHARS_WITH_LITERAL_ESCAPES[c] == -1) {
                 // char should be escaped, but there is no literal for it, or maybe we just dont want literals
 
+                final int codePoint;
+                if (Character.isHighSurrogate(c) && (i + 1) < textLen) {
+                    // This might be a non-BMP (suplementary) Unicode character, therefore represented by two
+                    // character instead of just one. We also need to check whether the next char is a low surrogate.
+                    final char c2 = text.charAt(i + 1);
+                    if (Character.isLowSurrogate(c2)) {
+                        codePoint = Character.toCodePoint(c, c2);
+                        i++;
+                    } else {
+                        codePoint = (int) c;
+                    }
+                } else {
+                    codePoint = (int) c;
+                }
+
                 if (hexa) {
                     strBuilder.append(HEXA_ESCAPE_PREFIX);
-                    strBuilder.append(Integer.toHexString((int) c));
+                    strBuilder.append(Integer.toHexString(codePoint));
                 } else {
                     strBuilder.append(DECIMAL_ESCAPE_PREFIX);
-                    strBuilder.append((int) c);
+                    strBuilder.append(String.valueOf(codePoint));
                 }
                 strBuilder.append(';');
 
@@ -194,7 +209,7 @@ final class MarkupEscapist {
                         strBuilder.append(Integer.toHexString((int) c));
                     } else {
                         strBuilder.append(DECIMAL_ESCAPE_PREFIX);
-                        strBuilder.append((int) c);
+                        strBuilder.append(String.valueOf((int) c));
                     }
                     strBuilder.append(';');
                 } else {
@@ -248,76 +263,12 @@ final class MarkupEscapist {
 
         if (text == null || text.length == 0) {
             return;
-        }
-
-        final int nonEscapableCharsLen = (nonEscapableChars == null? 0 : nonEscapableChars.length);
-        final int nonLiteralEscapableCharsLen = (nonLiteralEscapableChars == null? 0 : nonLiteralEscapableChars.length);
-
-        final boolean literal =
-                (MarkupEscapeType.LITERAL_DEFAULT_TO_DECIMAL.equals(markupEscapeType) ||
-                        MarkupEscapeType.LITERAL_DEFAULT_TO_HEXA.equals(markupEscapeType));
-        final boolean hexa =
-                (MarkupEscapeType.HEXA.equals(markupEscapeType) ||
-                        MarkupEscapeType.LITERAL_DEFAULT_TO_HEXA.equals(markupEscapeType));
-
-        int readOffset = offset;
-        final int maxLen = (offset + len);
-
-        for (int i = offset; i < maxLen; i++) {
-
-            final char c = text[i];
-
-            if (c <= 0x7f && CHARS_WITH_LITERAL_ESCAPES[c] == -1) {
-                continue;
-            }
-
-            if (arrayContains(nonEscapableChars, nonEscapableCharsLen, c)) {
-                continue;
-            }
-
-            if (i - readOffset > 0) {
-                writer.write(text, readOffset, (i - readOffset));
-            }
-
-            if (!literal || c >= CHARS_WITH_LITERAL_ESCAPES_LEN || CHARS_WITH_LITERAL_ESCAPES[c] == -1) {
-                // char should be escaped, but there is no literal for it, or maybe we just dont want literals
-
-                if (hexa) {
-                    writer.write("&#x");
-                    writer.write(Integer.toHexString((int) c));
-                } else {
-                    writer.write("&#");
-                    writer.write(String.valueOf((int) c));
-                }
-                writer.write(';');
-
-            } else {
-                // char should be escaped AND there is literal for it
-
-                if (arrayContains(nonLiteralEscapableChars, nonLiteralEscapableCharsLen, c)) {
-                    // literal shouldn't be applied, defaulting
-                    if (hexa) {
-                        writer.write("&#x");
-                        writer.write(Integer.toHexString((int) c));
-                    } else {
-                        writer.write("&#");
-                        writer.write(String.valueOf((int) c));
-                    }
-                    writer.write(';');
-                } else {
-                    // just apply the literal
-                    writer.write(LITERAL_ESCAPES[CHARS_WITH_LITERAL_ESCAPES[c]]);
-                }
-
-            }
-
-            readOffset = i + 1;
 
         }
 
-        if (maxLen - readOffset > 0) {
-            writer.write(text, readOffset, (maxLen - readOffset));
-        }
+
+        // TODO Fill with code from String version, once it is finished
+
 
     }
 

@@ -31,10 +31,20 @@ import java.io.Writer;
  */
 public final class HtmlEscapist {
 
+    /*
+     * SEE: https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
+     * SEE: http://www.w3.org/TR/2011/WD-html5-20110113/named-character-references.html
+     * SEE: http://dev.w3.org/html5/html-author/charref
+     *
+     * SEE, FOR UNESCAPING: http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
+     * SEE, FOR REFERENCE: http://www.oracle.com/technetwork/articles/javase/supplementary-142654.html
+     */
+
 
     public static enum HtmlEscapeContext {
-        ATTRIBUTE_OR_TEXT(new char[] {'\''}, null), // Don't escape apostrophes at all
+        ATTRIBUTE_OR_TEXT(null, new char[] {'\''}), // Don't escape apostrophes at all
         SINGLE_QUOTED_ATTRIBUTE(null, new char[] {'\''}); // Escape apostrophes, but not with literals (&apos; is forbidden in HTML)
+
 
         private final char[] nonEscapedChars;
         private final char[] nonLiteralEscapedChars;
