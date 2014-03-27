@@ -73,7 +73,7 @@ public class Html5Entities {
         distribution.put(Integer.valueOf(0xFFFF), new int[]{ 0, 0, 0 });
         distribution.put(Integer.valueOf(Integer.MAX_VALUE), new int[]{ 0, 0, 0 });
 
-
+        int maxcp = Integer.MIN_VALUE;
 
         System.out.println("TOTAL: " + entityLines.size());
         int valid = 0;
@@ -94,6 +94,8 @@ public class Html5Entities {
                 final int[] values = distribution.get(distributionKey);
                 values[0]++;
 
+                maxcp = Math.max(maxcp, codepoint);
+
             } else if (codepoints.length == 1 && characters.length == 2) {
 
                 final int codepoint = Integer.parseInt(codepoints[0]);
@@ -101,12 +103,17 @@ public class Html5Entities {
                 final int[] values = distribution.get(distributionKey);
                 values[1]++;
 
+                maxcp = Math.max(maxcp, codepoint);
+
             } else if (codepoints.length == 2 && characters.length == 2) {
 
                 final int codepoint = Integer.parseInt(codepoints[0]);
                 final Integer distributionKey = getDistributionKey(distribution, codepoint);
                 final int[] values = distribution.get(distributionKey);
                 values[2]++;
+
+                maxcp = Math.max(maxcp, codepoint);
+                maxcp = Math.max(maxcp, Integer.valueOf(codepoints[1]));
 
                 System.out.println("{" + Integer.parseInt(codepoints[0]) + "," + Integer.parseInt(codepoints[1]) + "} " + (codepoint < 0x7f? "*" : ""));
 
@@ -118,6 +125,7 @@ public class Html5Entities {
 
         }
 
+        System.out.println("Maximum codepoint: " + maxcp);
         System.out.println("VALID: " + valid);
         for (final Map.Entry<Integer,int[]> distEntry : distribution.entrySet()) {
             final String values = Arrays.toString(distEntry.getValue());
