@@ -44,6 +44,9 @@ public class HtmlEscapistTest {
         System.out.println(HtmlEscapist.escapeHtml("hello how are you"));
         System.out.println(HtmlEscapist.escapeHtml("I'm < 355, & you?"));
         System.out.println(HtmlEscapist.escapeHtml("\u0163\"I'm < 355, & you\u00E1?\""));
+        System.out.println(HtmlEscapist.escapeHtml("[\u0163\u00E1aeiouABC0123\uD840\uDC00']\ud835\udccd", HtmlEscapist.HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL));
+        System.out.println(HtmlEscapist.escapeHtml("[\u0163\u00E1aeiouABC0123\uD840\uDC00']\ud835\udccd", HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL));
+
 
         for (final HtmlEscapist.HtmlEscapeContext context : HtmlEscapist.HtmlEscapeContext.values()) {
             for (final HtmlEscapist.HtmlEscapeType type : HtmlEscapist.HtmlEscapeType.values()) {
@@ -112,6 +115,8 @@ public class HtmlEscapistTest {
         final long end2 = System.nanoTime();
 
         System.out.println("nanos: " + (end2 - start2));
+
+        System.out.println(SMPTest.asHexCharString(new String(Character.toChars(0x20000))));
 
     }
 

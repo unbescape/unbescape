@@ -36,7 +36,7 @@ public class SMPTest {
 
 
 
-    private static String asHexCharString(final String text) {
+    static String asHexCharString(final String text) {
         final StringBuilder strBuilder = new StringBuilder();
         final int textLen = text.length();
         for (int i = 0; i < textLen; i++) {
@@ -55,22 +55,23 @@ public class SMPTest {
         final HTMLEntityCodec htmlEntityCodec = new HTMLEntityCodec();
         final char[] immune = new char[0];
 
-        final String s1 = "[\u0163\u00E1&#x20000;']";
+        final String s1 = "[\u0163\u00E1aeiouABC0123&#x20000;']\ud835\udccd";
         System.out.println(s1);
         final String s2 = StringEscapeUtils.unescapeHtml4(s1);
-        System.out.println(s2 + " -> " + asHexCharString(s2));
-        final String s3 = HtmlEscapist.escapeHtml(s2, HtmlEscapist.HtmlEscapeType.LITERAL_DEFAULT_TO_HEXA);
-        System.out.println(s3);
+        System.out.println("UNESCAPED:         " + s2 + " -> " + asHexCharString(s2));
+        final String s3 = HtmlEscapist.escapeHtml(s2, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
+        System.out.println("JAVAESCAPIST:      " + s3);
         final String s4 = StringEscapeUtils.escapeHtml4(s2);
-        System.out.println(s4);
+        System.out.println("STRINGESCAPEUTILS: " + s4);
         final String s5 = HtmlUtils.htmlEscape(s2);
-        System.out.println(s5);
+        System.out.println("SPRING HTMLUTILS:  " + s5);
         final String s6 = htmlEntityCodec.encode(immune, s2);
-        System.out.println(s6);
+        System.out.println("ESAPI:             " + s6);
 
 
+        String testMsg = "\"Im < 355, & you\u00E1?\"";
 //        String testMsg = "\u0163\"I'm < 355, & you\u00E1?\"";
-        String testMsg = "Im less than 355, and you?";
+//        String testMsg = "Im less than 355, and you?";
         for (int i = 0; i < 5; i++) {
             testMsg = testMsg + testMsg;
         }
@@ -78,7 +79,7 @@ public class SMPTest {
 
         // Warmup
         for (int i = 0; i < 100; i++) {
-            final String result1 = HtmlEscapist.escapeHtml(testMsg);
+            final String result1 = HtmlEscapist.escapeHtml(testMsg, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
             final String result2 = StringEscapeUtils.escapeHtml4(testMsg);
             final String result3 = HtmlUtils.htmlEscape(testMsg);
             final String result4 = htmlEntityCodec.encode(immune, testMsg);
@@ -86,7 +87,7 @@ public class SMPTest {
 
         final long jstart = System.nanoTime();
         for (int i = 0; i < execs; i++) {
-            final String result = HtmlEscapist.escapeHtml(testMsg);
+            final String result = HtmlEscapist.escapeHtml(testMsg, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
         }
         final long jfinish = System.nanoTime();
 
@@ -104,7 +105,7 @@ public class SMPTest {
 
         System.out.println(String.format("J: %15d nanosecs", Long.valueOf(jfinish - jstart)));
         System.out.println(String.format("C: %15d nanosecs", Long.valueOf(cfinish - cstart)));
-        System.out.println(String.format("G: %15d nanosecs", Long.valueOf(gfinish - gstart)));
+        System.out.println(String.format("S: %15d nanosecs", Long.valueOf(gfinish - gstart)));
 
         System.out.println(HtmlEscapist.escapeHtml(testMsg));
         System.out.println(HtmlEscapist.escapeHtml(testMsg) == testMsg);
@@ -112,7 +113,6 @@ public class SMPTest {
         System.out.println(StringEscapeUtils.escapeHtml4(testMsg) == testMsg);
         System.out.println(HtmlUtils.htmlEscape(testMsg));
         System.out.println(HtmlUtils.htmlEscape(testMsg) == testMsg);
-
 
 
 

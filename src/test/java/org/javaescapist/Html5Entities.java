@@ -19,19 +19,11 @@
  */
 package org.javaescapist;
 
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -96,6 +88,8 @@ public class Html5Entities {
 
                 maxcp = Math.max(maxcp, codepoint);
 
+                System.out.println("html5References.addReference(" + codepoint +  ", \"" + entity + "\");");
+
             } else if (codepoints.length == 1 && characters.length == 2) {
 
                 final int codepoint = Integer.parseInt(codepoints[0]);
@@ -104,6 +98,8 @@ public class Html5Entities {
                 values[1]++;
 
                 maxcp = Math.max(maxcp, codepoint);
+
+                System.out.println("html5References.addReference(" + codepoint +  ", \"" + entity + "\");");
 
             } else if (codepoints.length == 2 && characters.length == 2) {
 
@@ -115,7 +111,7 @@ public class Html5Entities {
                 maxcp = Math.max(maxcp, codepoint);
                 maxcp = Math.max(maxcp, Integer.valueOf(codepoints[1]));
 
-                System.out.println("{" + Integer.parseInt(codepoints[0]) + "," + Integer.parseInt(codepoints[1]) + "} " + (codepoint < 0x7f? "*" : ""));
+                System.out.println("html5References.addReference(" + codepoint +  ", " + codepoints[1] +  ", \"" + entity + "\");");
 
             } else {
                 throw new RuntimeException(

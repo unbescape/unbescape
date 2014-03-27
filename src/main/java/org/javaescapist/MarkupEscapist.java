@@ -40,10 +40,15 @@ final class MarkupEscapist {
 
 
     static enum MarkupEscapeType {
-        LITERAL_DEFAULT_TO_DECIMAL,
-        LITERAL_DEFAULT_TO_HEXA,
-        DECIMAL,
-        HEXA
+        NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
+        NAMED_REFERENCES_DEFAULT_TO_HEXA,
+        DECIMAL_REFERENCES,
+        HEXADECIMAL_REFERENCES
+    }
+
+    static enum BaseImmunityType {
+        BASE_IMMUNITY_ALL_ASCII,
+        BASE_IMMUNITY_ONLY_ALPHANUMERIC
     }
 
 
@@ -65,11 +70,11 @@ final class MarkupEscapist {
     /*
      * Length of the array used for holding the 'base' NCRS indexed by the codepoints themselves. This size
      * (0x2fff - 12287) is considered enough to hold most of the NCRS that should be needed (HTML4 has 252
-     * NCRs with a maximum codepoint of 0x2666 - HTML5 has 1125 NCRs with a maximum codepoint of 120171, but
+     * NCRs with a maximum codepoint of 0x2666 - HTML5 has 2125 NCRs with a maximum codepoint of 120171, but
      * only 138 scarcely used NCRs live above codepoint 0x2fff so an overflow map should be enough for
      * those 138 cases).
      */
-    private static final short NCRS_BY_CODEPOINT_LEN = 0x2fff;
+    private static final int NCRS_BY_CODEPOINT_LEN = 0x2fff;
 
     /*
      * This array will contain the NCRs for the first NCRS_BY_CODEPOINT_LEN (0x2fff) codepoints, indexed by
@@ -78,8 +83,8 @@ final class MarkupEscapist {
      *   array to hold String pointers, which would be 4 bytes in size each (compared to shorts, which are 2 bytes).
      * - Chars themselves or int codepoints can (will, in fact) be used as indexes.
      * - Given values are short, the maximum amount of total references this class can handle is 0x7fff = 32767
-     *   (which is safe, because HTML5 has 1125).
-     * - All XML and HTML4 NCRs will fit in this array. In the case of HTML5 NCRs, only 138 of the 1125 will
+     *   (which is safe, because HTML5 has 2125).
+     * - All XML and HTML4 NCRs will fit in this array. In the case of HTML5 NCRs, only 138 of the 2125 will
      *   not fit here (NCRs assigned to codepoints > 0x2fff), and an overflow map will be provided for them.
      * - Approximate size will be 16 (header) + 12287 * 2 = 24590 bytes.
      */
@@ -107,7 +112,7 @@ final class MarkupEscapist {
      *     * NCRs whose codepoint is >= 0x2fff and therefore live in NCRS_BY_CODEPOINT_OVERFLOW
      *     * NCRs which are not referenced in any of the above because they are a shortcut for (and completely
      *       equivalent to) a sequence of two codepoints. These NCRs will only be unescaped, but never escaped.
-     * - Max size in real world, when populated for HTML5: 1125 NCRs * 4 bytes/objref -> 4500 bytes, plus the texts.
+     * - Max size in real world, when populated for HTML5: 2125 NCRs * 4 bytes/objref -> 8500 bytes, plus the texts.
      */
     private final char[][] SORTED_NCRS;
 
@@ -116,7 +121,7 @@ final class MarkupEscapist {
      * so that each index in SORTED_NCRS can also be used to retrieve the original CODEPOINT when used on this array.
      * - Values in this array can be positive (= single codepoint) or negative (= double codepoint, will need further
      *   resolution by means of the DOUBLE_CODEPOINTS array)
-     * - Max size in real world, when populated for HTML5: 1125 NCRs * 4 bytes/objref -> 4500 bytes.
+     * - Max size in real world, when populated for HTML5: 2125 NCRs * 4 bytes/objref -> 8500 bytes.
      */
     private final int[] SORTED_CODEPOINTS;
 
@@ -139,9 +144,18 @@ final class MarkupEscapist {
     private static final short NO_NCR = (short) 0;
 
 
+    /*
+     * Constant defined for the highest possible ASCII char / codepoint value
+     */
+    private static final char MAX_ASCII_CHAR = '\u007f';
 
+
+    /*
+     * Prefixes and suffix defined for use in decimal/hexa escaping.
+     */
     private static final char[] DECIMAL_ESCAPE_PREFIX = "&#".toCharArray();
     private static final char[] HEXA_ESCAPE_PREFIX = "&#x".toCharArray();
+    private static final char NUMERIC_ESCAPE_SUFFIX = ';';
 
 
 
@@ -173,12 +187,6 @@ final class MarkupEscapist {
                 final int referenceCodepoint = referenceCodepoints[0];
                 codepoints.add(Integer.valueOf(referenceCodepoint));
 
-                if (referenceCodepoint >= NCRS_BY_CODEPOINT_LEN) {
-                    // For values that should go to the NCRS_BY_CODEPOINT array, we will take care
-                    // of them later. In this case, we only add the overflow values to their map.
-                    ncrsByCodepointOverflow.put(Integer.valueOf(referenceCodepoint), Short.valueOf(ncrIndex));
-                }
-
             } else if (referenceCodepoints.length == 2) {
                 // Two codepoints, therefore this NCR will translate when unescaping into a two-codepoint
                 // (probably two-char, too) sequence. We will use a negative codepoint value to signal this.
@@ -200,13 +208,6 @@ final class MarkupEscapist {
         // amount of "empty" (i.e. non-assigned) values.
         Arrays.fill(NCRS_BY_CODEPOINT, NO_NCR);
 
-        // Only create the overflow map if it is really needed.
-        if (ncrsByCodepointOverflow.size() > 0) {
-            NCRS_BY_CODEPOINT_OVERFLOW = ncrsByCodepointOverflow;
-        } else {
-            NCRS_BY_CODEPOINT_OVERFLOW = null;
-        }
-
 
         // We can initialize now these arrays that will hold the NCR-to-codepoint correspondence, but we cannot copy
         // them directly from our auxiliary structures because we need to order the NCRs alphabetically first.
@@ -222,16 +223,51 @@ final class MarkupEscapist {
         });
 
         for (short i = 0; i < SORTED_NCRS.length; i++) {
+
             final char[] ncr = ncrsOrdered.get(i);
             SORTED_NCRS[i] = ncr;
+
             for (short j = 0; j  < SORTED_NCRS.length; j++) {
+
                 if (Arrays.equals(ncr,ncrs.get(j))) {
+
                     final int cp = codepoints.get(j);
                     SORTED_CODEPOINTS[i] = cp;
-                    NCRS_BY_CODEPOINT[cp] = i;
+
+                    if (cp > 0) {
+                        // Not negative (i.e. not double-codepoint)
+                        if (cp < NCRS_BY_CODEPOINT_LEN) {
+                            // Not overflown
+                            final short currentNCRForCodepoint = NCRS_BY_CODEPOINT[cp];
+                            if (currentNCRForCodepoint == NO_NCR) {
+                                NCRS_BY_CODEPOINT[cp] = i;
+                            } else {
+                                // There are more than one NCRs for the same codepoint, so we need to choose
+                                // one for escaping operations. The shortest NCR will be chosen.
+                                if (ncr.length < SORTED_NCRS[currentNCRForCodepoint].length) {
+                                    NCRS_BY_CODEPOINT[cp] = i;
+                                }
+                            }
+                        } else {
+                            // Codepoint should be overflown
+                            ncrsByCodepointOverflow.put(Integer.valueOf(cp), Short.valueOf(i));
+                        }
+                    }
+
                     break;
+
                 }
+
             }
+
+        }
+
+
+        // Only create the overflow map if it is really needed.
+        if (ncrsByCodepointOverflow.size() > 0) {
+            NCRS_BY_CODEPOINT_OVERFLOW = ncrsByCodepointOverflow;
+        } else {
+            NCRS_BY_CODEPOINT_OVERFLOW = null;
         }
 
 
@@ -250,9 +286,14 @@ final class MarkupEscapist {
 
 
 
-    private static boolean arrayContains(final char[] array, final int arrayLen, final char c) {
+    private static boolean isAlphanumeric(final char c) {
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
+    }
+
+
+    private static boolean arrayContains(final int[] array, final int arrayLen, final int n) {
         for (int i = 0; i < arrayLen; i++) {
-            if (c == array[i]) {
+            if (n == array[i]) {
                 return true;
             }
         }
@@ -260,8 +301,13 @@ final class MarkupEscapist {
     }
 
 
-    String escape(final String text, final char[] nonEscapableChars, final char[] nonLiteralEscapableChars,
-                  final MarkupEscapeType markupEscapeType) {
+
+    String escape(final String text, final int[] immunecodepoints, final int[] forbiddenncrs,
+                  final BaseImmunityType baseImmunityType, final MarkupEscapeType markupEscapeType) {
+
+        if (baseImmunityType == null) {
+            throw new IllegalArgumentException("Argument 'baseImmunityType' cannot be null");
+        }
 
         if (markupEscapeType == null) {
             throw new IllegalArgumentException("Argument 'markupEscapeType' cannot be null");
@@ -271,97 +317,155 @@ final class MarkupEscapist {
             return null;
         }
 
-        final int nonEscapableCharsLen = (nonEscapableChars == null? 0 : nonEscapableChars.length);
-        final int nonLiteralEscapableCharsLen = (nonLiteralEscapableChars == null? 0 : nonLiteralEscapableChars.length);
+        final int immunecodepointsLen = (immunecodepoints == null? 0 : immunecodepoints.length);
+        final int forbiddenncrsLen = (forbiddenncrs == null? 0 : forbiddenncrs.length);
 
-        final boolean literal =
-                (MarkupEscapeType.LITERAL_DEFAULT_TO_DECIMAL.equals(markupEscapeType) ||
-                 MarkupEscapeType.LITERAL_DEFAULT_TO_HEXA.equals(markupEscapeType));
-        final boolean hexa =
-                (MarkupEscapeType.HEXA.equals(markupEscapeType) ||
-                 MarkupEscapeType.LITERAL_DEFAULT_TO_HEXA.equals(markupEscapeType));
+        final boolean onlyAlphaImmune = baseImmunityType.equals(BaseImmunityType.BASE_IMMUNITY_ONLY_ALPHANUMERIC);
+
+        final boolean useNCRs =
+                (MarkupEscapeType.NAMED_REFERENCES_DEFAULT_TO_DECIMAL.equals(markupEscapeType) ||
+                 MarkupEscapeType.NAMED_REFERENCES_DEFAULT_TO_HEXA.equals(markupEscapeType));
+        final boolean useHexa =
+                (MarkupEscapeType.NAMED_REFERENCES_DEFAULT_TO_HEXA.equals(markupEscapeType) ||
+                 MarkupEscapeType.HEXADECIMAL_REFERENCES.equals(markupEscapeType));
 
         StringBuilder strBuilder = null;
-        int readOffset = 0;
-        final int textLen = text.length();
 
-        for (int i = 0; i < textLen; i++) {
+        final int offset = 0;
+        final int max = text.length();
+
+        int readOffset = offset;
+
+        for (int i = offset; i < max; i++) {
 
             final char c = text.charAt(i);
 
-            if (c <= 0x7f && NCRS_BY_CODEPOINT[c] == -1) {
+
+            /*
+             * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
+             * all for them
+             */
+
+            if (c <= MAX_ASCII_CHAR && NCRS_BY_CODEPOINT[c] == NO_NCR ) {
+                if (!onlyAlphaImmune || isAlphanumeric(c)) {
+                    continue;
+                }
+            }
+
+
+            /*
+             * Compute the codepoint. This will be used instead of the char for the rest of the process.
+             */
+
+            final int codepoint;
+            if (c < Character.MIN_HIGH_SURROGATE) { // shortcut: U+D800 is the lower limit of high-surrogate chars.
+                codepoint = (int) c;
+            } else if (Character.isHighSurrogate(c) && (i + 1) < max) {
+                final char c1 = text.charAt(i + 1);
+                if (Character.isLowSurrogate(c1)) {
+                    codepoint = Character.toCodePoint(c, c1);
+                } else {
+                    codepoint = (int) c;
+                }
+            } else { // just a normal, single-char, high-valued codepoint.
+                codepoint = (int) c;
+            }
+
+
+            /*
+             * Check direct codepoint immunity
+             */
+
+            if (arrayContains(immunecodepoints, immunecodepointsLen, codepoint)) {
                 continue;
             }
 
-            if (arrayContains(nonEscapableChars, nonEscapableCharsLen, c)) {
-                continue;
-            }
+
+            /*
+             * At this point we know for sure we will need some kind of escaping, so we
+             * can increase the offset and initialize the string builder if needed, along with
+             * copying to it all the contents pending up to this point.
+             */
 
             if (strBuilder == null) {
-                strBuilder = new StringBuilder(textLen + 15);
+                strBuilder = new StringBuilder(max + 20);
             }
 
             if (i - readOffset > 0) {
                 strBuilder.append(text, readOffset, i);
             }
 
-            if (!literal || c >= NCRS_BY_CODEPOINT_LEN || NCRS_BY_CODEPOINT[c] == -1) {
-                // char should be escaped, but there is no literal for it, or maybe we just dont want literals
-
-                final int codePoint;
-                if (Character.isHighSurrogate(c) && (i + 1) < textLen) {
-                    // This might be a non-BMP (suplementary) Unicode character, therefore represented by two
-                    // character instead of just one. We also need to check whether the next char is a low surrogate.
-                    final char c2 = text.charAt(i + 1);
-                    if (Character.isLowSurrogate(c2)) {
-                        codePoint = Character.toCodePoint(c, c2);
-                        i++;
-                    } else {
-                        codePoint = (int) c;
-                    }
-                } else {
-                    codePoint = (int) c;
-                }
-
-                if (hexa) {
-                    strBuilder.append(HEXA_ESCAPE_PREFIX);
-                    strBuilder.append(Integer.toHexString(codePoint));
-                } else {
-                    strBuilder.append(DECIMAL_ESCAPE_PREFIX);
-                    strBuilder.append(String.valueOf(codePoint));
-                }
-                strBuilder.append(';');
-
-            } else {
-                // char should be escaped AND there is literal for it
-
-                if (arrayContains(nonLiteralEscapableChars, nonLiteralEscapableCharsLen, c)) {
-                    // literal shouldn't be applied, defaulting
-                    if (hexa) {
-                        strBuilder.append(HEXA_ESCAPE_PREFIX);
-                        strBuilder.append(Integer.toHexString((int) c));
-                    } else {
-                        strBuilder.append(DECIMAL_ESCAPE_PREFIX);
-                        strBuilder.append(String.valueOf((int) c));
-                    }
-                    strBuilder.append(';');
-                } else {
-                    // just apply the literal
-                    strBuilder.append(SORTED_NCRS[NCRS_BY_CODEPOINT[c]]);
-                }
-
+            if (Character.charCount(codepoint) > 1) {
+                // This is to compensate that we are actually escaping two char[] positions with a single codepoint.
+                i++;
             }
 
             readOffset = i + 1;
 
+
+            /*
+             * -----------------------------------------------------------------------------------------
+             *
+             * Peform the real escaping, attending the different combinations of NCR, DCR and HCR needs.
+             *
+             * -----------------------------------------------------------------------------------------
+             */
+
+            if (useNCRs && !arrayContains(forbiddenncrs, forbiddenncrsLen, codepoint)) {
+                // We will try to use an NCR
+
+                if (codepoint < NCRS_BY_CODEPOINT_LEN) {
+                    // codepoint < 0x2fff - all HTML4, most HTML5
+
+                    final short ncrIndex = NCRS_BY_CODEPOINT[codepoint];
+                    if (ncrIndex != NO_NCR) {
+                        // There is an NCR for this codepoint!
+                        strBuilder.append(SORTED_NCRS[ncrIndex]);
+                        continue;
+                    } // else, just let it exit the block and let decimal/hexa escaping do its job
+
+                } else if (NCRS_BY_CODEPOINT_OVERFLOW != null) {
+                    // codepoint >= 0x2fff. NCR, if exists, will live at the overflow map (if there is one).
+
+                    final Short ncrIndex = NCRS_BY_CODEPOINT_OVERFLOW.get(Integer.valueOf(codepoint));
+                    if (ncrIndex != null) {
+                        strBuilder.append(SORTED_NCRS[ncrIndex.shortValue()]);
+                        continue;
+                    } // else, just let it exit the block and let decimal/hexa escaping do its job
+
+                }
+
+            }
+
+            /*
+             * No NCR-escaping was possible (or allowed), so we need decimal/hexa escaping.
+             */
+
+            if (useHexa) {
+                strBuilder.append(HEXA_ESCAPE_PREFIX);
+                strBuilder.append(Integer.toHexString(codepoint));
+            } else {
+                strBuilder.append(DECIMAL_ESCAPE_PREFIX);
+                strBuilder.append(String.valueOf(codepoint));
+            }
+            strBuilder.append(NUMERIC_ESCAPE_SUFFIX);
+
         }
+
+
+        /*
+         * -----------------------------------------------------------------------------------------------
+         * Final cleaning: return the original String object if no escaping was actually needed. Otherwise
+         *                 append the remaining unescaped text to the string builder and return.
+         * -----------------------------------------------------------------------------------------------
+         */
 
         if (strBuilder == null) {
             return text;
         }
 
-        if (textLen - readOffset > 0) {
-            strBuilder.append(text, readOffset, textLen);
+        if (max - readOffset > 0) {
+            strBuilder.append(text, readOffset, max);
         }
 
         return strBuilder.toString();
@@ -372,8 +476,8 @@ final class MarkupEscapist {
 
 
     void escape(final char[] text, final int offset, final int len, final Writer writer,
-                final char[] nonEscapableChars, final char[] nonLiteralEscapableChars,
-                final MarkupEscapeType markupEscapeType)
+                final int[] immunecodepoints, final int[] forbiddenncrs,
+                final BaseImmunityType baseImmunityType, final MarkupEscapeType markupEscapeType)
                 throws IOException {
 
         if (writer == null) {
@@ -409,6 +513,20 @@ final class MarkupEscapist {
 
 
 
+
+
+
+    String unescape(final String text) {
+        return text;
+    }
+
+
+
+
+
+
+
+
     static final class References {
 
         private final List<Reference> references = new ArrayList<Reference>(200);
@@ -417,8 +535,12 @@ final class MarkupEscapist {
             super();
         }
 
-        void addReference(final String ncr, final int codepoint, final char character) {
-            this.references.add(new Reference(ncr, new int[] { codepoint }, new char[] { character }));
+        void addReference(final int codepoint, final String ncr) {
+            this.references.add(new Reference(ncr, new int[]{codepoint}));
+        }
+
+        void addReference(final int codepoint0, final int codepoint1, final String ncr) {
+            this.references.add(new Reference(ncr, new int[] { codepoint0, codepoint1 }));
         }
 
     }
