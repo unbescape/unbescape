@@ -115,6 +115,11 @@ public class SMPTest {
         System.out.println(HtmlUtils.htmlEscape(testMsg) == testMsg);
 
 
+        System.out.println("UNESCAPE: " + HtmlEscapist.unescape(
+                HtmlEscapist.escapeHtml(s2, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA)));
+        System.out.println("UNESCAPE: " + HtmlEscapist.unescape(
+                HtmlEscapist.escapeHtml(s2, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL)));
+        System.out.println("UNESCAPE: " + HtmlEscapist.unescape("&euro; - &#x20aC; - &#8364; - &#x80; - &#128; - &#x80gs - &#128as"));
 
     }
 

@@ -151,12 +151,20 @@ final class MarkupEscapist {
 
 
     /*
-     * Prefixes and suffix defined for use in decimal/hexa escaping.
+     * Prefixes and suffix defined for use in decimal/hexa escaping and unescaping.
      */
-    private static final char[] DECIMAL_ESCAPE_PREFIX = "&#".toCharArray();
-    private static final char[] HEXA_ESCAPE_PREFIX = "&#x".toCharArray();
-    private static final char NUMERIC_ESCAPE_SUFFIX = ';';
+    private static final char REFERENCE_PREFIX = '&';
+    private static final char REFERENCE_NUMERIC_PREFIX2 = '#';
+    private static final char REFERENCE_HEXA_PREFIX3 = 'x';
+    private static final char[] REFERENCE_DECIMAL_PREFIX = "&#".toCharArray();
+    private static final char[] REFERENCE_HEXA_PREFIX = "&#x".toCharArray();
+    private static final char REFERENCE_SUFFIX = ';';
 
+    /*
+     * Small utility char arrays for hexadecimal conversion
+     */
+    private static char[] HEXA_CHARS_UPPER = "0123456789ABCDEF".toCharArray();
+    private static char[] HEXA_CHARS_LOWER = "0123456789abcdef".toCharArray();
 
 
 
@@ -176,8 +184,6 @@ final class MarkupEscapist {
 
             final char[] referenceNcr = reference.ncr;
             final int[] referenceCodepoints = reference.codepoints;
-
-            final short ncrIndex = (short) ncrs.size();
 
             ncrs.add(referenceNcr);
 
@@ -442,13 +448,13 @@ final class MarkupEscapist {
              */
 
             if (useHexa) {
-                strBuilder.append(HEXA_ESCAPE_PREFIX);
+                strBuilder.append(REFERENCE_HEXA_PREFIX);
                 strBuilder.append(Integer.toHexString(codepoint));
             } else {
-                strBuilder.append(DECIMAL_ESCAPE_PREFIX);
+                strBuilder.append(REFERENCE_DECIMAL_PREFIX);
                 strBuilder.append(String.valueOf(codepoint));
             }
-            strBuilder.append(NUMERIC_ESCAPE_SUFFIX);
+            strBuilder.append(REFERENCE_SUFFIX);
 
         }
 
@@ -512,12 +518,249 @@ final class MarkupEscapist {
 
 
 
+    /*
+     * This translation is needed during unescaping to support ill-formed escaping codes for Windows 1252 codes
+     * instead of the correct unicode ones (for example, &#x80; for the euro symbol instead of &#x20aC;). This is
+     * something browsers do support, and included in the HTML5 spec for consuming character references.
+     * See http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
+     */
+    static int translateIllFormedCodepoint(final int codepoint) {
+        switch (codepoint) {
+            case 0x00: return 0xFFFD;
+            case 0x80: return 0x20AC;
+            case 0x82: return 0x201A;
+            case 0x83: return 0x0192;
+            case 0x84: return 0x201E;
+            case 0x85: return 0x2026;
+            case 0x86: return 0x2020;
+            case 0x87: return 0x2021;
+            case 0x88: return 0x02C6;
+            case 0x89: return 0x2030;
+            case 0x8A: return 0x0160;
+            case 0x8B: return 0x2039;
+            case 0x8C: return 0x0152;
+            case 0x8E: return 0x017D;
+            case 0x91: return 0x2018;
+            case 0x92: return 0x2019;
+            case 0x93: return 0x201C;
+            case 0x94: return 0x201D;
+            case 0x95: return 0x2022;
+            case 0x96: return 0x2013;
+            case 0x97: return 0x2014;
+            case 0x98: return 0x02DC;
+            case 0x99: return 0x2122;
+            case 0x9A: return 0x0161;
+            case 0x9B: return 0x203A;
+            case 0x9C: return 0x0153;
+            case 0x9E: return 0x017E;
+            case 0x9F: return 0x0178;
+            default: return codepoint;
+        }
+    }
+
+
+    /*
+     * This method is used instead of Integer.parseInt(str,radix) in order to avoid the need
+     * to create substrings of the text being unescaped to feed such method.
+     * -  No need to check all chars are within the radix limits - reference parsing code will already have done so.
+     */
+    static int parseIntFromReference(final String text, final int start, final int end, final int radix) {
+        int result = 0;
+        for (int i = start; i < end; i++) {
+            final char c = text.charAt(i);
+            int n = -1;
+            for (int j = 0; j < HEXA_CHARS_UPPER.length; j++) {
+                if (c == HEXA_CHARS_UPPER[j] || c == HEXA_CHARS_LOWER[j]) {
+                    n = j;
+                    break;
+                }
+            }
+            result = (radix * result) + n;
+        }
+        return result;
+    }
 
 
 
-
+    /*
+     * See: http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
+     */
     String unescape(final String text) {
-        return text;
+
+        if (text == null) {
+            return text;
+        }
+
+        StringBuilder strBuilder = null;
+
+        final int offset = 0;
+        final int max = text.length();
+
+        int readOffset = offset;
+        int referenceOffset = offset;
+
+        for (int i = offset; i < max; i++) {
+
+            final char c = text.charAt(i);
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if (c != REFERENCE_PREFIX || (i + 1) >= max) {
+                continue;
+            }
+
+            int codepoint = 0;
+
+            if (c == REFERENCE_PREFIX) {
+
+                final char c1 = text.charAt(i + 1);
+
+                if (c1 == '\u0020' || // SPACE
+                    c1 == '\n' ||     // LF
+                    c1 == '\u0009' || // TAB
+                    c1 == '\u000C' || // FF
+                    c1 == '\u003C' || // LES-THAN SIGN
+                    c1 == '\u0026') { // AMPERSAND
+                    // Not a character references. No characters are consumed, and nothing is returned.
+                    continue;
+
+                } else if (c1 == REFERENCE_NUMERIC_PREFIX2) {
+
+                    if (i + 2 >= max) {
+                        // No reference possible
+                        continue;
+                    }
+
+                    final char c2 = text.charAt(i + 2);
+
+                    if (c2 == 'x' || c2 == 'X' && (i + 3) < max) {
+                        // This is a hexadecimal reference
+
+                        int f = i + 3;
+                        while (f < max) {
+                            final char cf = text.charAt(f);
+                            if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
+                                break;
+                            }
+                            f++;
+                        }
+
+                        if ((f - (i + 3)) <= 0) {
+                            // We weren't able to consume any hexa chars
+                            continue;
+                        }
+
+                        codepoint = parseIntFromReference(text, i + 3, f, 16);
+                        referenceOffset = f - 1;
+
+                        if ((f < max) && text.charAt(f) == REFERENCE_SUFFIX) {
+                            referenceOffset++;
+                        }
+
+                        codepoint = translateIllFormedCodepoint(codepoint);
+
+                        // Don't continue here, just let the unescaping code below do its job
+
+                    } else if (c2 >= '0' && c2 <= '9') {
+                        // This is a decimal reference
+
+                        int f = i + 2;
+                        while (f < max) {
+                            final char cf = text.charAt(f);
+                            if (!(cf >= '0' && cf <= '9')) {
+                                break;
+                            }
+                            f++;
+                        }
+
+                        if ((f - (i + 2)) <= 0) {
+                            // We weren't able to consume any decimal chars
+                            continue;
+                        }
+
+                        codepoint = parseIntFromReference(text, i + 2, f, 10);
+                        referenceOffset = f - 1;
+
+                        if ((f < max) && text.charAt(f) == REFERENCE_SUFFIX) {
+                            referenceOffset++;
+                        }
+
+                        codepoint = translateIllFormedCodepoint(codepoint);
+
+                        // Don't continue here, just let the unescaping code below do its job
+
+                    } else {
+                        // This is not a valid reference, just discard
+                        continue;
+                    }
+
+
+                } else {
+
+                    // This is a named reference, must be comprised only of ALPHANUMERIC chars
+
+                    continue;
+
+                }
+
+
+            }
+
+
+            /*
+             * At this point we know for sure we will need some kind of unescaping, so we
+             * can increase the offset and initialize the string builder if needed, along with
+             * copying to it all the contents pending up to this point.
+             */
+
+            if (strBuilder == null) {
+                strBuilder = new StringBuilder(max + 5);
+            }
+
+            if (i - readOffset > 0) {
+                strBuilder.append(text, readOffset, i);
+            }
+
+            i = referenceOffset;
+            readOffset = i + 1;
+
+            /*
+             * --------------------------
+             *
+             * Peform the real unescaping
+             *
+             * --------------------------
+             */
+
+            // TODO Unescape
+            if (codepoint > '\uFFFF') {
+                strBuilder.append(Character.toChars(codepoint));
+            } else {
+                strBuilder.append((char)codepoint);
+            }
+
+        }
+
+
+        /*
+         * -----------------------------------------------------------------------------------------------
+         * Final cleaning: return the original String object if no unescaping was actually needed. Otherwise
+         *                 append the remaining escaped text to the string builder and return.
+         * -----------------------------------------------------------------------------------------------
+         */
+
+        if (strBuilder == null) {
+            return text;
+        }
+
+        if (max - readOffset > 0) {
+            strBuilder.append(text, readOffset, max);
+        }
+
+        return strBuilder.toString();
+
     }
 
 

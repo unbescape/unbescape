@@ -197,6 +197,16 @@ public final class HtmlEscapist {
 
 
 
+
+
+
+    public static String unescape(final String text) {
+        return HTML5_MARKUP_ESCAPER.unescape(text);
+    }
+
+
+
+
     private HtmlEscapist() {
         super();
     }
