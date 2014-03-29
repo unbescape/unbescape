@@ -121,6 +121,52 @@ public class SMPTest {
                 HtmlEscapist.escapeHtml(s2, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL)));
         System.out.println("UNESCAPE: " + HtmlEscapist.unescape("&euro; - &#x20aC; - &#8364; - &#x80; - &#128; - &#x80gs - &#128as"));
 
+        final String testUnescMsg = HtmlEscapist.escapeHtml(s2, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
+
+        System.out.println("ESCAPED:         " + testUnescMsg);
+        final String u3 = HtmlEscapist.unescape(testUnescMsg);
+        System.out.println("JAVAESCAPIST:      " + u3);
+        final String u4 = StringEscapeUtils.unescapeHtml4(testUnescMsg);
+        System.out.println("STRINGESCAPEUTILS: " + u4);
+        final String u5 = HtmlUtils.htmlUnescape(testUnescMsg);
+        System.out.println("SPRING HTMLUTILS:  " + u5);
+        final String u6 = htmlEntityCodec.decode(testUnescMsg);
+        System.out.println("ESAPI:             " + u6);
+
+
+        // Warmup
+        for (int i = 0; i < 100; i++) {
+            final String result1 = HtmlEscapist.escapeHtml(testUnescMsg, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
+            final String result2 = StringEscapeUtils.escapeHtml4(testUnescMsg);
+            final String result3 = HtmlUtils.htmlEscape(testUnescMsg);
+            final String result4 = htmlEntityCodec.encode(immune, testUnescMsg);
+        }
+
+        final long ujstart = System.nanoTime();
+        for (int i = 0; i < execs; i++) {
+            final String result = HtmlEscapist.unescape(testUnescMsg);
+        }
+        final long ujfinish = System.nanoTime();
+
+        final long ucstart = System.nanoTime();
+        for (int i = 0; i < execs; i++) {
+            final String result = StringEscapeUtils.unescapeHtml4(testUnescMsg);
+        }
+        final long ucfinish = System.nanoTime();
+
+        final long ugstart = System.nanoTime();
+        for (int i = 0; i < execs; i++) {
+            final String result = HtmlUtils.htmlUnescape(testUnescMsg);
+        }
+        final long ugfinish = System.nanoTime();
+
+        System.out.println(String.format("J: %15d nanosecs", Long.valueOf(ujfinish - ujstart)));
+        System.out.println(String.format("C: %15d nanosecs", Long.valueOf(ucfinish - ucstart)));
+        System.out.println(String.format("S: %15d nanosecs", Long.valueOf(ugfinish - ugstart)));
+
+
+        System.out.println(HtmlEscapist.unescape("&Dot;"));
+
     }
 
 

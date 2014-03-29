@@ -72,9 +72,9 @@ public class Html5Entities {
         for (final String entityLine : entityLines) {
             final String[] lineParts = StringUtils.split(entityLine, ":");
             final String entity = lineParts[0];
-            if (!entity.endsWith(";")) {
-                continue;
-            }
+//            if (!entity.endsWith(";")) {
+//                continue;
+//            }
             valid++;
             final String[] codepoints = StringUtils.split(lineParts[1],",");
             final String[] characters = StringUtils.split(lineParts[2],"\\");

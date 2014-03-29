@@ -245,13 +245,17 @@ final class MarkupEscapist {
                         if (cp < NCRS_BY_CODEPOINT_LEN) {
                             // Not overflown
                             final short currentNCRForCodepoint = NCRS_BY_CODEPOINT[cp];
-                            if (currentNCRForCodepoint == NO_NCR) {
-                                NCRS_BY_CODEPOINT[cp] = i;
-                            } else {
-                                // There are more than one NCRs for the same codepoint, so we need to choose
-                                // one for escaping operations. The shortest NCR will be chosen.
-                                if (ncr.length < SORTED_NCRS[currentNCRForCodepoint].length) {
+                            if (ncr[ncr.length - 1] == REFERENCE_SUFFIX) {
+                                // Never assign an NCR not ending in semicolon - They are always duplicates.
+                                if (currentNCRForCodepoint == NO_NCR) {
                                     NCRS_BY_CODEPOINT[cp] = i;
+                                } else {
+                                    // There are more than one NCRs for the same codepoint, so we need to choose
+                                    // one for escaping operations. The shortest NCR will be chosen, if both end in
+                                    // a semicolon (if one doesn't, the one ending in semicolon will be chosen).
+                                    if (ncr.length < SORTED_NCRS[currentNCRForCodepoint].length) {
+                                        NCRS_BY_CODEPOINT[cp] = i;
+                                    }
                                 }
                             }
                         } else {
@@ -582,6 +586,60 @@ final class MarkupEscapist {
 
 
 
+    private static int ncrCompare(final char[] ncr, final String text, final int start, final int end) {
+        // char 0 is discarded, will be & in both cases
+        final int textLen = end - start;
+        final int maxCommon = Math.min(ncr.length, textLen);
+        int i;
+        for (i = 1; i < maxCommon; i++) {
+            final char tc = text.charAt(start + i);
+            if (ncr[i] < tc) {
+                return -1;
+            } else if (ncr[i] > tc) {
+                return 1;
+            }
+        }
+        if (ncr.length > i) {
+            return 1;
+        }
+        if (textLen > i) {
+            // We have a partial match. Can be an NCR not finishing in a semicolon
+            return -1;
+        }
+        return 0;
+    }
+
+
+
+    private static int ncrBinarySearch(final char[][] ncrs, final String text, final int start, final int end) {
+
+        int low = 0;
+        int high = ncrs.length - 1;
+
+        while (low <= high) {
+
+            final int mid = (low + high) >>> 1;
+            final char[] midVal = ncrs[mid];
+
+            final int cmp = ncrCompare(midVal, text, start, end);
+
+            if (cmp < 0) {
+                low = mid + 1;
+            } else if (cmp > 0) {
+                high = mid - 1;
+            } else {
+                // Found!!
+                return mid;
+            }
+        }
+
+        return -(low + 1); // Not found!
+
+    }
+
+
+
+
     /*
      * See: http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
      */
@@ -699,12 +757,36 @@ final class MarkupEscapist {
 
                 } else {
 
-                    // This is a named reference, must be comprised only of ALPHANUMERIC chars
+                    // This is a named reference, must be comprised only of ALPHABETIC chars
+                    // TODO AlphaNUMERIC? Depends on the definition of "entity" in XML!!!
 
-                    continue;
+                    int f = i + 1;
+                    while (f < max) {
+                        final char cf = text.charAt(f);
+                        if (!((cf >= 'a' && cf <= 'z') || (cf >= 'A' && cf <= 'Z') || (cf >= '0' && cf <= '9'))) {
+                            break;
+                        }
+                        f++;
+                    }
+
+                    if ((f - (i + 1)) <= 0) {
+                        // We weren't able to consume any alphanumeric
+                        continue;
+                    }
+
+                    if ((f < max) && text.charAt(f) == REFERENCE_SUFFIX) {
+                        f++;
+                    }
+
+                    final int ncrPosition = ncrBinarySearch(SORTED_NCRS, text, i, f);
+                    codepoint = SORTED_CODEPOINTS[ncrPosition];
+                    // TODO Not found? WE WILL BE RETURNING A NEGATIVE CODEPOINT!
+
+                    referenceOffset = f - 1;
+
+                    // TODO Check: does HTML5 allow the absence of ; for EVERY REFERENCE? AND WHAT ABOUT XML?
 
                 }
-
 
             }
 
