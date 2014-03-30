@@ -164,8 +164,17 @@ public class SMPTest {
         System.out.println(String.format("C: %15d nanosecs", Long.valueOf(ucfinish - ucstart)));
         System.out.println(String.format("S: %15d nanosecs", Long.valueOf(ugfinish - ugstart)));
 
+        final String partial01 = "&lsqb;&tcedil;&aacuteaeiouABC0123&#131072;&#39;&rsqb;&xscr;";
+        final String uPartial01 = HtmlEscapist.unescape(partial01);
+        System.out.println("JAVAESCAPIST PARTIAL:      " + uPartial01);
+        final String uPartial02 = StringEscapeUtils.unescapeHtml4(partial01);
+        System.out.println("STRINGESCAPEUTILS PARTIAL: " + uPartial02);
 
-        System.out.println(HtmlEscapist.unescape("&Dot;"));
+        System.out.println(HtmlEscapist.unescape("Fern&aacutendez"));
+        System.out.println(HtmlEscapist.unescape("Fern&aacute;&ndez"));
+        System.out.println(HtmlEscapist.unescape("Fern&aacute;&ndez&rarr;"));
+
+        System.out.println(HtmlEscapist.unescape("a&fjlig;a"));
 
     }
 

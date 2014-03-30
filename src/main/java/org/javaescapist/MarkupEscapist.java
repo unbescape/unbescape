@@ -586,11 +586,11 @@ final class MarkupEscapist {
 
 
 
-    private static int ncrCompare(final char[] ncr, final String text, final int start, final int end) {
-        // char 0 is discarded, will be & in both cases
+    private static int compare(final char[] ncr, final String text, final int start, final int end) {
         final int textLen = end - start;
         final int maxCommon = Math.min(ncr.length, textLen);
         int i;
+        // char 0 is discarded, will be & in both cases
         for (i = 1; i < maxCommon; i++) {
             final char tc = text.charAt(start + i);
             if (ncr[i] < tc) {
@@ -604,36 +604,53 @@ final class MarkupEscapist {
         }
         if (textLen > i) {
             // We have a partial match. Can be an NCR not finishing in a semicolon
-            return -1;
+            return - ((textLen - i) + 10);
         }
         return 0;
     }
 
 
 
-    private static int ncrBinarySearch(final char[][] ncrs, final String text, final int start, final int end) {
+    static int binarySearch(final char[][] values,
+                            final String text, final int start, final int end) {
 
         int low = 0;
-        int high = ncrs.length - 1;
+        int high = values.length - 1;
+
+        int partialIndex = Integer.MIN_VALUE;
+        int partialValue = Integer.MIN_VALUE;
 
         while (low <= high) {
 
             final int mid = (low + high) >>> 1;
-            final char[] midVal = ncrs[mid];
+            final char[] midVal = values[mid];
 
-            final int cmp = ncrCompare(midVal, text, start, end);
+            final int cmp = compare(midVal, text, start, end);
 
-            if (cmp < 0) {
+            if (cmp == -1) {
                 low = mid + 1;
-            } else if (cmp > 0) {
+            } else if (cmp == 1) {
                 high = mid - 1;
+            } else if (cmp < -10) {
+                // Partial match
+                low = mid + 1;
+                if (partialIndex == Integer.MIN_VALUE || partialValue < cmp) {
+                    partialIndex = mid;
+                    partialValue = cmp; // partial will always be negative, and -10. We look for the smallest partial
+                }
             } else {
                 // Found!!
                 return mid;
             }
+
         }
 
-        return -(low + 1); // Not found!
+        if (partialIndex != Integer.MIN_VALUE) {
+            // We have a partial result. We return the closest result index as negative + (-10)
+            return (-1) * (partialIndex + 10);
+        }
+
+        return Integer.MIN_VALUE; // Not found!
 
     }
 
@@ -758,7 +775,6 @@ final class MarkupEscapist {
                 } else {
 
                     // This is a named reference, must be comprised only of ALPHABETIC chars
-                    // TODO AlphaNUMERIC? Depends on the definition of "entity" in XML!!!
 
                     int f = i + 1;
                     while (f < max) {
@@ -778,13 +794,24 @@ final class MarkupEscapist {
                         f++;
                     }
 
-                    final int ncrPosition = ncrBinarySearch(SORTED_NCRS, text, i, f);
-                    codepoint = SORTED_CODEPOINTS[ncrPosition];
-                    // TODO Not found? WE WILL BE RETURNING A NEGATIVE CODEPOINT!
+                    final int ncrPosition = binarySearch(SORTED_NCRS, text, i, f);
+                    if (ncrPosition >= 0) {
+                        codepoint = SORTED_CODEPOINTS[ncrPosition];
+                    } else if (ncrPosition == Integer.MIN_VALUE) {
+                        // Not found! Just ignore our efforts to find a match.
+                        continue;
+                    } else if (ncrPosition < -10) {
+                        // Found but partial!
+                        final int partialIndex = (-1) * (ncrPosition + 10);
+                        final char[] partialMatch = SORTED_NCRS[partialIndex];
+                        codepoint = SORTED_CODEPOINTS[partialIndex];
+                        f -= ((f - i) - partialMatch.length); // un-consume the chars remaining from the partial match
+                    } else {
+                        // Should never happen!
+                        throw new RuntimeException("Invalid unescaping codepoint after search: " + ncrPosition);
+                    }
 
                     referenceOffset = f - 1;
-
-                    // TODO Check: does HTML5 allow the absence of ; for EVERY REFERENCE? AND WHAT ABOUT XML?
 
                 }
 
@@ -816,9 +843,21 @@ final class MarkupEscapist {
              * --------------------------
              */
 
-            // TODO Unescape
             if (codepoint > '\uFFFF') {
                 strBuilder.append(Character.toChars(codepoint));
+            } else if (codepoint < 0) {
+                // This is a double-codepoint unescaping operation
+                final int[] codepoints = DOUBLE_CODEPOINTS[((-1) * codepoint) - 1];
+                if (codepoints[0] > '\uFFFF') {
+                    strBuilder.append(Character.toChars(codepoints[0]));
+                } else {
+                    strBuilder.append((char) codepoints[0]);
+                }
+                if (codepoints[1] > '\uFFFF') {
+                    strBuilder.append(Character.toChars(codepoints[1]));
+                } else {
+                    strBuilder.append((char) codepoints[1]);
+                }
             } else {
                 strBuilder.append((char)codepoint);
             }
