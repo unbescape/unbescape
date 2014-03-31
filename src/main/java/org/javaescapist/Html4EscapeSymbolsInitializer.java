@@ -19,6 +19,8 @@
  */
 package org.javaescapist;
 
+import java.util.Arrays;
+
 /**
  * 
  * @author Daniel Fern&aacute;ndez
@@ -26,18 +28,12 @@ package org.javaescapist;
  * @since 1.0
  *
  */
-final class Html4References {
+final class Html4EscapeSymbolsInitializer {
 
 
+    static EscapeSymbols initializeHtml4() {
 
-
-    static final MarkupEscapist.References REFERENCES;
-
-
-
-    static {
-
-        final MarkupEscapist.References html4References = new MarkupEscapist.References();
+        final EscapeSymbols.References html4References = new EscapeSymbols.References();
 
         /*
          * -----------------------------------------------------------
@@ -47,7 +43,6 @@ final class Html4References {
          */
 
         /* HTML ESCAPE ENTITIES FOR MARKUP-SIGNIFICANT CHARACTERS */
-        html4References.addReference('\'', "&apos;");
         html4References.addReference('"', "&quot;");
         html4References.addReference('&', "&amp;");
         html4References.addReference('<', "&lt;");
@@ -315,16 +310,42 @@ final class Html4References {
         html4References.addReference('\u20AC', "&euro;");
 
 
-        REFERENCES = html4References;
+        /*
+         * Initialization of escape levels for the ASCII plane (0x0 to 0x7f)
+         *
+         * Defined levels :
+         *
+         *    - Level 0 : Only markup-significant characters, excluding '
+         *    - Level 1 : Only markup-significant characters, including '
+         *    - Level 2 : All non-alphanumeric characters
+         *    - Level 3 : All characters
+         */
+        final byte[] asciiEscapeLevels = new byte[0x7f + 1];
+        Arrays.fill(asciiEscapeLevels, (byte)2);
+        for (char c = 'A'; c <= 'Z'; c++) {
+            asciiEscapeLevels[c] = 3;
+        }
+        for (char c = 'a'; c <= 'z'; c++) {
+            asciiEscapeLevels[c] = 3;
+        }
+        for (char c = '0'; c <= '9'; c++) {
+            asciiEscapeLevels[c] = 3;
+        }
+        asciiEscapeLevels['\''] = 1;
+        asciiEscapeLevels['"'] = 0;
+        asciiEscapeLevels['<'] = 0;
+        asciiEscapeLevels['>'] = 0;
+        asciiEscapeLevels['&'] = 0;
+
+
+        return new EscapeSymbols(html4References, asciiEscapeLevels);
 
     }
 
 
-    private Html4References() {
+    private Html4EscapeSymbolsInitializer() {
         super();
     }
-
-
 
 }
 

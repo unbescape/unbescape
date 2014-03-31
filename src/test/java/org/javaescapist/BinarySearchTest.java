@@ -93,7 +93,7 @@ public class BinarySearchTest {
 
 
     private static String search(int valuesIndex, final String text) {
-        final int result = MarkupEscapist.binarySearch(VALUES[valuesIndex], text, 0, text.length());
+        final int result = EscapeSymbols.binarySearch(VALUES[valuesIndex], text, 0, text.length());
         if (result == Integer.MIN_VALUE) {
             return NOT_FOUND;
         } else if (result < 0) {

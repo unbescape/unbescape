@@ -20,10 +20,17 @@
 package org.javaescapist;
 
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -68,6 +75,13 @@ public class Html5Entities {
         int maxcp = Integer.MIN_VALUE;
 
         System.out.println("TOTAL: " + entityLines.size());
+
+        final Map<String, List<String>> references = new TreeMap<String, List<String>>(new Comparator<String>() {
+            public int compare(final String o1, final String o2) {
+                return o1.compareTo(o2);
+            }
+        });
+
         int valid = 0;
         for (final String entityLine : entityLines) {
             final String[] lineParts = StringUtils.split(entityLine, ":");
@@ -88,7 +102,46 @@ public class Html5Entities {
 
                 maxcp = Math.max(maxcp, codepoint);
 
-                System.out.println("html5References.addReference(" + codepoint +  ", \"" + entity + "\");");
+//                System.out.println("html5References.addReference(" + codepoint +  ", \"" + entity + "\");");
+
+                final String referencesKey = String.format("%6d",Integer.valueOf(codepoint));
+                List<String> referencesForCodepoints = references.get(referencesKey);
+                if (referencesForCodepoints == null) {
+                    referencesForCodepoints = new ArrayList<String>();
+                    references.put(referencesKey, referencesForCodepoints);
+                }
+                referencesForCodepoints.add(entity);
+                Collections.sort(referencesForCodepoints, new Comparator<String>() {
+                    public int compare(final String o1, final String o2) {
+                        final int o1Search4 =
+                                Arrays.binarySearch(EscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o1.toCharArray(), new Comparator<char[]>() {
+                                    public int compare(final char[] o1, final char[] o2) {
+                                        return new String(o1).compareTo(new String(o2));
+                                    }
+                                });
+                        final int o2Search4 =
+                                Arrays.binarySearch(EscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o2.toCharArray(), new Comparator<char[]>() {
+                                    public int compare(final char[] o1, final char[] o2) {
+                                        return new String(o1).compareTo(new String(o2));
+                                    }
+                                });
+                        if (o1Search4 >= 0) {
+                            return -1;
+                        }
+                        if (o2Search4 >= 0) {
+                            return 1;
+                        }
+
+                        final boolean o1low = Character.isLowerCase(o1.charAt(1));
+                        final boolean o2low = Character.isLowerCase(o2.charAt(1));
+                        if (o1low && !o2low) {
+                            return -1;
+                        } else if (o2low && !o1low) {
+                            return 1;
+                        }
+                        return o1.compareTo(o2);
+                    }
+                });
 
             } else if (codepoints.length == 1 && characters.length == 2) {
 
@@ -99,7 +152,46 @@ public class Html5Entities {
 
                 maxcp = Math.max(maxcp, codepoint);
 
-                System.out.println("html5References.addReference(" + codepoint +  ", \"" + entity + "\");");
+//                System.out.println("html5References.addReference(" + codepoint +  ", \"" + entity + "\");");
+
+                final String referencesKey = String.format("%6d", Integer.valueOf(codepoint));
+                List<String> referencesForCodepoints = references.get(referencesKey);
+                if (referencesForCodepoints == null) {
+                    referencesForCodepoints = new ArrayList<String>();
+                    references.put(referencesKey, referencesForCodepoints);
+                }
+                referencesForCodepoints.add(entity);
+                Collections.sort(referencesForCodepoints, new Comparator<String>() {
+                    public int compare(final String o1, final String o2) {
+                        final int o1Search4 =
+                                Arrays.binarySearch(EscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o1.toCharArray(), new Comparator<char[]>() {
+                                    public int compare(final char[] o1, final char[] o2) {
+                                        return new String(o1).compareTo(new String(o2));
+                                    }
+                                });
+                        final int o2Search4 =
+                                Arrays.binarySearch(EscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o2.toCharArray(), new Comparator<char[]>() {
+                                    public int compare(final char[] o1, final char[] o2) {
+                                        return new String(o1).compareTo(new String(o2));
+                                    }
+                                });
+                        if (o1Search4 >= 0) {
+                            return -1;
+                        }
+                        if (o2Search4 >= 0) {
+                            return 1;
+                        }
+
+                        final boolean o1low = Character.isLowerCase(o1.charAt(1));
+                        final boolean o2low = Character.isLowerCase(o2.charAt(1));
+                        if (o1low && !o2low) {
+                            return -1;
+                        } else if (o2low && !o1low) {
+                            return 1;
+                        }
+                        return o1.compareTo(o2);
+                    }
+                });
 
             } else if (codepoints.length == 2 && characters.length == 2) {
 
@@ -111,7 +203,47 @@ public class Html5Entities {
                 maxcp = Math.max(maxcp, codepoint);
                 maxcp = Math.max(maxcp, Integer.valueOf(codepoints[1]));
 
-                System.out.println("html5References.addReference(" + codepoint +  ", " + codepoints[1] +  ", \"" + entity + "\");");
+//                System.out.println("html5References.addReference(" + codepoint +  ", " + codepoints[1] +  ", \"" + entity + "\");");
+
+                final String referencesKey = String.format("%6d", Integer.valueOf(codepoints[0])) + "," +
+                                             String.format("%6d", Integer.valueOf(codepoints[1]));
+                List<String> referencesForCodepoints = references.get(referencesKey);
+                if (referencesForCodepoints == null) {
+                    referencesForCodepoints = new ArrayList<String>();
+                    references.put(referencesKey, referencesForCodepoints);
+                }
+                referencesForCodepoints.add(entity);
+                Collections.sort(referencesForCodepoints, new Comparator<String>() {
+                    public int compare(final String o1, final String o2) {
+                        final int o1Search4 =
+                                Arrays.binarySearch(EscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o1.toCharArray(), new Comparator<char[]>() {
+                                    public int compare(final char[] o1, final char[] o2) {
+                                        return new String(o1).compareTo(new String(o2));
+                                    }
+                                });
+                        final int o2Search4 =
+                                Arrays.binarySearch(EscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o2.toCharArray(), new Comparator<char[]>() {
+                                    public int compare(final char[] o1, final char[] o2) {
+                                        return new String(o1).compareTo(new String(o2));
+                                    }
+                                });
+                        if (o1Search4 >= 0) {
+                            return -1;
+                        }
+                        if (o2Search4 >= 0) {
+                            return 1;
+                        }
+
+                        final boolean o1low = Character.isLowerCase(o1.charAt(1));
+                        final boolean o2low = Character.isLowerCase(o2.charAt(1));
+                        if (o1low && !o2low) {
+                            return -1;
+                        } else if (o2low && !o1low) {
+                            return 1;
+                        }
+                        return o1.compareTo(o2);
+                    }
+                });
 
             } else {
                 throw new RuntimeException(
@@ -129,6 +261,41 @@ public class Html5Entities {
                     ("< " + Integer.toHexString(distEntry.getKey().intValue())),
                     values));
         }
+
+
+        System.out.println("-----");
+        System.out.println("HTML4");
+        System.out.println("-----");
+        for (int i = 0; i <= 0x7f; i++) {
+            if (EscapeSymbols.HTML4_SYMBOLS.NCRS_BY_CODEPOINT[i] != EscapeSymbols.HTML4_SYMBOLS.NO_NCR) {
+                System.out.println(String.format("%5d ", Integer.valueOf(i)) + new String(EscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS[EscapeSymbols.HTML4_SYMBOLS.NCRS_BY_CODEPOINT[i]]));
+            }
+        }
+
+
+        System.out.println("-----");
+        System.out.println("HTML5");
+        System.out.println("-----");
+        for (int i = 0; i <= 0x7f; i++) {
+            if (EscapeSymbols.HTML5_SYMBOLS.NCRS_BY_CODEPOINT[i] != EscapeSymbols.HTML5_SYMBOLS.NO_NCR) {
+                System.out.println(String.format("%5d ", Integer.valueOf(i)) + new String(EscapeSymbols.HTML5_SYMBOLS.SORTED_NCRS[EscapeSymbols.HTML5_SYMBOLS.NCRS_BY_CODEPOINT[i]]));
+            } else {
+                System.out.println(String.format("%5d ", Integer.valueOf(i)) + (char)i);
+            }
+        }
+
+
+        int count = 0;
+        for (final Map.Entry<String,List<String>> referencesEntry : references.entrySet()) {
+            final String key = referencesEntry.getKey();
+            final List<String> values = referencesEntry.getValue();
+            for (final String value : values) {
+                System.out.println("html5References.addReference(" + key +  ", \"" + value + "\");");
+                count++;
+            }
+        }
+        System.out.println("COUNT: " +  count);
+
 
     }
 

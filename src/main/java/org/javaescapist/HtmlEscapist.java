@@ -43,31 +43,18 @@ public final class HtmlEscapist {
 
     public static enum HtmlEscapeContext {
 
-        ATTRIBUTE_OR_TEXT(MarkupEscapist.BaseImmunityType.BASE_IMMUNITY_ALL_ASCII, null, new int[] {'\''}),
-        SINGLE_QUOTED_ATTRIBUTE(MarkupEscapist.BaseImmunityType.BASE_IMMUNITY_ALL_ASCII, null, new int[] {'\''});
+        ATTRIBUTE_OR_TEXT(1),
+        SINGLE_QUOTED_ATTRIBUTE(1);
 
 
-        private final MarkupEscapist.BaseImmunityType baseImmunityType;
-        private final int[] immuneCodepoints;
-        private final int[] forbiddenNcrs;
+        private final int escapeLevel;
 
-        HtmlEscapeContext(final MarkupEscapist.BaseImmunityType baseImmunityType,
-                          final int[] immuneCodepoints, final int[] forbiddenNcrs) {
-            this.baseImmunityType = baseImmunityType;
-            this.immuneCodepoints = immuneCodepoints;
-            this.forbiddenNcrs = forbiddenNcrs;
+        HtmlEscapeContext(final int escapeLevel) {
+            this.escapeLevel = escapeLevel;
         }
 
-        public MarkupEscapist.BaseImmunityType getBaseImmunityType() {
-            return this.baseImmunityType;
-        }
-
-        public int[] getImmuneCodepoints() {
-            return this.immuneCodepoints;
-        }
-
-        public int[] getForbiddenNcrs() {
-            return this.forbiddenNcrs;
+        public int getEscapeLevel() {
+            return this.escapeLevel;
         }
 
     }
@@ -97,13 +84,6 @@ public final class HtmlEscapist {
 
 
 
-    private static final MarkupEscapist HTML4_MARKUP_ESCAPER = new MarkupEscapist(Html4References.REFERENCES);;
-    private static final MarkupEscapist HTML5_MARKUP_ESCAPER = new MarkupEscapist(Html5References.REFERENCES);;
-
-
-
-
-
 
 
     public static String escapeHtml(final String text) {
@@ -130,17 +110,10 @@ public final class HtmlEscapist {
             (type.equals(HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL) ||
                  type.equals(HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA));
 
-        if (html5) {
-            return HTML5_MARKUP_ESCAPER.escape(
-                    text,
-                    context.getImmuneCodepoints(), context.getForbiddenNcrs(),
-                    context.getBaseImmunityType(), type.getMarkupEscapeType());
-        }
+        final EscapeSymbols symbols = (html5? EscapeSymbols.HTML5_SYMBOLS : EscapeSymbols.HTML4_SYMBOLS);
 
-        return HTML4_MARKUP_ESCAPER.escape(
-                text,
-                context.getImmuneCodepoints(), context.getForbiddenNcrs(),
-                context.getBaseImmunityType(), type.getMarkupEscapeType());
+        return MarkupEscapist.escape(
+                symbols, text, context.getEscapeLevel(), type.getMarkupEscapeType());
 
     }
 
@@ -188,10 +161,9 @@ public final class HtmlEscapist {
             throw new IllegalArgumentException("The 'context' argument cannot be null");
         }
 
-        HTML4_MARKUP_ESCAPER.escape(
-                text, offset, len, writer,
-                context.getImmuneCodepoints(), context.getForbiddenNcrs(),
-                context.getBaseImmunityType(), type.getMarkupEscapeType());
+        MarkupEscapist.escape(
+                EscapeSymbols.HTML4_SYMBOLS, text, offset, len, writer,
+                context.getEscapeLevel(), type.getMarkupEscapeType());
 
     }
 
@@ -200,8 +172,8 @@ public final class HtmlEscapist {
 
 
 
-    public static String unescape(final String text) {
-        return HTML5_MARKUP_ESCAPER.unescape(text);
+    public static String unescapeHtml(final String text) {
+        return MarkupEscapist.unescape(text);
     }
 
 
