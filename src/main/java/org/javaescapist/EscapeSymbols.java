@@ -93,12 +93,14 @@ final class EscapeSymbols {
     final char MAX_ASCII_CHAR = 0x7f;
 
     /*
-     * This array will hold the 'escape level' assigned to each ASCII character (codepoint), 0x0 to 0x7f.
-     * - These levels are used to configure how (and if) escape operations should ignore ASCII characters, or
-     *   escape them somehow if required.
+     * This array will hold the 'escape level' assigned to each ASCII character (codepoint), 0x0 to 0x7f and also
+     * a level for the rest of non-ASCII characters.
+     * - These levels are used to configure how (and if) escape operations should ignore ASCII or non-ASCII
+     *   characters, or escape them somehow if required.
      * - Each EscapeSymbols structure will define a different set of levels for ASCII chars, according to their needs.
+     * - Position 0x7f + 1 represents all the non-ASCII characters. The specified
      */
-    final byte[] ASCII_ESCAPE_LEVEL = new byte[MAX_ASCII_CHAR + 1];
+    final byte[] ESCAPE_LEVELS = new byte[MAX_ASCII_CHAR + 2];
 
     /*
      * This array will contain all the NCRs, alphabetically ordered.
@@ -167,12 +169,12 @@ final class EscapeSymbols {
 
 
 
-    EscapeSymbols(final References references, final byte[] asciiLevels) {
+    EscapeSymbols(final References references, final byte[] escapeLevels) {
 
         super();
 
         // Initialize ASCII escape levels: just copy the array
-        System.arraycopy(asciiLevels, 0, ASCII_ESCAPE_LEVEL, 0, (0x7f + 1));
+        System.arraycopy(escapeLevels, 0, ESCAPE_LEVELS, 0, (0x7f + 2));
 
 
         // Initialize some auxiliary structures

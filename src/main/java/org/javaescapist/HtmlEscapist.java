@@ -41,15 +41,30 @@ public final class HtmlEscapist {
      */
 
 
-    public static enum HtmlEscapeContext {
+    /*
+     * Initialization of escape levels for the ASCII plane (0x0 to 0x7f)
+     *
+     * Defined levels :
+     *
+     *    - Level 0 : Only markup-significant characters, excluding '
+     *    - Level 1 : Only markup-significant characters, including '
+     *    - Level 2 : Markup-significant characters including ', plus all ASCII
+     *    - Level 3 : All non-alphanumeric characters
+     *    - Level 4 : All characters
+     *
+     */
+    public static enum HtmlEscapeLevel {
 
-        ATTRIBUTE_OR_TEXT(1),
-        SINGLE_QUOTED_ATTRIBUTE(1);
+        LEVEL_0_ONLY_MARKUP_SIGNIFICANT_WITHOUT_APOS(0),
+        LEVEL_1_ONLY_MARKUP_SIGNIFICANT_WITH_APOS(1),
+        LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS(2),
+        LEVEL_3_ALL_NON_ALPHANUMERIC(3),
+        LEVEL_4_ALL_CHARACTERS(4);
 
 
         private final int escapeLevel;
 
-        HtmlEscapeContext(final int escapeLevel) {
+        HtmlEscapeLevel(final int escapeLevel) {
             this.escapeLevel = escapeLevel;
         }
 
@@ -87,16 +102,16 @@ public final class HtmlEscapist {
 
 
     public static String escapeHtml(final String text) {
-        return escapeHtml(text, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL, HtmlEscapeContext.ATTRIBUTE_OR_TEXT);
+        return escapeHtml(text, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL, HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS);
     }
 
 
     public static String escapeHtml(final String text, final HtmlEscapeType type) {
-        return escapeHtml(text, type, HtmlEscapeContext.ATTRIBUTE_OR_TEXT);
+        return escapeHtml(text, type, HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS);
     }
 
 
-    public static String escapeHtml(final String text, final HtmlEscapeType type, final HtmlEscapeContext context) {
+    public static String escapeHtml(final String text, final HtmlEscapeType type, final HtmlEscapeLevel context) {
 
         if (type == null) {
             throw new IllegalArgumentException("The 'type' argument cannot be null");
@@ -122,36 +137,36 @@ public final class HtmlEscapist {
 
 
     public static void escapeHtml(final char[] text, final Writer writer) throws IOException {
-        escapeHtml(text, 0, text.length, writer, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL, HtmlEscapeContext.ATTRIBUTE_OR_TEXT);
+        escapeHtml(text, 0, text.length, writer, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL, HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS);
     }
 
 
     public static void escapeHtml(final char[] text, final Writer writer, final HtmlEscapeType type)
                                   throws IOException {
-        escapeHtml(text, 0, text.length, writer, type, HtmlEscapeContext.ATTRIBUTE_OR_TEXT);
+        escapeHtml(text, 0, text.length, writer, type, HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS);
     }
 
 
     public static void escapeHtml(final char[] text, final Writer writer, final HtmlEscapeType type,
-                                  final HtmlEscapeContext context) throws IOException {
+                                  final HtmlEscapeLevel context) throws IOException {
         escapeHtml(text, 0, text.length, writer, type, context);
     }
 
 
     public static void escapeHtml(final char[] text, final int offset, final int len, final Writer writer)
                                   throws IOException {
-        escapeHtml(text, offset, len, writer, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL, HtmlEscapeContext.ATTRIBUTE_OR_TEXT);
+        escapeHtml(text, offset, len, writer, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL, HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS);
     }
 
 
     public static void escapeHtml(final char[] text, final int offset, final int len, final Writer writer,
                                   final HtmlEscapeType type) throws IOException {
-        escapeHtml(text, offset, len, writer, type, HtmlEscapeContext.ATTRIBUTE_OR_TEXT);
+        escapeHtml(text, offset, len, writer, type, HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS);
     }
 
 
     public static void escapeHtml(final char[] text, final int offset, final int len, final Writer writer,
-                                  final HtmlEscapeType type, final HtmlEscapeContext context) throws IOException {
+                                  final HtmlEscapeType type, final HtmlEscapeLevel context) throws IOException {
 
         if (type == null) {
             throw new IllegalArgumentException("The 'type' argument cannot be null");

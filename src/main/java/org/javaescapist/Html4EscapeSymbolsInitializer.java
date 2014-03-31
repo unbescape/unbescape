@@ -317,28 +317,30 @@ final class Html4EscapeSymbolsInitializer {
          *
          *    - Level 0 : Only markup-significant characters, excluding '
          *    - Level 1 : Only markup-significant characters, including '
-         *    - Level 2 : All non-alphanumeric characters
-         *    - Level 3 : All characters
+         *    - Level 2 : Markup-significant characters including ', plus all ASCII
+         *    - Level 3 : All non-alphanumeric characters
+         *    - Level 4 : All characters
          */
-        final byte[] asciiEscapeLevels = new byte[0x7f + 1];
-        Arrays.fill(asciiEscapeLevels, (byte)2);
+        final byte[] escapeLevels = new byte[0x7f + 2];
+        Arrays.fill(escapeLevels, (byte)3);
         for (char c = 'A'; c <= 'Z'; c++) {
-            asciiEscapeLevels[c] = 3;
+            escapeLevels[c] = 4;
         }
         for (char c = 'a'; c <= 'z'; c++) {
-            asciiEscapeLevels[c] = 3;
+            escapeLevels[c] = 4;
         }
         for (char c = '0'; c <= '9'; c++) {
-            asciiEscapeLevels[c] = 3;
+            escapeLevels[c] = 4;
         }
-        asciiEscapeLevels['\''] = 1;
-        asciiEscapeLevels['"'] = 0;
-        asciiEscapeLevels['<'] = 0;
-        asciiEscapeLevels['>'] = 0;
-        asciiEscapeLevels['&'] = 0;
+        escapeLevels['\''] = 1;
+        escapeLevels['"'] = 0;
+        escapeLevels['<'] = 0;
+        escapeLevels['>'] = 0;
+        escapeLevels['&'] = 0;
+        escapeLevels[0x7f + 1] = 2;
 
 
-        return new EscapeSymbols(html4References, asciiEscapeLevels);
+        return new EscapeSymbols(html4References, escapeLevels);
 
     }
 

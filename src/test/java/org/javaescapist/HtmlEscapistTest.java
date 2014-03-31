@@ -48,7 +48,7 @@ public class HtmlEscapistTest {
         System.out.println(HtmlEscapist.escapeHtml("[\u0163\u00E1aeiouABC0123\uD840\uDC00']\ud835\udccd", HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL));
 
 
-        for (final HtmlEscapist.HtmlEscapeContext context : HtmlEscapist.HtmlEscapeContext.values()) {
+        for (final HtmlEscapist.HtmlEscapeLevel context : HtmlEscapist.HtmlEscapeLevel.values()) {
             for (final HtmlEscapist.HtmlEscapeType type : HtmlEscapist.HtmlEscapeType.values()) {
                 System.out.println("(" + type + "," + context + ") " + HtmlEscapist.escapeHtml("\u0163\"I'm < 355, & you\u00E1?\"", type, context));
             }
@@ -81,7 +81,7 @@ public class HtmlEscapistTest {
         System.out.println(sw.toString());
 
 
-        for (final HtmlEscapist.HtmlEscapeContext context : HtmlEscapist.HtmlEscapeContext.values()) {
+        for (final HtmlEscapist.HtmlEscapeLevel context : HtmlEscapist.HtmlEscapeLevel.values()) {
             for (final HtmlEscapist.HtmlEscapeType type : HtmlEscapist.HtmlEscapeType.values()) {
                 sw = new StringWriter();
                 HtmlEscapist.escapeHtml("\u0163\"I'm < 355, & you\u00E1?\"".toCharArray(), sw, type, context);
