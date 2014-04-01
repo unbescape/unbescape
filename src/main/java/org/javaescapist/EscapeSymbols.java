@@ -98,7 +98,8 @@ final class EscapeSymbols {
      * - These levels are used to configure how (and if) escape operations should ignore ASCII or non-ASCII
      *   characters, or escape them somehow if required.
      * - Each EscapeSymbols structure will define a different set of levels for ASCII chars, according to their needs.
-     * - Position 0x7f + 1 represents all the non-ASCII characters. The specified
+     * - Position 0x7f + 1 represents all the non-ASCII characters. The specified value will determine whether
+     *   all non-ASCII characters have to be escaped or not.
      */
     final byte[] ESCAPE_LEVELS = new byte[MAX_ASCII_CHAR + 2];
 
