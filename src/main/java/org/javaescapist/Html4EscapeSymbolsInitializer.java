@@ -31,9 +31,9 @@ import java.util.Arrays;
 final class Html4EscapeSymbolsInitializer {
 
 
-    static EscapeSymbols initializeHtml4() {
+    static MarkupEscapeSymbols initializeHtml4() {
 
-        final EscapeSymbols.References html4References = new EscapeSymbols.References();
+        final MarkupEscapeSymbols.References html4References = new MarkupEscapeSymbols.References();
 
         /*
          * -----------------------------------------------------------
@@ -340,7 +340,7 @@ final class Html4EscapeSymbolsInitializer {
         escapeLevels[0x7f + 1] = 2;
 
 
-        return new EscapeSymbols(html4References, escapeLevels);
+        return new MarkupEscapeSymbols(html4References, escapeLevels);
 
     }
 

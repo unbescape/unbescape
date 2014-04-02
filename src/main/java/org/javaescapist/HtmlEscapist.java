@@ -125,7 +125,7 @@ public final class HtmlEscapist {
             (type.equals(HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL) ||
                  type.equals(HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA));
 
-        final EscapeSymbols symbols = (html5? EscapeSymbols.HTML5_SYMBOLS : EscapeSymbols.HTML4_SYMBOLS);
+        final MarkupEscapeSymbols symbols = (html5? MarkupEscapeSymbols.HTML5_SYMBOLS : MarkupEscapeSymbols.HTML4_SYMBOLS);
 
         return MarkupEscapist.escape(
                 symbols, text, context.getEscapeLevel(), type.getMarkupEscapeType());
@@ -177,7 +177,7 @@ public final class HtmlEscapist {
         }
 
         MarkupEscapist.escape(
-                EscapeSymbols.HTML4_SYMBOLS, text, offset, len, writer,
+                MarkupEscapeSymbols.HTML4_SYMBOLS, text, offset, len, writer,
                 context.getEscapeLevel(), type.getMarkupEscapeType());
 
     }

@@ -85,7 +85,7 @@ final class MarkupEscapist {
 
 
 
-    static String escape(final EscapeSymbols symbols, final String text, final int level,
+    static String escape(final MarkupEscapeSymbols symbols, final String text, final int level,
                          final MarkupEscapeType markupEscapeType) {
 
         if (markupEscapeType == null) {
@@ -245,7 +245,9 @@ final class MarkupEscapist {
 
 
 
-    static void escape(final EscapeSymbols symbols,
+
+
+    static void escape(final MarkupEscapeSymbols symbols,
                 final char[] text, final int offset, final int len, final Writer writer,
                 final int level, final MarkupEscapeType markupEscapeType)
                 throws IOException {
@@ -270,14 +272,140 @@ final class MarkupEscapist {
 
         if (text == null || text.length == 0) {
             return;
+        }
+
+        final boolean useNCRs =
+                (MarkupEscapeType.NAMED_REFERENCES_DEFAULT_TO_DECIMAL.equals(markupEscapeType) ||
+                        MarkupEscapeType.NAMED_REFERENCES_DEFAULT_TO_HEXA.equals(markupEscapeType));
+        final boolean useHexa =
+                (MarkupEscapeType.NAMED_REFERENCES_DEFAULT_TO_HEXA.equals(markupEscapeType) ||
+                        MarkupEscapeType.HEXADECIMAL_REFERENCES.equals(markupEscapeType));
+
+        final int max = (offset + len);
+
+        int readOffset = offset;
+
+        for (int i = offset; i < max; i++) {
+
+            final char c = text[i];
+
+
+            /*
+             * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
+             * all for them
+             */
+            if (c <= symbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[c]) {
+                continue;
+            }
+
+
+            /*
+             * Shortcut: we might not want to escape non-ASCII chars at all either.
+             */
+            if (c > symbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[symbols.MAX_ASCII_CHAR + 1]) {
+                continue;
+            }
+
+
+            /*
+             * Compute the codepoint. This will be used instead of the char for the rest of the process.
+             */
+
+            final int codepoint;
+            if (c < Character.MIN_HIGH_SURROGATE) { // shortcut: U+D800 is the lower limit of high-surrogate chars.
+                codepoint = (int) c;
+            } else if (Character.isHighSurrogate(c) && (i + 1) < max) {
+                final char c1 = text[i + 1];
+                if (Character.isLowSurrogate(c1)) {
+                    codepoint = Character.toCodePoint(c, c1);
+                } else {
+                    codepoint = (int) c;
+                }
+            } else { // just a normal, single-char, high-valued codepoint.
+                codepoint = (int) c;
+            }
+
+
+            /*
+             * At this point we know for sure we will need some kind of escaping, so we
+             * can write all the contents pending up to this point.
+             */
+
+            if (i - readOffset > 0) {
+                writer.write(text, readOffset, (i - readOffset));
+            }
+
+            if (Character.charCount(codepoint) > 1) {
+                // This is to compensate that we are actually escaping two char[] positions with a single codepoint.
+                i++;
+            }
+
+            readOffset = i + 1;
+
+
+            /*
+             * -----------------------------------------------------------------------------------------
+             *
+             * Peform the real escaping, attending the different combinations of NCR, DCR and HCR needs.
+             *
+             * -----------------------------------------------------------------------------------------
+             */
+
+            if (useNCRs) {
+                // We will try to use an NCR
+
+                if (codepoint < symbols.NCRS_BY_CODEPOINT_LEN) {
+                    // codepoint < 0x2fff - all HTML4, most HTML5
+
+                    final short ncrIndex = symbols.NCRS_BY_CODEPOINT[codepoint];
+                    if (ncrIndex != symbols.NO_NCR) {
+                        // There is an NCR for this codepoint!
+                        writer.write(symbols.SORTED_NCRS[ncrIndex]);
+                        continue;
+                    } // else, just let it exit the block and let decimal/hexa escaping do its job
+
+                } else if (symbols.NCRS_BY_CODEPOINT_OVERFLOW != null) {
+                    // codepoint >= 0x2fff. NCR, if exists, will live at the overflow map (if there is one).
+
+                    final Short ncrIndex = symbols.NCRS_BY_CODEPOINT_OVERFLOW.get(Integer.valueOf(codepoint));
+                    if (ncrIndex != null) {
+                        writer.write(symbols.SORTED_NCRS[ncrIndex.shortValue()]);
+                        continue;
+                    } // else, just let it exit the block and let decimal/hexa escaping do its job
+
+                }
+
+            }
+
+            /*
+             * No NCR-escaping was possible (or allowed), so we need decimal/hexa escaping.
+             */
+
+            if (useHexa) {
+                writer.write(REFERENCE_HEXA_PREFIX);
+                writer.write(Integer.toHexString(codepoint));
+            } else {
+                writer.write(REFERENCE_DECIMAL_PREFIX);
+                writer.write(String.valueOf(codepoint));
+            }
+            writer.write(REFERENCE_SUFFIX);
 
         }
 
 
-        // TODO Fill with code from String version, once it is finished
+        /*
+         * -----------------------------------------------------------------------------------------------
+         * Final cleaning: append the remaining unescaped text to the writer and return.
+         * -----------------------------------------------------------------------------------------------
+         */
 
+        if (max - readOffset > 0) {
+            writer.write(text, readOffset, (max - readOffset));
+        }
 
     }
+
+
 
 
 
@@ -324,10 +452,11 @@ final class MarkupEscapist {
 
 
     /*
-     * This method is used instead of Integer.parseInt(str,radix) in order to avoid the need
+     * This methods (the two versions) are used instead of Integer.parseInt(str,radix) in order to avoid the need
      * to create substrings of the text being unescaped to feed such method.
      * -  No need to check all chars are within the radix limits - reference parsing code will already have done so.
      */
+
     static int parseIntFromReference(final String text, final int start, final int end, final int radix) {
         int result = 0;
         for (int i = start; i < end; i++) {
@@ -344,6 +473,24 @@ final class MarkupEscapist {
         return result;
     }
 
+    static int parseIntFromReference(final char[] text, final int start, final int end, final int radix) {
+        int result = 0;
+        for (int i = start; i < end; i++) {
+            final char c = text[i];
+            int n = -1;
+            for (int j = 0; j < HEXA_CHARS_UPPER.length; j++) {
+                if (c == HEXA_CHARS_UPPER[j] || c == HEXA_CHARS_LOWER[j]) {
+                    n = j;
+                    break;
+                }
+            }
+            result = (radix * result) + n;
+        }
+        return result;
+    }
+
+
+
 
 
     /*
@@ -355,7 +502,7 @@ final class MarkupEscapist {
             return text;
         }
 
-        final EscapeSymbols symbols = EscapeSymbols.HTML5_SYMBOLS;
+        final MarkupEscapeSymbols symbols = MarkupEscapeSymbols.HTML5_SYMBOLS;
         StringBuilder strBuilder = null;
 
         final int offset = 0;
@@ -484,7 +631,7 @@ final class MarkupEscapist {
                         f++;
                     }
 
-                    final int ncrPosition = EscapeSymbols.binarySearch(symbols.SORTED_NCRS, text, i, f);
+                    final int ncrPosition = MarkupEscapeSymbols.binarySearch(symbols.SORTED_NCRS, text, i, f);
                     if (ncrPosition >= 0) {
                         codepoint = symbols.SORTED_CODEPOINTS[ncrPosition];
                     } else if (ncrPosition == Integer.MIN_VALUE) {
@@ -571,6 +718,226 @@ final class MarkupEscapist {
         }
 
         return strBuilder.toString();
+
+    }
+
+
+
+
+
+
+    /*
+     * See: http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
+     */
+    static void unescape(final char[] text, final int offset, final int len, final Writer writer)
+                         throws IOException {
+
+        if (text == null) {
+            return;
+        }
+
+        final MarkupEscapeSymbols symbols = MarkupEscapeSymbols.HTML5_SYMBOLS;
+
+        final int max = (offset + len);
+
+        int readOffset = offset;
+        int referenceOffset = offset;
+
+        for (int i = offset; i < max; i++) {
+
+            final char c = text[i];
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if (c != REFERENCE_PREFIX || (i + 1) >= max) {
+                continue;
+            }
+
+            int codepoint = 0;
+
+            if (c == REFERENCE_PREFIX) {
+
+                final char c1 = text[i + 1];
+
+                if (c1 == '\u0020' || // SPACE
+                        c1 == '\n' ||     // LF
+                        c1 == '\u0009' || // TAB
+                        c1 == '\u000C' || // FF
+                        c1 == '\u003C' || // LES-THAN SIGN
+                        c1 == '\u0026') { // AMPERSAND
+                    // Not a character references. No characters are consumed, and nothing is returned.
+                    continue;
+
+                } else if (c1 == REFERENCE_NUMERIC_PREFIX2) {
+
+                    if (i + 2 >= max) {
+                        // No reference possible
+                        continue;
+                    }
+
+                    final char c2 = text[i + 2];
+
+                    if ((c2 == REFERENCE_HEXA_PREFIX3_LOWER || c2 == REFERENCE_HEXA_PREFIX3_UPPER) && (i + 3) < max) {
+                        // This is a hexadecimal reference
+
+                        int f = i + 3;
+                        while (f < max) {
+                            final char cf = text[f];
+                            if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
+                                break;
+                            }
+                            f++;
+                        }
+
+                        if ((f - (i + 3)) <= 0) {
+                            // We weren't able to consume any hexa chars
+                            continue;
+                        }
+
+                        codepoint = parseIntFromReference(text, i + 3, f, 16);
+                        referenceOffset = f - 1;
+
+                        if ((f < max) && text[f] == REFERENCE_SUFFIX) {
+                            referenceOffset++;
+                        }
+
+                        codepoint = translateIllFormedCodepoint(codepoint);
+
+                        // Don't continue here, just let the unescaping code below do its job
+
+                    } else if (c2 >= '0' && c2 <= '9') {
+                        // This is a decimal reference
+
+                        int f = i + 2;
+                        while (f < max) {
+                            final char cf = text[f];
+                            if (!(cf >= '0' && cf <= '9')) {
+                                break;
+                            }
+                            f++;
+                        }
+
+                        if ((f - (i + 2)) <= 0) {
+                            // We weren't able to consume any decimal chars
+                            continue;
+                        }
+
+                        codepoint = parseIntFromReference(text, i + 2, f, 10);
+                        referenceOffset = f - 1;
+
+                        if ((f < max) && text[f] == REFERENCE_SUFFIX) {
+                            referenceOffset++;
+                        }
+
+                        codepoint = translateIllFormedCodepoint(codepoint);
+
+                        // Don't continue here, just let the unescaping code below do its job
+
+                    } else {
+                        // This is not a valid reference, just discard
+                        continue;
+                    }
+
+
+                } else {
+
+                    // This is a named reference, must be comprised only of ALPHABETIC chars
+
+                    int f = i + 1;
+                    while (f < max) {
+                        final char cf = text[f];
+                        if (!((cf >= 'a' && cf <= 'z') || (cf >= 'A' && cf <= 'Z') || (cf >= '0' && cf <= '9'))) {
+                            break;
+                        }
+                        f++;
+                    }
+
+                    if ((f - (i + 1)) <= 0) {
+                        // We weren't able to consume any alphanumeric
+                        continue;
+                    }
+
+                    if ((f < max) && text[f] == REFERENCE_SUFFIX) {
+                        f++;
+                    }
+
+                    final int ncrPosition = MarkupEscapeSymbols.binarySearch(symbols.SORTED_NCRS, text, i, f);
+                    if (ncrPosition >= 0) {
+                        codepoint = symbols.SORTED_CODEPOINTS[ncrPosition];
+                    } else if (ncrPosition == Integer.MIN_VALUE) {
+                        // Not found! Just ignore our efforts to find a match.
+                        continue;
+                    } else if (ncrPosition < -10) {
+                        // Found but partial!
+                        final int partialIndex = (-1) * (ncrPosition + 10);
+                        final char[] partialMatch = symbols.SORTED_NCRS[partialIndex];
+                        codepoint = symbols.SORTED_CODEPOINTS[partialIndex];
+                        f -= ((f - i) - partialMatch.length); // un-consume the chars remaining from the partial match
+                    } else {
+                        // Should never happen!
+                        throw new RuntimeException("Invalid unescaping codepoint after search: " + ncrPosition);
+                    }
+
+                    referenceOffset = f - 1;
+
+                }
+
+            }
+
+
+            /*
+             * At this point we know for sure we will need some kind of unescaping, so we
+             * write all the contents pending up to this point.
+             */
+
+            if (i - readOffset > 0) {
+                writer.write(text, readOffset, (i - readOffset));
+            }
+
+            i = referenceOffset;
+            readOffset = i + 1;
+
+            /*
+             * --------------------------
+             *
+             * Peform the real unescaping
+             *
+             * --------------------------
+             */
+
+            if (codepoint > '\uFFFF') {
+                writer.write(Character.toChars(codepoint));
+            } else if (codepoint < 0) {
+                // This is a double-codepoint unescaping operation
+                final int[] codepoints = symbols.DOUBLE_CODEPOINTS[((-1) * codepoint) - 1];
+                if (codepoints[0] > '\uFFFF') {
+                    writer.write(Character.toChars(codepoints[0]));
+                } else {
+                    writer.write((char) codepoints[0]);
+                }
+                if (codepoints[1] > '\uFFFF') {
+                    writer.write(Character.toChars(codepoints[1]));
+                } else {
+                    writer.write((char) codepoints[1]);
+                }
+            } else {
+                writer.write((char) codepoint);
+            }
+
+        }
+
+
+        /*
+         * -----------------------------------------------------------------------------------------------
+         * Final cleaning: writer the remaining escaped text and return.
+         * -----------------------------------------------------------------------------------------------
+         */
+
+        if (max - readOffset > 0) {
+            writer.write(text, readOffset, (max - readOffset));
+        }
 
     }
 

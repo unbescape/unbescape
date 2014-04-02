@@ -28,13 +28,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * <p>
+ *   Instances of this class group all the complex data structures needed to support full escaping and unescaping
+ *   operations of markup.
+ * </p>
+ * <p>
+ *   Most of the fields in objects of this class are package-accessible, as the class itself is, in order to allow
+ *   them (the fields) to be directly accessed from the classes doing the real escaping/unescaping (basically,
+ *   the {@link org.javaescapist.MarkupEscapist} class.
+ * </p>
  * 
  * @author Daniel Fern&aacute;ndez
  * 
  * @since 1.0
  *
  */
-final class EscapeSymbols {
+final class MarkupEscapeSymbols {
 
 
     /*
@@ -97,7 +106,7 @@ final class EscapeSymbols {
      * a level for the rest of non-ASCII characters.
      * - These levels are used to configure how (and if) escape operations should ignore ASCII or non-ASCII
      *   characters, or escape them somehow if required.
-     * - Each EscapeSymbols structure will define a different set of levels for ASCII chars, according to their needs.
+     * - Each MarkupEscapeSymbols structure will define a different set of levels for ASCII chars, according to their needs.
      * - Position 0x7f + 1 represents all the non-ASCII characters. The specified value will determine whether
      *   all non-ASCII characters have to be escaped or not.
      */
@@ -149,11 +158,11 @@ final class EscapeSymbols {
 
 
     /*
-     * Constants holding the definition of all the EscapeSymbols for HTML4 and HTML5, to be used in escape and
+     * Constants holding the definition of all the MarkupEscapeSymbols for HTML4 and HTML5, to be used in escape and
      * unescape operations.
      */
-    static final EscapeSymbols HTML4_SYMBOLS;
-    static final EscapeSymbols HTML5_SYMBOLS;
+    static final MarkupEscapeSymbols HTML4_SYMBOLS;
+    static final MarkupEscapeSymbols HTML5_SYMBOLS;
 
 
 
@@ -169,8 +178,11 @@ final class EscapeSymbols {
 
 
 
-
-    EscapeSymbols(final References references, final byte[] escapeLevels) {
+    /*
+     * Create a new MarkupEscapeSymbols structure. This will initialize all the structures needed to cover the
+     * specified references and escape levels, including sorted arrays, overflow maps, etc.
+     */
+    MarkupEscapeSymbols(final References references, final byte[] escapeLevels) {
 
         super();
 
@@ -298,7 +310,12 @@ final class EscapeSymbols {
     }
 
 
-
+    /*
+     * Utility method, used for determining which of the different NCRs for the same
+     * codepoint (when there are many) was specified first, because that is the one
+     * we should be using for escaping.
+     * (Note all of the NCRs will be available for unescaping, obviously)
+     */
     private static int positionInList(final List<char[]> list, final char[] element) {
         int i = 0;
         for (final char[] e : list) {
@@ -312,6 +329,19 @@ final class EscapeSymbols {
 
 
 
+
+    /*
+     * These two methods (two versions: for String and for char[]) compare each of the candidate
+     * text fragments with an NCR coming from the SORTED_NCRs array, during binary search operations.
+     *
+     * Note these methods not only perform a normal comparison (returning -1, 0 or 1), but will also
+     * return a negative number < -10 when a partial match is possible, this is, when the specified text
+     * fragment contains a complete NCR at its first chars but contains more chars afterwards. This is
+     * useful for matching HTML5 NCRs which do not end in ; (like '&aacute'), which will come in bigger fragments
+     * because the unescaping method will have no way of differentiating the chars after the NCR from chars that
+     * could be in fact part of the NCR. Also note that, in the case of a partial match, (-1) * (returnValue + 10)
+     * will specify the number of matched chars.
+     */
 
     private static int compare(final char[] ncr, final String text, final int start, final int end) {
         final int textLen = end - start;
@@ -336,10 +366,85 @@ final class EscapeSymbols {
         return 0;
     }
 
+    private static int compare(final char[] ncr, final char[] text, final int start, final int end) {
+        final int textLen = end - start;
+        final int maxCommon = Math.min(ncr.length, textLen);
+        int i;
+        // char 0 is discarded, will be & in both cases
+        for (i = 1; i < maxCommon; i++) {
+            final char tc = text[start + i];
+            if (ncr[i] < tc) {
+                return -1;
+            } else if (ncr[i] > tc) {
+                return 1;
+            }
+        }
+        if (ncr.length > i) {
+            return 1;
+        }
+        if (textLen > i) {
+            // We have a partial match. Can be an NCR not finishing in a semicolon
+            return - ((textLen - i) + 10);
+        }
+        return 0;
+    }
 
+
+
+    /*
+     * These two methods (two versions: for String and for char[]) are used during unescaping at the
+     * {@link MarkupEscapist} class in order to quickly find the NCR corresponding to a preselected fragment
+     * of text (if there is such NCR).
+     *
+     * Note this operation supports partial matching (based on the above 'compare(...)' methods). That way,
+     * if an exact match is not found but a partial match exists, the partial match will be returned.
+     */
 
     static int binarySearch(final char[][] values,
                             final String text, final int start, final int end) {
+
+        int low = 0;
+        int high = values.length - 1;
+
+        int partialIndex = Integer.MIN_VALUE;
+        int partialValue = Integer.MIN_VALUE;
+
+        while (low <= high) {
+
+            final int mid = (low + high) >>> 1;
+            final char[] midVal = values[mid];
+
+            final int cmp = compare(midVal, text, start, end);
+
+            if (cmp == -1) {
+                low = mid + 1;
+            } else if (cmp == 1) {
+                high = mid - 1;
+            } else if (cmp < -10) {
+                // Partial match
+                low = mid + 1;
+                if (partialIndex == Integer.MIN_VALUE || partialValue < cmp) {
+                    partialIndex = mid;
+                    partialValue = cmp; // partial will always be negative, and -10. We look for the smallest partial
+                }
+            } else {
+                // Found!!
+                return mid;
+            }
+
+        }
+
+        if (partialIndex != Integer.MIN_VALUE) {
+            // We have a partial result. We return the closest result index as negative + (-10)
+            return (-1) * (partialIndex + 10);
+        }
+
+        return Integer.MIN_VALUE; // Not found!
+
+    }
+
+    static int binarySearch(final char[][] values,
+                            final char[] text, final int start, final int end) {
 
         int low = 0;
         int high = values.length - 1;
@@ -386,6 +491,11 @@ final class EscapeSymbols {
 
 
 
+    /*
+     * Inner utility classes that model the named character references to be included in an initialized
+     * instance of the MarkupEscapeSymbols class.
+     */
+
 
     static final class References {
 
@@ -404,7 +514,6 @@ final class EscapeSymbols {
         }
 
     }
-
 
 
     private static final class Reference {
