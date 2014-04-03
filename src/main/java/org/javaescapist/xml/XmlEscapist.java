@@ -17,7 +17,7 @@
  * 
  * =============================================================================
  */
-package org.javaescapist;
+package org.javaescapist.xml;
 
 import java.util.ArrayList;
 import java.util.Arrays;

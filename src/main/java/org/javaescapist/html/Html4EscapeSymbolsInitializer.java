@@ -17,7 +17,7 @@
  * 
  * =============================================================================
  */
-package org.javaescapist;
+package org.javaescapist.html;
 
 import java.util.Arrays;
 
@@ -31,9 +31,9 @@ import java.util.Arrays;
 final class Html4EscapeSymbolsInitializer {
 
 
-    static MarkupEscapeSymbols initializeHtml4() {
+    static HtmlEscapeSymbols initializeHtml4() {
 
-        final MarkupEscapeSymbols.References html4References = new MarkupEscapeSymbols.References();
+        final HtmlEscapeSymbols.References html4References = new HtmlEscapeSymbols.References();
 
         /*
          * -----------------------------------------------------------
@@ -340,7 +340,7 @@ final class Html4EscapeSymbolsInitializer {
         escapeLevels[0x7f + 1] = 2;
 
 
-        return new MarkupEscapeSymbols(html4References, escapeLevels);
+        return new HtmlEscapeSymbols(html4References, escapeLevels);
 
     }
 

@@ -17,7 +17,7 @@
  * 
  * =============================================================================
  */
-package org.javaescapist;
+package org.javaescapist.html;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,12 +30,12 @@ import java.util.Map;
 /**
  * <p>
  *   Instances of this class group all the complex data structures needed to support full escaping and unescaping
- *   operations of markup.
+ *   operations of HTML.
  * </p>
  * <p>
  *   Most of the fields in objects of this class are package-accessible, as the class itself is, in order to allow
  *   them (the fields) to be directly accessed from the classes doing the real escaping/unescaping (basically,
- *   the {@link org.javaescapist.MarkupEscapist} class.
+ *   the {@link HtmlEscapeUtil} class.
  * </p>
  * 
  * @author Daniel Fern&aacute;ndez
@@ -43,7 +43,7 @@ import java.util.Map;
  * @since 1.0
  *
  */
-final class MarkupEscapeSymbols {
+final class HtmlEscapeSymbols {
 
 
     /*
@@ -106,7 +106,7 @@ final class MarkupEscapeSymbols {
      * a level for the rest of non-ASCII characters.
      * - These levels are used to configure how (and if) escape operations should ignore ASCII or non-ASCII
      *   characters, or escape them somehow if required.
-     * - Each MarkupEscapeSymbols structure will define a different set of levels for ASCII chars, according to their needs.
+     * - Each HtmlEscapeSymbols structure will define a different set of levels for ASCII chars, according to their needs.
      * - Position 0x7f + 1 represents all the non-ASCII characters. The specified value will determine whether
      *   all non-ASCII characters have to be escaped or not.
      */
@@ -158,11 +158,11 @@ final class MarkupEscapeSymbols {
 
 
     /*
-     * Constants holding the definition of all the MarkupEscapeSymbols for HTML4 and HTML5, to be used in escape and
+     * Constants holding the definition of all the HtmlEscapeSymbols for HTML4 and HTML5, to be used in escape and
      * unescape operations.
      */
-    static final MarkupEscapeSymbols HTML4_SYMBOLS;
-    static final MarkupEscapeSymbols HTML5_SYMBOLS;
+    static final HtmlEscapeSymbols HTML4_SYMBOLS;
+    static final HtmlEscapeSymbols HTML5_SYMBOLS;
 
 
 
@@ -179,10 +179,10 @@ final class MarkupEscapeSymbols {
 
 
     /*
-     * Create a new MarkupEscapeSymbols structure. This will initialize all the structures needed to cover the
+     * Create a new HtmlEscapeSymbols structure. This will initialize all the structures needed to cover the
      * specified references and escape levels, including sorted arrays, overflow maps, etc.
      */
-    MarkupEscapeSymbols(final References references, final byte[] escapeLevels) {
+    HtmlEscapeSymbols(final References references, final byte[] escapeLevels) {
 
         super();
 
@@ -393,7 +393,7 @@ final class MarkupEscapeSymbols {
 
     /*
      * These two methods (two versions: for String and for char[]) are used during unescaping at the
-     * {@link MarkupEscapist} class in order to quickly find the NCR corresponding to a preselected fragment
+     * {@link HtmlEscapeUtil} class in order to quickly find the NCR corresponding to a preselected fragment
      * of text (if there is such NCR).
      *
      * Note this operation supports partial matching (based on the above 'compare(...)' methods). That way,
@@ -493,7 +493,7 @@ final class MarkupEscapeSymbols {
 
     /*
      * Inner utility classes that model the named character references to be included in an initialized
-     * instance of the MarkupEscapeSymbols class.
+     * instance of the HtmlEscapeSymbols class.
      */
 
 

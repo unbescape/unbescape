@@ -17,7 +17,7 @@
  * 
  * =============================================================================
  */
-package org.javaescapist;
+package org.javaescapist.html;
 
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -111,13 +111,13 @@ public class Html5Entities {
                 Collections.sort(referencesForCodepoints, new Comparator<String>() {
                     public int compare(final String o1, final String o2) {
                         final int o1Search4 =
-                                Arrays.binarySearch(MarkupEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o1.toCharArray(), new Comparator<char[]>() {
+                                Arrays.binarySearch(HtmlEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o1.toCharArray(), new Comparator<char[]>() {
                                     public int compare(final char[] o1, final char[] o2) {
                                         return new String(o1).compareTo(new String(o2));
                                     }
                                 });
                         final int o2Search4 =
-                                Arrays.binarySearch(MarkupEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o2.toCharArray(), new Comparator<char[]>() {
+                                Arrays.binarySearch(HtmlEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o2.toCharArray(), new Comparator<char[]>() {
                                     public int compare(final char[] o1, final char[] o2) {
                                         return new String(o1).compareTo(new String(o2));
                                     }
@@ -161,13 +161,13 @@ public class Html5Entities {
                 Collections.sort(referencesForCodepoints, new Comparator<String>() {
                     public int compare(final String o1, final String o2) {
                         final int o1Search4 =
-                                Arrays.binarySearch(MarkupEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o1.toCharArray(), new Comparator<char[]>() {
+                                Arrays.binarySearch(HtmlEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o1.toCharArray(), new Comparator<char[]>() {
                                     public int compare(final char[] o1, final char[] o2) {
                                         return new String(o1).compareTo(new String(o2));
                                     }
                                 });
                         final int o2Search4 =
-                                Arrays.binarySearch(MarkupEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o2.toCharArray(), new Comparator<char[]>() {
+                                Arrays.binarySearch(HtmlEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o2.toCharArray(), new Comparator<char[]>() {
                                     public int compare(final char[] o1, final char[] o2) {
                                         return new String(o1).compareTo(new String(o2));
                                     }
@@ -213,13 +213,13 @@ public class Html5Entities {
                 Collections.sort(referencesForCodepoints, new Comparator<String>() {
                     public int compare(final String o1, final String o2) {
                         final int o1Search4 =
-                                Arrays.binarySearch(MarkupEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o1.toCharArray(), new Comparator<char[]>() {
+                                Arrays.binarySearch(HtmlEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o1.toCharArray(), new Comparator<char[]>() {
                                     public int compare(final char[] o1, final char[] o2) {
                                         return new String(o1).compareTo(new String(o2));
                                     }
                                 });
                         final int o2Search4 =
-                                Arrays.binarySearch(MarkupEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o2.toCharArray(), new Comparator<char[]>() {
+                                Arrays.binarySearch(HtmlEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS, o2.toCharArray(), new Comparator<char[]>() {
                                     public int compare(final char[] o1, final char[] o2) {
                                         return new String(o1).compareTo(new String(o2));
                                     }
@@ -264,8 +264,8 @@ public class Html5Entities {
         System.out.println("HTML4");
         System.out.println("-----");
         for (int i = 0; i <= 0x7f; i++) {
-            if (MarkupEscapeSymbols.HTML4_SYMBOLS.NCRS_BY_CODEPOINT[i] != MarkupEscapeSymbols.HTML4_SYMBOLS.NO_NCR) {
-                System.out.println(String.format("%5d ", Integer.valueOf(i)) + new String(MarkupEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS[MarkupEscapeSymbols.HTML4_SYMBOLS.NCRS_BY_CODEPOINT[i]]));
+            if (HtmlEscapeSymbols.HTML4_SYMBOLS.NCRS_BY_CODEPOINT[i] != HtmlEscapeSymbols.HTML4_SYMBOLS.NO_NCR) {
+                System.out.println(String.format("%5d ", Integer.valueOf(i)) + new String(HtmlEscapeSymbols.HTML4_SYMBOLS.SORTED_NCRS[HtmlEscapeSymbols.HTML4_SYMBOLS.NCRS_BY_CODEPOINT[i]]));
             }
         }
 
@@ -274,8 +274,8 @@ public class Html5Entities {
         System.out.println("HTML5");
         System.out.println("-----");
         for (int i = 0; i <= 0x7f; i++) {
-            if (MarkupEscapeSymbols.HTML5_SYMBOLS.NCRS_BY_CODEPOINT[i] != MarkupEscapeSymbols.HTML5_SYMBOLS.NO_NCR) {
-                System.out.println(String.format("%5d ", Integer.valueOf(i)) + new String(MarkupEscapeSymbols.HTML5_SYMBOLS.SORTED_NCRS[MarkupEscapeSymbols.HTML5_SYMBOLS.NCRS_BY_CODEPOINT[i]]));
+            if (HtmlEscapeSymbols.HTML5_SYMBOLS.NCRS_BY_CODEPOINT[i] != HtmlEscapeSymbols.HTML5_SYMBOLS.NO_NCR) {
+                System.out.println(String.format("%5d ", Integer.valueOf(i)) + new String(HtmlEscapeSymbols.HTML5_SYMBOLS.SORTED_NCRS[HtmlEscapeSymbols.HTML5_SYMBOLS.NCRS_BY_CODEPOINT[i]]));
             } else {
                 System.out.println(String.format("%5d ", Integer.valueOf(i)) + (char)i);
             }

@@ -17,10 +17,7 @@
  * 
  * =============================================================================
  */
-package org.javaescapist;
-
-import java.util.Calendar;
-import java.util.TimeZone;
+package org.javaescapist.html;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.owasp.esapi.codecs.HTMLEntityCodec;
@@ -64,8 +61,8 @@ public class SMPTest {
                 "z&#xE1;&#x159;&#xED; a &#x159;&#xED;jna.";
 
         final String czechTextUnescaped = HtmlEscapist.unescapeHtml(czechTextOrig);
-        final String czechText2Escaped = HtmlEscapist.escapeHtml(czechTextOrig, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
-        final String czechTextEscaped = HtmlEscapist.escapeHtml(czechTextUnescaped, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
+        final String czechText2Escaped = HtmlEscapist.escapeHtml(czechTextOrig, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
+        final String czechTextEscaped = HtmlEscapist.escapeHtml(czechTextUnescaped, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
 
         System.out.println(czechTextUnescaped);
         System.out.println(czechTextEscaped);
@@ -79,7 +76,7 @@ public class SMPTest {
         System.out.println(s1);
         final String s2 = StringEscapeUtils.unescapeHtml4(s1);
         System.out.println("UNESCAPED:         " + s2 + " -> " + asHexCharString(s2));
-        final String s3 = HtmlEscapist.escapeHtml(s2, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
+        final String s3 = HtmlEscapist.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
         System.out.println("JAVAESCAPIST:      " + s3);
         final String s4 = StringEscapeUtils.escapeHtml4(s2);
         System.out.println("STRINGESCAPEUTILS: " + s4);
@@ -99,7 +96,7 @@ public class SMPTest {
 
         // Warmup
         for (int i = 0; i < 100; i++) {
-            final String result1 = HtmlEscapist.escapeHtml(testMsg, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
+            final String result1 = HtmlEscapist.escapeHtml(testMsg, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
             final String result2 = StringEscapeUtils.escapeHtml4(testMsg);
             final String result3 = HtmlUtils.htmlEscape(testMsg);
             final String result4 = htmlEntityCodec.encode(immune, testMsg);
@@ -107,7 +104,7 @@ public class SMPTest {
 
         final long jstart = System.nanoTime();
         for (int i = 0; i < execs; i++) {
-            final String result = HtmlEscapist.escapeHtml(testMsg, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
+            final String result = HtmlEscapist.escapeHtml(testMsg, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
         }
         final long jfinish = System.nanoTime();
 
@@ -136,9 +133,9 @@ public class SMPTest {
 
 
         System.out.println("UNESCAPE: " + HtmlEscapist.unescapeHtml(
-                HtmlEscapist.escapeHtml(s2, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA)));
+                HtmlEscapist.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA)));
         System.out.println("UNESCAPE: " + HtmlEscapist.unescapeHtml(
-                HtmlEscapist.escapeHtml(s2, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL)));
+                HtmlEscapist.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL)));
         System.out.println("UNESCAPE: " + HtmlEscapist.unescapeHtml("&euro; - &#x20aC; - &#8364; - &#x80; - &#128; - &#x80gs - &#128as"));
 
 //        final String testUnescMsg = HtmlEscapist.escapeHtml(s2, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);

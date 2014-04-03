@@ -17,7 +17,7 @@
  * 
  * =============================================================================
  */
-package org.javaescapist;
+package org.javaescapist.html;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -29,17 +29,10 @@ import java.io.Writer;
  * @since 1.0
  *
  */
-final class MarkupEscapist {
+final class HtmlEscapeUtil {
 
 
-    static enum MarkupEscapeType {
-        NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
-        NAMED_REFERENCES_DEFAULT_TO_HEXA,
-        DECIMAL_REFERENCES,
-        HEXADECIMAL_REFERENCES
-    }
-
-
+    
     /*
      * GLOSSARY
      * ------------------------
@@ -76,7 +69,7 @@ final class MarkupEscapist {
 
 
 
-    private MarkupEscapist() {
+    private HtmlEscapeUtil() {
         super();
     }
 
@@ -84,24 +77,22 @@ final class MarkupEscapist {
 
 
 
-
-    static String escape(final MarkupEscapeSymbols symbols, final String text, final int level,
-                         final MarkupEscapeType markupEscapeType) {
-
-        if (markupEscapeType == null) {
-            throw new IllegalArgumentException("Argument 'markupEscapeType' cannot be null");
-        }
+    /*
+     * Perform an escape operation, based on String, according to the specified level and type.
+     */
+    static String escape(final String text, final HtmlEscapeType escapeType, final HtmlEscapeLevel escapeLevel) {
 
         if (text == null) {
             return null;
         }
 
-        final boolean useNCRs =
-                (MarkupEscapeType.NAMED_REFERENCES_DEFAULT_TO_DECIMAL.equals(markupEscapeType) ||
-                 MarkupEscapeType.NAMED_REFERENCES_DEFAULT_TO_HEXA.equals(markupEscapeType));
-        final boolean useHexa =
-                (MarkupEscapeType.NAMED_REFERENCES_DEFAULT_TO_HEXA.equals(markupEscapeType) ||
-                 MarkupEscapeType.HEXADECIMAL_REFERENCES.equals(markupEscapeType));
+        final int level = escapeLevel.getEscapeLevel();
+        final boolean useHtml5 = escapeType.getUseHtml5();
+        final boolean useNCRs = escapeType.getUseNCRs();
+        final boolean useHexa = escapeType.getUseHexa();
+
+        final HtmlEscapeSymbols symbols =
+                (useHtml5? HtmlEscapeSymbols.HTML5_SYMBOLS : HtmlEscapeSymbols.HTML4_SYMBOLS);
 
         StringBuilder strBuilder = null;
 
@@ -246,40 +237,24 @@ final class MarkupEscapist {
 
 
 
-
-    static void escape(final MarkupEscapeSymbols symbols,
-                final char[] text, final int offset, final int len, final Writer writer,
-                final int level, final MarkupEscapeType markupEscapeType)
-                throws IOException {
-
-        if (writer == null) {
-            throw new IllegalArgumentException("Argument 'writer' cannot be null");
-        }
-
-        if (markupEscapeType == null) {
-            throw new IllegalArgumentException("Argument 'markupEscapeType' cannot be null");
-        }
-
-        if (offset < 0 || offset > text.length) {
-            throw new IllegalArgumentException(
-                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + text.length);
-        }
-
-        if (len < 0 || (offset + len) > text.length) {
-            throw new IllegalArgumentException(
-                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + text.length);
-        }
+    /*
+     * Perform an escape operation, based on char[], according to the specified level and type.
+     */
+    static void escape(final char[] text, final int offset, final int len, final Writer writer,
+                       final HtmlEscapeType escapeType, final HtmlEscapeLevel escapeLevel)
+                       throws IOException {
 
         if (text == null || text.length == 0) {
             return;
         }
 
-        final boolean useNCRs =
-                (MarkupEscapeType.NAMED_REFERENCES_DEFAULT_TO_DECIMAL.equals(markupEscapeType) ||
-                        MarkupEscapeType.NAMED_REFERENCES_DEFAULT_TO_HEXA.equals(markupEscapeType));
-        final boolean useHexa =
-                (MarkupEscapeType.NAMED_REFERENCES_DEFAULT_TO_HEXA.equals(markupEscapeType) ||
-                        MarkupEscapeType.HEXADECIMAL_REFERENCES.equals(markupEscapeType));
+        final int level = escapeLevel.getEscapeLevel();
+        final boolean useHtml5 = escapeType.getUseHtml5();
+        final boolean useNCRs = escapeType.getUseNCRs();
+        final boolean useHexa = escapeType.getUseHexa();
+
+        final HtmlEscapeSymbols symbols =
+                (useHtml5? HtmlEscapeSymbols.HTML5_SYMBOLS : HtmlEscapeSymbols.HTML4_SYMBOLS);
 
         final int max = (offset + len);
 
@@ -493,8 +468,14 @@ final class MarkupEscapist {
 
 
 
+
+
+
+
     /*
-     * See: http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
+     * Perform an unescape operation based on String. Unescape operations are always based on the HTML5 symbol set.
+     * Unescaping operations will be performed in the most similar way possible to the process a browser follows for
+     * showing HTML5 escaped code. See: http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
      */
     static String unescape(final String text) {
 
@@ -502,7 +483,8 @@ final class MarkupEscapist {
             return text;
         }
 
-        final MarkupEscapeSymbols symbols = MarkupEscapeSymbols.HTML5_SYMBOLS;
+        // Unescaping will always cover the full HTML5 spectrum.
+        final HtmlEscapeSymbols symbols = HtmlEscapeSymbols.HTML5_SYMBOLS;
         StringBuilder strBuilder = null;
 
         final int offset = 0;
@@ -631,7 +613,7 @@ final class MarkupEscapist {
                         f++;
                     }
 
-                    final int ncrPosition = MarkupEscapeSymbols.binarySearch(symbols.SORTED_NCRS, text, i, f);
+                    final int ncrPosition = HtmlEscapeSymbols.binarySearch(symbols.SORTED_NCRS, text, i, f);
                     if (ncrPosition >= 0) {
                         codepoint = symbols.SORTED_CODEPOINTS[ncrPosition];
                     } else if (ncrPosition == Integer.MIN_VALUE) {
@@ -727,7 +709,9 @@ final class MarkupEscapist {
 
 
     /*
-     * See: http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
+     * Perform an unescape operation based on char[]. Unescape operations are always based on the HTML5 symbol set.
+     * Unescaping operations will be performed in the most similar way possible to the process a browser follows for
+     * showing HTML5 escaped code. See: http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
      */
     static void unescape(final char[] text, final int offset, final int len, final Writer writer)
                          throws IOException {
@@ -736,7 +720,7 @@ final class MarkupEscapist {
             return;
         }
 
-        final MarkupEscapeSymbols symbols = MarkupEscapeSymbols.HTML5_SYMBOLS;
+        final HtmlEscapeSymbols symbols = HtmlEscapeSymbols.HTML5_SYMBOLS;
 
         final int max = (offset + len);
 
@@ -863,7 +847,7 @@ final class MarkupEscapist {
                         f++;
                     }
 
-                    final int ncrPosition = MarkupEscapeSymbols.binarySearch(symbols.SORTED_NCRS, text, i, f);
+                    final int ncrPosition = HtmlEscapeSymbols.binarySearch(symbols.SORTED_NCRS, text, i, f);
                     if (ncrPosition >= 0) {
                         codepoint = symbols.SORTED_CODEPOINTS[ncrPosition];
                     } else if (ncrPosition == Integer.MIN_VALUE) {

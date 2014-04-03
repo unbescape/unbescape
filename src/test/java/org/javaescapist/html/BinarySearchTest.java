@@ -17,7 +17,7 @@
  * 
  * =============================================================================
  */
-package org.javaescapist;
+package org.javaescapist.html;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -93,7 +93,7 @@ public class BinarySearchTest {
 
 
     private static String search(int valuesIndex, final String text) {
-        final int result = MarkupEscapeSymbols.binarySearch(VALUES[valuesIndex], text, 0, text.length());
+        final int result = HtmlEscapeSymbols.binarySearch(VALUES[valuesIndex], text, 0, text.length());
         if (result == Integer.MIN_VALUE) {
             return NOT_FOUND;
         } else if (result < 0) {
