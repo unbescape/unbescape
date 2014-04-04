@@ -40,23 +40,23 @@ public class HtmlEscapistTest {
 
     public static void main(String[] args) throws Exception {
 
-        System.out.println(HtmlEscapist.escapeHtml("hello"));
-        System.out.println(HtmlEscapist.escapeHtml("hello how are you"));
-        System.out.println(HtmlEscapist.escapeHtml("I'm < 355, & you?"));
-        System.out.println(HtmlEscapist.escapeHtml("\u0163\"I'm < 355, & you\u00E1?\""));
-        System.out.println(HtmlEscapist.escapeHtml("[\u0163\u00E1aeiouABC0123\uD840\uDC00']\ud835\udccd", HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL));
-        System.out.println(HtmlEscapist.escapeHtml("[\u0163\u00E1aeiouABC0123\uD840\uDC00']\ud835\udccd", HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL));
+        System.out.println(HtmlEscape.escapeHtml("hello"));
+        System.out.println(HtmlEscape.escapeHtml("hello how are you"));
+        System.out.println(HtmlEscape.escapeHtml("I'm < 355, & you?"));
+        System.out.println(HtmlEscape.escapeHtml("\u0163\"I'm < 355, & you\u00E1?\""));
+        System.out.println(HtmlEscape.escapeHtml("[\u0163\u00E1aeiouABC0123\uD840\uDC00']\ud835\udccd", HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL));
+        System.out.println(HtmlEscape.escapeHtml("[\u0163\u00E1aeiouABC0123\uD840\uDC00']\ud835\udccd", HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL));
 
 
         for (final HtmlEscapeLevel context : HtmlEscapeLevel.values()) {
             for (final HtmlEscapeType type : HtmlEscapeType.values()) {
-                System.out.println("(" + type + "," + context + ") " + HtmlEscapist.escapeHtml("\u0163\"I'm < 355, & you\u00E1?\"", type, context));
+                System.out.println("(" + type + "," + context + ") " + HtmlEscape.escapeHtml("\u0163\"I'm < 355, & you\u00E1?\"", type, context));
             }
         }
 
         final long start = System.nanoTime();
         for (int i = 0; i < 10000000; i++) {
-            final String s = HtmlEscapist.escapeHtml("\u0163\"I'm < 355, & you? \u00FA\"");
+            final String s = HtmlEscape.escapeHtml("\u0163\"I'm < 355, & you? \u00FA\"");
         }
         final long end = System.nanoTime();
 
@@ -65,26 +65,26 @@ public class HtmlEscapistTest {
 
 
         StringWriter sw = new StringWriter();
-        HtmlEscapist.escapeHtml("hello".toCharArray(), sw);
+        HtmlEscape.escapeHtml("hello".toCharArray(), sw);
         System.out.println(sw.toString());
 
         sw = new StringWriter();
-        HtmlEscapist.escapeHtml("hello how are you".toCharArray(), sw);
+        HtmlEscape.escapeHtml("hello how are you".toCharArray(), sw);
         System.out.println(sw.toString());
 
         sw = new StringWriter();
-        HtmlEscapist.escapeHtml("I'm < 355, & you?".toCharArray(), sw);
+        HtmlEscape.escapeHtml("I'm < 355, & you?".toCharArray(), sw);
         System.out.println(sw.toString());
 
         sw = new StringWriter();
-        HtmlEscapist.escapeHtml("\u0163\"I'm < 355, & you\u00E1?\"".toCharArray(), sw);
+        HtmlEscape.escapeHtml("\u0163\"I'm < 355, & you\u00E1?\"".toCharArray(), sw);
         System.out.println(sw.toString());
 
 
         for (final HtmlEscapeLevel context : HtmlEscapeLevel.values()) {
             for (final HtmlEscapeType type : HtmlEscapeType.values()) {
                 sw = new StringWriter();
-                HtmlEscapist.escapeHtml("\u0163\"I'm < 355, & you\u00E1?\"".toCharArray(), sw, type, context);
+                HtmlEscape.escapeHtml("\u0163\"I'm < 355, & you\u00E1?\"".toCharArray(), sw, type, context);
                 System.out.println("(" + type + "," + context + ") " + sw.toString());
             }
         }
@@ -110,7 +110,7 @@ public class HtmlEscapistTest {
         final char[] text = "\u0163\"I'm < 355, & you\u00E1? \u00FA\"".toCharArray();
         final long start2 = System.nanoTime();
         for (int i = 0; i < 10000000; i++) {
-            HtmlEscapist.escapeHtml(text, writer);
+            HtmlEscape.escapeHtml(text, writer);
         }
         final long end2 = System.nanoTime();
 

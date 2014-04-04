@@ -49,7 +49,7 @@ public class SMPTest {
 
     public static void main(String[] args) throws Exception {
 
-//        System.out.println(HtmlEscapist.escapeHtml("\u20000"));
+//        System.out.println(HtmlEscape.escapeHtml("\u20000"));
 //        System.out.println("[\u2840\uDC00]");
 
 
@@ -60,9 +60,9 @@ public class SMPTest {
                 "na Morav&#x11B;, kter&#xE9; prob&#x11B;hnou v pr&#x16F;b&#x11B;hu " +
                 "z&#xE1;&#x159;&#xED; a &#x159;&#xED;jna.";
 
-        final String czechTextUnescaped = HtmlEscapist.unescapeHtml(czechTextOrig);
-        final String czechText2Escaped = HtmlEscapist.escapeHtml(czechTextOrig, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
-        final String czechTextEscaped = HtmlEscapist.escapeHtml(czechTextUnescaped, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
+        final String czechTextUnescaped = HtmlEscape.unescapeHtml(czechTextOrig);
+        final String czechText2Escaped = HtmlEscape.escapeHtml(czechTextOrig, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
+        final String czechTextEscaped = HtmlEscape.escapeHtml(czechTextUnescaped, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
 
         System.out.println(czechTextUnescaped);
         System.out.println(czechTextEscaped);
@@ -76,7 +76,7 @@ public class SMPTest {
         System.out.println(s1);
         final String s2 = StringEscapeUtils.unescapeHtml4(s1);
         System.out.println("UNESCAPED:         " + s2 + " -> " + asHexCharString(s2));
-        final String s3 = HtmlEscapist.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
+        final String s3 = HtmlEscape.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
         System.out.println("UNBESCAPE:      " + s3);
         final String s4 = StringEscapeUtils.escapeHtml4(s2);
         System.out.println("STRINGESCAPEUTILS: " + s4);
@@ -96,7 +96,7 @@ public class SMPTest {
 
         // Warmup
         for (int i = 0; i < 100; i++) {
-            final String result1 = HtmlEscapist.escapeHtml(testMsg, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
+            final String result1 = HtmlEscape.escapeHtml(testMsg, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
             final String result2 = StringEscapeUtils.escapeHtml4(testMsg);
             final String result3 = HtmlUtils.htmlEscape(testMsg);
             final String result4 = htmlEntityCodec.encode(immune, testMsg);
@@ -104,7 +104,7 @@ public class SMPTest {
 
         final long jstart = System.nanoTime();
         for (int i = 0; i < execs; i++) {
-            final String result = HtmlEscapist.escapeHtml(testMsg, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
+            final String result = HtmlEscape.escapeHtml(testMsg, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
         }
         final long jfinish = System.nanoTime();
 
@@ -124,25 +124,25 @@ public class SMPTest {
         System.out.println(String.format("C: %15d nanosecs", Long.valueOf(cfinish - cstart)));
         System.out.println(String.format("S: %15d nanosecs", Long.valueOf(gfinish - gstart)));
 
-        System.out.println(HtmlEscapist.escapeHtml(testMsg));
-        System.out.println(HtmlEscapist.escapeHtml(testMsg) == testMsg);
+        System.out.println(HtmlEscape.escapeHtml(testMsg));
+        System.out.println(HtmlEscape.escapeHtml(testMsg) == testMsg);
         System.out.println(StringEscapeUtils.escapeHtml4(testMsg));
         System.out.println(StringEscapeUtils.escapeHtml4(testMsg) == testMsg);
         System.out.println(HtmlUtils.htmlEscape(testMsg));
         System.out.println(HtmlUtils.htmlEscape(testMsg) == testMsg);
 
 
-        System.out.println("UNESCAPE: " + HtmlEscapist.unescapeHtml(
-                HtmlEscapist.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA)));
-        System.out.println("UNESCAPE: " + HtmlEscapist.unescapeHtml(
-                HtmlEscapist.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL)));
-        System.out.println("UNESCAPE: " + HtmlEscapist.unescapeHtml("&euro; - &#x20aC; - &#8364; - &#x80; - &#128; - &#x80gs - &#128as"));
+        System.out.println("UNESCAPE: " + HtmlEscape.unescapeHtml(
+                HtmlEscape.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA)));
+        System.out.println("UNESCAPE: " + HtmlEscape.unescapeHtml(
+                HtmlEscape.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL)));
+        System.out.println("UNESCAPE: " + HtmlEscape.unescapeHtml("&euro; - &#x20aC; - &#8364; - &#x80; - &#128; - &#x80gs - &#128as"));
 
-//        final String testUnescMsg = HtmlEscapist.escapeHtml(s2, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
+//        final String testUnescMsg = HtmlEscape.escapeHtml(s2, HtmlEscape.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
         final String testUnescMsg = "&lsqb;&tcedil;&aacuteaeiouABC0123&#131072;&#39;&rsqb;&xscr;";
 
         System.out.println("ESCAPED:           " + testUnescMsg);
-        final String u3 = HtmlEscapist.unescapeHtml(testUnescMsg);
+        final String u3 = HtmlEscape.unescapeHtml(testUnescMsg);
         System.out.println("UNBESCAPE:         " + u3);
         final String u4 = StringEscapeUtils.unescapeHtml4(testUnescMsg);
         System.out.println("STRINGESCAPEUTILS: " + u4);
@@ -154,7 +154,7 @@ public class SMPTest {
 
         // Warmup
         for (int i = 0; i < 100; i++) {
-            final String result1 = HtmlEscapist.unescapeHtml(testUnescMsg);
+            final String result1 = HtmlEscape.unescapeHtml(testUnescMsg);
             final String result2 = StringEscapeUtils.unescapeHtml4(testUnescMsg);
             final String result3 = HtmlUtils.htmlUnescape(testUnescMsg);
             final String result4 = htmlEntityCodec.decode(testUnescMsg);
@@ -162,7 +162,7 @@ public class SMPTest {
 
         final long ujstart = System.nanoTime();
         for (int i = 0; i < execs; i++) {
-            final String result = HtmlEscapist.unescapeHtml(testUnescMsg);
+            final String result = HtmlEscape.unescapeHtml(testUnescMsg);
         }
         final long ujfinish = System.nanoTime();
 
@@ -190,16 +190,16 @@ public class SMPTest {
         System.out.println(String.format("E: %15d nanosecs", Long.valueOf(uefinish - uestart)));
 
         final String partial01 = "&lsqb;&tcedil;&aacuteaeiouABC0123&#131072;&#39;&rsqb;&xscr;";
-        final String uPartial01 = HtmlEscapist.unescapeHtml(partial01);
+        final String uPartial01 = HtmlEscape.unescapeHtml(partial01);
         System.out.println("UNBESCAPE PARTIAL:         " + uPartial01);
         final String uPartial02 = StringEscapeUtils.unescapeHtml4(partial01);
         System.out.println("STRINGESCAPEUTILS PARTIAL: " + uPartial02);
 
-        System.out.println(HtmlEscapist.unescapeHtml("Fern&aacutendez"));
-        System.out.println(HtmlEscapist.unescapeHtml("Fern&aacute;&ndez"));
-        System.out.println(HtmlEscapist.unescapeHtml("Fern&aacute;&ndez&rarr;"));
+        System.out.println(HtmlEscape.unescapeHtml("Fern&aacutendez"));
+        System.out.println(HtmlEscape.unescapeHtml("Fern&aacute;&ndez"));
+        System.out.println(HtmlEscape.unescapeHtml("Fern&aacute;&ndez&rarr;"));
 
-        System.out.println(HtmlEscapist.unescapeHtml("a&fjlig;a"));
+        System.out.println(HtmlEscape.unescapeHtml("a&fjlig;a"));
 
 //        final String czechTextOrig =
 //                "Jako efektivn&#x115;j&#x161;&#xED; se n&#xE1;m jev&#xED; " +
@@ -208,9 +208,9 @@ public class SMPTest {
 //                "na Morav&#x11B;, kter&#xE9; prob&#x11B;hnou v pr&#x16F;b&#x11B;hu " +
 //                "z&#xE1;&#x159;&#xED; a &#x159;&#xED;jna.";
 //
-//        final String czechTextUnescaped = HtmlEscapist.unescapeHtml(czechTextOrig);
-//        final String czechText2Escaped = HtmlEscapist.escapeHtml(czechTextOrig, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
-//        final String czechTextEscaped = HtmlEscapist.escapeHtml(czechTextUnescaped, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
+//        final String czechTextUnescaped = HtmlEscape.unescapeHtml(czechTextOrig);
+//        final String czechText2Escaped = HtmlEscape.escapeHtml(czechTextOrig, HtmlEscape.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
+//        final String czechTextEscaped = HtmlEscape.escapeHtml(czechTextUnescaped, HtmlEscape.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
 //
 //        System.out.println(czechTextUnescaped);
 //        System.out.println(czechTextEscaped);

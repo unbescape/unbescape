@@ -29,7 +29,7 @@ import java.io.Writer;
  * @since 1.0
  *
  */
-public final class HtmlEscapist {
+public final class HtmlEscape {
 
     /*
      * SEE: https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
@@ -189,7 +189,7 @@ public final class HtmlEscapist {
 
 
 
-    private HtmlEscapist() {
+    private HtmlEscape() {
         super();
     }
 
