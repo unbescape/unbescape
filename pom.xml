@@ -2,7 +2,7 @@
 
 <!-- ========================================================================= -->
 <!--                                                                           -->
-<!--   Copyright (c) 2014, The JAVAESCAPIST team (http://www.javaescapist.org) -->
+<!--   Copyright (c) 2014, The UNBESCAPE team (http://www.unbescape.org)       -->
 <!--                                                                           -->
 <!--   Licensed under the Apache License, Version 2.0 (the "License");         -->
 <!--   you may not use this file except in compliance with the License.        -->
@@ -21,12 +21,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.javaescapist</groupId>
-  <artifactId>javaescapist</artifactId>
+  <groupId>org.unbescape</groupId>
+  <artifactId>unbescape</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>javaescapist</name>
-  <url>http://www.javaescapist.org</url>
+  <name>unbescape</name>
+  <url>http://www.unbescape.org</url>
 
   <description>Escaping library for Java</description>
 
@@ -39,14 +39,14 @@
   </licenses>
 
   <organization>
-    <name>The JAVAESCAPIST team</name>
-    <url>http://www.javaescapist.org</url>
+    <name>The UNBESCAPE team</name>
+    <url>http://www.unbescape.org</url>
   </organization>
   
   <scm>
-    <url>scm:git:git@github.com:javaescapist/javaescapist.git</url>
-    <connection>scm:git:git@github.com:javaescapist/javaescapist.git</connection>
-    <developerConnection>scm:git:git@github.com:javaescapist/javaescapist.git</developerConnection>
+    <url>scm:git:git@github.com:unbescape/unbescape.git</url>
+    <connection>scm:git:git@github.com:unbescape/unbescape.git</connection>
+    <developerConnection>scm:git:git@github.com:unbescape/unbescape.git</developerConnection>
   </scm>
   
   <developers>

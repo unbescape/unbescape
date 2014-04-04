@@ -1,7 +1,7 @@
 /*
  * =============================================================================
  * 
- *   Copyright (c) 2014, The JAVAESCAPIST team (http://www.javaescapist.org)
+ *   Copyright (c) 2014, The UNBESCAPE team (http://www.unbescape.org)
  * 
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * 
  * =============================================================================
  */
-package org.javaescapist.html;
+package org.unbescape.html;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.owasp.esapi.codecs.HTMLEntityCodec;
@@ -77,7 +77,7 @@ public class SMPTest {
         final String s2 = StringEscapeUtils.unescapeHtml4(s1);
         System.out.println("UNESCAPED:         " + s2 + " -> " + asHexCharString(s2));
         final String s3 = HtmlEscapist.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
-        System.out.println("JAVAESCAPIST:      " + s3);
+        System.out.println("UNBESCAPE:      " + s3);
         final String s4 = StringEscapeUtils.escapeHtml4(s2);
         System.out.println("STRINGESCAPEUTILS: " + s4);
         final String s5 = HtmlUtils.htmlEscape(s2);
@@ -141,9 +141,9 @@ public class SMPTest {
 //        final String testUnescMsg = HtmlEscapist.escapeHtml(s2, HtmlEscapist.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
         final String testUnescMsg = "&lsqb;&tcedil;&aacuteaeiouABC0123&#131072;&#39;&rsqb;&xscr;";
 
-        System.out.println("ESCAPED:         " + testUnescMsg);
+        System.out.println("ESCAPED:           " + testUnescMsg);
         final String u3 = HtmlEscapist.unescapeHtml(testUnescMsg);
-        System.out.println("JAVAESCAPIST:      " + u3);
+        System.out.println("UNBESCAPE:         " + u3);
         final String u4 = StringEscapeUtils.unescapeHtml4(testUnescMsg);
         System.out.println("STRINGESCAPEUTILS: " + u4);
         final String u5 = HtmlUtils.htmlUnescape(testUnescMsg);
@@ -191,7 +191,7 @@ public class SMPTest {
 
         final String partial01 = "&lsqb;&tcedil;&aacuteaeiouABC0123&#131072;&#39;&rsqb;&xscr;";
         final String uPartial01 = HtmlEscapist.unescapeHtml(partial01);
-        System.out.println("JAVAESCAPIST PARTIAL:      " + uPartial01);
+        System.out.println("UNBESCAPE PARTIAL:         " + uPartial01);
         final String uPartial02 = StringEscapeUtils.unescapeHtml4(partial01);
         System.out.println("STRINGESCAPEUTILS PARTIAL: " + uPartial02);
 
