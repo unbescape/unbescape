@@ -19,18 +19,28 @@
  */
 package org.unbescape.html;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-
-import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Test;
 
-import static org.unbescape.html.HtmlEscapeTestUtil.*;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeDecimal0;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeDecimal1;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeDecimal2;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeDecimal3;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeDecimal4;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHexa0;
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHexa1;
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHexa2;
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHexa3;
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHexa4;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Decimal0;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Decimal1;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Decimal2;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Decimal3;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Decimal4;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Decimal0;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Decimal1;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Decimal2;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Decimal3;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Decimal4;
 
 /**
  * 
