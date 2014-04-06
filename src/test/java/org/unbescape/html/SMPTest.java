@@ -176,13 +176,6 @@ public class SMPTest {
         final String uPartial02 = StringEscapeUtils.unescapeHtml4(partial01);
         System.out.println("STRINGESCAPEUTILS PARTIAL: " + uPartial02);
 
-
-        System.out.println(HtmlEscape.unescapeHtml("Fern&aacutendez"));
-        System.out.println(HtmlEscape.unescapeHtml("Fern&aacute;&ndez"));
-        System.out.println(HtmlEscape.unescapeHtml("Fern&aacute;&ndez&rarr;"));
-
-        System.out.println(HtmlEscape.unescapeHtml("a&fjlig;a"));
-
     }
 
 
