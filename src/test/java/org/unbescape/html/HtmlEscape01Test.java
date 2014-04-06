@@ -19,10 +19,6 @@
  */
 package org.unbescape.html;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-
 import org.junit.Test;
 
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeDecimal0;
