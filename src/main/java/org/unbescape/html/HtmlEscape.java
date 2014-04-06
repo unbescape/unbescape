@@ -81,7 +81,7 @@ public final class HtmlEscape {
 
     public static void escapeHtml(final char[] text, final Writer writer)
                                   throws IOException {
-        escapeHtml(text, 0, text.length, writer,
+        escapeHtml(text, 0, (text == null? 0 : text.length), writer,
                 HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
                 HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS);
     }
@@ -89,21 +89,21 @@ public final class HtmlEscape {
 
     public static void escapeHtml(final char[] text, final Writer writer, final HtmlEscapeType type)
                                   throws IOException {
-        escapeHtml(text, 0, text.length, writer, type,
+        escapeHtml(text, 0, (text == null? 0 : text.length), writer, type,
                 HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS);
     }
 
 
     public static void escapeHtml(final char[] text, final Writer writer, final HtmlEscapeLevel level)
                                   throws IOException {
-        escapeHtml(text, 0, text.length, writer, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL, level);
+        escapeHtml(text, 0, (text == null? 0 : text.length), writer, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL, level);
     }
 
 
     public static void escapeHtml(final char[] text, final Writer writer,
                                   final HtmlEscapeType type, final HtmlEscapeLevel level)
                                   throws IOException {
-        escapeHtml(text, 0, text.length, writer, type, level);
+        escapeHtml(text, 0,(text == null? 0 : text.length), writer, type, level);
     }
 
 
@@ -145,14 +145,16 @@ public final class HtmlEscape {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
         }
 
-        if (offset < 0 || offset > text.length) {
+        final int textLen = (text == null? 0 : text.length);
+
+        if (offset < 0 || offset > textLen) {
             throw new IllegalArgumentException(
-                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + text.length);
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
         }
 
-        if (len < 0 || (offset + len) > text.length) {
+        if (len < 0 || (offset + len) > textLen) {
             throw new IllegalArgumentException(
-                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + text.length);
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
         }
 
         HtmlEscapeUtil.escape(text, offset, len, writer, type, level);
@@ -172,7 +174,7 @@ public final class HtmlEscape {
 
     public static void unescapeHtml(final char[] text, final Writer writer)
             throws IOException{
-        HtmlEscapeUtil.unescape(text, 0, text.length, writer);
+        HtmlEscapeUtil.unescape(text, 0, (text == null? 0 : text.length), writer);
     }
 
 
@@ -183,7 +185,20 @@ public final class HtmlEscape {
             throw new IllegalArgumentException("Argument 'writer' cannot be null");
         }
 
+        final int textLen = (text == null? 0 : text.length);
+
+        if (offset < 0 || offset > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+
+        if (len < 0 || (offset + len) > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+
         HtmlEscapeUtil.unescape(text, offset, len, writer);
+
     }
 
 
