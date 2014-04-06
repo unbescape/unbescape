@@ -36,11 +36,21 @@ import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Decimal1;
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Decimal2;
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Decimal3;
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Decimal4;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Hexa0;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Hexa1;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Hexa2;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Hexa3;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml4Hexa4;
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Decimal0;
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Decimal1;
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Decimal2;
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Decimal3;
 import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Decimal4;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Hexa0;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Hexa1;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Hexa2;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Hexa3;
+import static org.unbescape.html.HtmlEscapeTestUtil.testEscapeHtml5Hexa4;
 
 /**
  * 
@@ -93,6 +103,37 @@ public class HtmlI18nEscapeTest {
         testEscapeHtml5Decimal3(TEXT, textHtml5DecLevel3);
         testEscapeHtml5Decimal4(TEXT, textHtml5DecLevel4);
 
+
+        final String textHtml5HexaLevel0 = TEXT;
+        final String textHtml5HexaLevel1 = TEXT;
+        final String textHtml5HexaLevel2 =
+                "Jako efektivn&#x115;j&scaron;&iacute; se n&aacute;m jev&iacute; po&rcaron;&aacute;d&aacute;n&iacute; tzv.\n" +
+                "Gira prost&rcaron;ednictv&iacute;m na&scaron;ich autorizovan&yacute;ch dealer&uring; v " +
+                "&Ccaron;ech&aacute;ch a na Morav&ecaron;, kter&eacute; prob&ecaron;hnou v pr&uring;b&ecaron;hu " +
+                "z&aacute;&rcaron;&iacute; a &rcaron;&iacute;j0na.";
+        final String textHtml5HexaLevel3 =
+                "Jako&#x20;efektivn&#x115;j&scaron;&iacute;&#x20;se&#x20;n&aacute;m&#x20;jev&iacute;&#x20;" +
+                "po&rcaron;&aacute;d&aacute;n&iacute;&#x20;tzv&period;&NewLine;Gira&#x20;prost&rcaron;ednictv&iacute;m&#x20;" +
+                "na&scaron;ich&#x20;autorizovan&yacute;ch&#x20;dealer&uring;&#x20;v&#x20;&Ccaron;ech&aacute;ch&#x20;a&#x20;" +
+                "na&#x20;Morav&ecaron;&comma;&#x20;kter&eacute;&#x20;prob&ecaron;hnou&#x20;v&#x20;pr&uring;b&ecaron;hu&#x20;" +
+                "z&aacute;&rcaron;&iacute;&#x20;a&#x20;&rcaron;&iacute;j0na&period;";
+        final String textHtml5HexaLevel4 =
+                "&#x4a;&#x61;&#x6b;&#x6f;&#x20;&#x65;&#x66;&#x65;&#x6b;&#x74;&#x69;&#x76;&#x6e;&#x115;&#x6a;&scaron;&iacute;&#x20;" +
+                "&#x73;&#x65;&#x20;&#x6e;&aacute;&#x6d;&#x20;&#x6a;&#x65;&#x76;&iacute;&#x20;" +
+                "&#x70;&#x6f;&rcaron;&aacute;&#x64;&aacute;&#x6e;&iacute;&#x20;&#x74;&#x7a;&#x76;&period;&NewLine;&#x47;&#x69;&#x72;&#x61;&#x20;" +
+                "&#x70;&#x72;&#x6f;&#x73;&#x74;&rcaron;&#x65;&#x64;&#x6e;&#x69;&#x63;&#x74;&#x76;&iacute;&#x6d;&#x20;" +
+                "&#x6e;&#x61;&scaron;&#x69;&#x63;&#x68;&#x20;&#x61;&#x75;&#x74;&#x6f;&#x72;&#x69;&#x7a;&#x6f;&#x76;&#x61;&#x6e;&yacute;&#x63;&#x68;&#x20;" +
+                "&#x64;&#x65;&#x61;&#x6c;&#x65;&#x72;&uring;&#x20;&#x76;&#x20;&Ccaron;&#x65;&#x63;&#x68;&aacute;&#x63;&#x68;&#x20;&#x61;&#x20;" +
+                "&#x6e;&#x61;&#x20;&#x4d;&#x6f;&#x72;&#x61;&#x76;&ecaron;&comma;&#x20;&#x6b;&#x74;&#x65;&#x72;&eacute;&#x20;" +
+                "&#x70;&#x72;&#x6f;&#x62;&ecaron;&#x68;&#x6e;&#x6f;&#x75;&#x20;&#x76;&#x20;&#x70;&#x72;&uring;&#x62;&ecaron;&#x68;&#x75;&#x20;" +
+                "&#x7a;&aacute;&rcaron;&iacute;&#x20;&#x61;&#x20;&rcaron;&iacute;&#x6a;&#x30;&#x6e;&#x61;&period;";
+
+        testEscapeHtml5Hexa0(TEXT, textHtml5HexaLevel0);
+        testEscapeHtml5Hexa1(TEXT, textHtml5HexaLevel1);
+        testEscapeHtml5Hexa2(TEXT, textHtml5HexaLevel2);
+        testEscapeHtml5Hexa3(TEXT, textHtml5HexaLevel3);
+        testEscapeHtml5Hexa4(TEXT, textHtml5HexaLevel4);
+
     }
 
 
@@ -128,6 +169,37 @@ public class HtmlI18nEscapeTest {
         testEscapeHtml4Decimal2(TEXT, textHtml4DecLevel2);
         testEscapeHtml4Decimal3(TEXT, textHtml4DecLevel3);
         testEscapeHtml4Decimal4(TEXT, textHtml4DecLevel4);
+
+
+        final String textHtml4HexaLevel0 = TEXT;
+        final String textHtml4HexaLevel1 = TEXT;
+        final String textHtml4HexaLevel2 =
+                "Jako efektivn&#x115;j&scaron;&iacute; se n&aacute;m jev&iacute; po&#x159;&aacute;d&aacute;n&iacute; tzv.\n" +
+                "Gira prost&#x159;ednictv&iacute;m na&scaron;ich autorizovan&yacute;ch dealer&#x16f; v " +
+                "&#x10c;ech&aacute;ch a na Morav&#x11b;, kter&eacute; prob&#x11b;hnou v pr&#x16f;b&#x11b;hu " +
+                "z&aacute;&#x159;&iacute; a &#x159;&iacute;j0na.";
+        final String textHtml4HexaLevel3 =
+                "Jako&#x20;efektivn&#x115;j&scaron;&iacute;&#x20;se&#x20;n&aacute;m&#x20;jev&iacute;&#x20;" +
+                "po&#x159;&aacute;d&aacute;n&iacute;&#x20;tzv&#x2e;&#xa;Gira&#x20;prost&#x159;ednictv&iacute;m&#x20;" +
+                "na&scaron;ich&#x20;autorizovan&yacute;ch&#x20;dealer&#x16f;&#x20;v&#x20;&#x10c;ech&aacute;ch&#x20;a&#x20;" +
+                "na&#x20;Morav&#x11b;&#x2c;&#x20;kter&eacute;&#x20;prob&#x11b;hnou&#x20;v&#x20;pr&#x16f;b&#x11b;hu&#x20;" +
+                "z&aacute;&#x159;&iacute;&#x20;a&#x20;&#x159;&iacute;j0na&#x2e;";
+        final String textHtml4HexaLevel4 =
+                "&#x4a;&#x61;&#x6b;&#x6f;&#x20;&#x65;&#x66;&#x65;&#x6b;&#x74;&#x69;&#x76;&#x6e;&#x115;&#x6a;&scaron;&iacute;&#x20;" +
+                "&#x73;&#x65;&#x20;&#x6e;&aacute;&#x6d;&#x20;&#x6a;&#x65;&#x76;&iacute;&#x20;" +
+                "&#x70;&#x6f;&#x159;&aacute;&#x64;&aacute;&#x6e;&iacute;&#x20;&#x74;&#x7a;&#x76;&#x2e;&#xa;&#x47;&#x69;&#x72;&#x61;&#x20;" +
+                "&#x70;&#x72;&#x6f;&#x73;&#x74;&#x159;&#x65;&#x64;&#x6e;&#x69;&#x63;&#x74;&#x76;&iacute;&#x6d;&#x20;" +
+                "&#x6e;&#x61;&scaron;&#x69;&#x63;&#x68;&#x20;&#x61;&#x75;&#x74;&#x6f;&#x72;&#x69;&#x7a;&#x6f;&#x76;&#x61;&#x6e;&yacute;&#x63;&#x68;&#x20;" +
+                "&#x64;&#x65;&#x61;&#x6c;&#x65;&#x72;&#x16f;&#x20;&#x76;&#x20;&#x10c;&#x65;&#x63;&#x68;&aacute;&#x63;&#x68;&#x20;&#x61;&#x20;" +
+                "&#x6e;&#x61;&#x20;&#x4d;&#x6f;&#x72;&#x61;&#x76;&#x11b;&#x2c;&#x20;&#x6b;&#x74;&#x65;&#x72;&eacute;&#x20;" +
+                "&#x70;&#x72;&#x6f;&#x62;&#x11b;&#x68;&#x6e;&#x6f;&#x75;&#x20;&#x76;&#x20;&#x70;&#x72;&#x16f;&#x62;&#x11b;&#x68;&#x75;&#x20;" +
+                "&#x7a;&aacute;&#x159;&iacute;&#x20;&#x61;&#x20;&#x159;&iacute;&#x6a;&#x30;&#x6e;&#x61;&#x2e;";
+
+        testEscapeHtml4Hexa0(TEXT, textHtml4HexaLevel0);
+        testEscapeHtml4Hexa1(TEXT, textHtml4HexaLevel1);
+        testEscapeHtml4Hexa2(TEXT, textHtml4HexaLevel2);
+        testEscapeHtml4Hexa3(TEXT, textHtml4HexaLevel3);
+        testEscapeHtml4Hexa4(TEXT, textHtml4HexaLevel4);
 
     }
 
