@@ -308,6 +308,53 @@ public class HtmlEscapeTestUtil {
 
 
 
+
+
+    public static void testUnescape(final String text, final String expected)
+            throws IOException {
+
+        final String resultStr = HtmlEscape.unescapeHtml(text);
+        Assert.assertEquals(expected, resultStr);
+
+        final char[] textCharArray = (text == null? null : text.toCharArray());
+        StringWriter stringWriter = new StringWriter();
+        HtmlEscape.unescapeHtml(textCharArray, stringWriter);
+        if (textCharArray == null) {
+            Assert.assertEquals("", stringWriter.toString());
+        } else {
+            Assert.assertEquals(expected,stringWriter.toString());
+        }
+
+        if (textCharArray == null) {
+            return;
+        }
+
+        final char[] fill = "AAAAAAAAAA".toCharArray();
+        for (int i = 0; i < 10; i++) {
+            final char[] array = new char[fill.length + textCharArray.length];
+            if (i > 0) {
+                System.arraycopy(fill,0,array,0,i);
+            }
+            System.arraycopy(textCharArray,0,array,i,textCharArray.length);
+            if ((i + 1) < 10) {
+                System.arraycopy(fill,i,array,i + textCharArray.length,(10 - (i+1)));
+            }
+
+            stringWriter = new StringWriter();
+            HtmlEscape.unescapeHtml(array, i, textCharArray.length, stringWriter);
+            if (textCharArray == null) {
+                Assert.assertEquals("", stringWriter.toString());
+            } else {
+                Assert.assertEquals(expected,stringWriter.toString());
+            }
+
+        }
+
+    }
+
+
+
+
     private HtmlEscapeTestUtil() {
         super();
     }
