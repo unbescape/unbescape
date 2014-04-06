@@ -55,9 +55,9 @@ public class HtmlI18nEscapeTest {
 
     private static final String TEXT =
             "Jako efektivn\u0115j\u0161\u00ED se n\u00E1m jev\u00ED po\u0159\u00E1d\u00E1n\u00ED tzv.\n" +
-                    "Gira prost\u0159ednictv\u00EDm na\u0161ich autorizovan\u00FDch dealer\u016F v " +
-                    "\u010Cech\u00E1ch a na Morav\u011B, kter\u00E9 prob\u011Bhnou v pr\u016Fb\u011Bhu " +
-                    "z\u00E1\u0159\u00ED a \u0159\u00EDj0na.";
+            "Gira prost\u0159ednictv\u00EDm na\u0161ich autorizovan\u00FDch dealer\u016F v " +
+            "\u010Cech\u00E1ch a na Morav\u011B, kter\u00E9 prob\u011Bhnou v pr\u016Fb\u011Bhu " +
+            "z\u00E1\u0159\u00ED a \u0159\u00EDj0na.";
 
 
 
