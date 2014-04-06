@@ -49,25 +49,6 @@ public class SMPTest {
 
     public static void main(String[] args) throws Exception {
 
-//        System.out.println(HtmlEscape.escapeHtml("\u20000"));
-//        System.out.println("[\u2840\uDC00]");
-
-
-        final String czechTextOrig =
-                "Jako efektivn&#x115;j&#x161;&#xED; se n&#xE1;m jev&#xED; " +
-                "po&#x159;&#xE1;d&#xE1;n&#xED; tzv. Gira prost&#x159;ednictv&#xED;m " +
-                "na&#x161;ich autorizovan&#xFD;ch dealer&#x16F; v &#x10C;ech&#xE1;ch a " +
-                "na Morav&#x11B;, kter&#xE9; prob&#x11B;hnou v pr&#x16F;b&#x11B;hu " +
-                "z&#xE1;&#x159;&#xED; a &#x159;&#xED;jna.";
-
-        final String czechTextUnescaped = HtmlEscape.unescapeHtml(czechTextOrig);
-        final String czechText2Escaped = HtmlEscape.escapeHtml(czechTextOrig, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
-        final String czechTextEscaped = HtmlEscape.escapeHtml(czechTextUnescaped, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
-
-        System.out.println(czechTextUnescaped);
-        System.out.println(czechTextEscaped);
-        System.out.println(czechText2Escaped);
-
 
         final HTMLEntityCodec htmlEntityCodec = new HTMLEntityCodec();
         final char[] immune = new char[0];
@@ -195,26 +176,12 @@ public class SMPTest {
         final String uPartial02 = StringEscapeUtils.unescapeHtml4(partial01);
         System.out.println("STRINGESCAPEUTILS PARTIAL: " + uPartial02);
 
+
         System.out.println(HtmlEscape.unescapeHtml("Fern&aacutendez"));
         System.out.println(HtmlEscape.unescapeHtml("Fern&aacute;&ndez"));
         System.out.println(HtmlEscape.unescapeHtml("Fern&aacute;&ndez&rarr;"));
 
         System.out.println(HtmlEscape.unescapeHtml("a&fjlig;a"));
-
-//        final String czechTextOrig =
-//                "Jako efektivn&#x115;j&#x161;&#xED; se n&#xE1;m jev&#xED; " +
-//                "po&#x159;&#xE1;d&#xE1;n&#xED; tzv. Gira prost&#x159;ednictv&#xED;m " +
-//                "na&#x161;ich autorizovan&#xFD;ch dealer&#x16F; v &#x10C;ech&#xE1;ch a " +
-//                "na Morav&#x11B;, kter&#xE9; prob&#x11B;hnou v pr&#x16F;b&#x11B;hu " +
-//                "z&#xE1;&#x159;&#xED; a &#x159;&#xED;jna.";
-//
-//        final String czechTextUnescaped = HtmlEscape.unescapeHtml(czechTextOrig);
-//        final String czechText2Escaped = HtmlEscape.escapeHtml(czechTextOrig, HtmlEscape.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
-//        final String czechTextEscaped = HtmlEscape.escapeHtml(czechTextUnescaped, HtmlEscape.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
-//
-//        System.out.println(czechTextUnescaped);
-//        System.out.println(czechTextEscaped);
-//        System.out.println(czechText2Escaped);
 
     }
 
