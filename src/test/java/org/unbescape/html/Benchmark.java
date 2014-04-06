@@ -30,7 +30,7 @@ import org.springframework.web.util.HtmlUtils;
  * @since 1.0
  *
  */
-public class SMPTest {
+public class Benchmark {
 
 
 
@@ -179,7 +179,7 @@ public class SMPTest {
     }
 
 
-    public SMPTest() {
+    public Benchmark() {
         super();
     }
 
