@@ -50,7 +50,7 @@ final class HtmlEscapeUtil {
 
 
     /*
-     * Prefixes and suffix defined for use in decimal/hexa escaping and unescaping.
+     * Prefixes and suffix defined for use in decimal/hexa escape and unescape.
      */
     private static final char REFERENCE_PREFIX = '&';
     private static final char REFERENCE_NUMERIC_PREFIX2 = '#';
@@ -143,7 +143,7 @@ final class HtmlEscapeUtil {
 
 
             /*
-             * At this point we know for sure we will need some kind of escaping, so we
+             * At this point we know for sure we will need some kind of escape, so we
              * can increase the offset and initialize the string builder if needed, along with
              * copying to it all the contents pending up to this point.
              */
@@ -167,7 +167,7 @@ final class HtmlEscapeUtil {
             /*
              * -----------------------------------------------------------------------------------------
              *
-             * Peform the real escaping, attending the different combinations of NCR, DCR and HCR needs.
+             * Peform the real escape, attending the different combinations of NCR, DCR and HCR needs.
              *
              * -----------------------------------------------------------------------------------------
              */
@@ -183,7 +183,7 @@ final class HtmlEscapeUtil {
                         // There is an NCR for this codepoint!
                         strBuilder.append(symbols.SORTED_NCRS[ncrIndex]);
                         continue;
-                    } // else, just let it exit the block and let decimal/hexa escaping do its job
+                    } // else, just let it exit the block and let decimal/hexa escape do its job
 
                 } else if (symbols.NCRS_BY_CODEPOINT_OVERFLOW != null) {
                     // codepoint >= 0x2fff. NCR, if exists, will live at the overflow map (if there is one).
@@ -192,14 +192,14 @@ final class HtmlEscapeUtil {
                     if (ncrIndex != null) {
                         strBuilder.append(symbols.SORTED_NCRS[ncrIndex.shortValue()]);
                         continue;
-                    } // else, just let it exit the block and let decimal/hexa escaping do its job
+                    } // else, just let it exit the block and let decimal/hexa escape do its job
 
                 }
 
             }
 
             /*
-             * No NCR-escaping was possible (or allowed), so we need decimal/hexa escaping.
+             * No NCR-escape was possible (or allowed), so we need decimal/hexa escape.
              */
 
             if (useHexa) {
@@ -216,7 +216,7 @@ final class HtmlEscapeUtil {
 
         /*
          * -----------------------------------------------------------------------------------------------
-         * Final cleaning: return the original String object if no escaping was actually needed. Otherwise
+         * Final cleaning: return the original String object if no escape was actually needed. Otherwise
          *                 append the remaining unescaped text to the string builder and return.
          * -----------------------------------------------------------------------------------------------
          */
@@ -302,7 +302,7 @@ final class HtmlEscapeUtil {
 
 
             /*
-             * At this point we know for sure we will need some kind of escaping, so we
+             * At this point we know for sure we will need some kind of escape, so we
              * can write all the contents pending up to this point.
              */
 
@@ -321,7 +321,7 @@ final class HtmlEscapeUtil {
             /*
              * -----------------------------------------------------------------------------------------
              *
-             * Peform the real escaping, attending the different combinations of NCR, DCR and HCR needs.
+             * Peform the real escape, attending the different combinations of NCR, DCR and HCR needs.
              *
              * -----------------------------------------------------------------------------------------
              */
@@ -337,7 +337,7 @@ final class HtmlEscapeUtil {
                         // There is an NCR for this codepoint!
                         writer.write(symbols.SORTED_NCRS[ncrIndex]);
                         continue;
-                    } // else, just let it exit the block and let decimal/hexa escaping do its job
+                    } // else, just let it exit the block and let decimal/hexa escape do its job
 
                 } else if (symbols.NCRS_BY_CODEPOINT_OVERFLOW != null) {
                     // codepoint >= 0x2fff. NCR, if exists, will live at the overflow map (if there is one).
@@ -346,14 +346,14 @@ final class HtmlEscapeUtil {
                     if (ncrIndex != null) {
                         writer.write(symbols.SORTED_NCRS[ncrIndex.shortValue()]);
                         continue;
-                    } // else, just let it exit the block and let decimal/hexa escaping do its job
+                    } // else, just let it exit the block and let decimal/hexa escape do its job
 
                 }
 
             }
 
             /*
-             * No NCR-escaping was possible (or allowed), so we need decimal/hexa escaping.
+             * No NCR-escape was possible (or allowed), so we need decimal/hexa escape.
              */
 
             if (useHexa) {
@@ -386,7 +386,7 @@ final class HtmlEscapeUtil {
 
 
     /*
-     * This translation is needed during unescaping to support ill-formed escaping codes for Windows 1252 codes
+     * This translation is needed during unescape to support ill-formed escape codes for Windows 1252 codes
      * instead of the correct unicode ones (for example, &#x80; for the euro symbol instead of &#x20aC;). This is
      * something browsers do support, and included in the HTML5 spec for consuming character references.
      * See http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
@@ -474,16 +474,16 @@ final class HtmlEscapeUtil {
 
     /*
      * Perform an unescape operation based on String. Unescape operations are always based on the HTML5 symbol set.
-     * Unescaping operations will be performed in the most similar way possible to the process a browser follows for
+     * Unescape operations will be performed in the most similar way possible to the process a browser follows for
      * showing HTML5 escaped code. See: http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
      */
     static String unescape(final String text) {
 
         if (text == null) {
-            return text;
+            return null;
         }
 
-        // Unescaping will always cover the full HTML5 spectrum.
+        // Unescape will always cover the full HTML5 spectrum.
         final HtmlEscapeSymbols symbols = HtmlEscapeSymbols.HTML5_SYMBOLS;
         StringBuilder strBuilder = null;
 
@@ -555,7 +555,7 @@ final class HtmlEscapeUtil {
 
                         codepoint = translateIllFormedCodepoint(codepoint);
 
-                        // Don't continue here, just let the unescaping code below do its job
+                        // Don't continue here, just let the unescape code below do its job
 
                     } else if (c2 >= '0' && c2 <= '9') {
                         // This is a decimal reference
@@ -583,7 +583,7 @@ final class HtmlEscapeUtil {
 
                         codepoint = translateIllFormedCodepoint(codepoint);
 
-                        // Don't continue here, just let the unescaping code below do its job
+                        // Don't continue here, just let the unescape code below do its job
 
                     } else {
                         // This is not a valid reference, just discard
@@ -627,7 +627,7 @@ final class HtmlEscapeUtil {
                         f -= ((f - i) - partialMatch.length); // un-consume the chars remaining from the partial match
                     } else {
                         // Should never happen!
-                        throw new RuntimeException("Invalid unescaping codepoint after search: " + ncrPosition);
+                        throw new RuntimeException("Invalid unescape codepoint after search: " + ncrPosition);
                     }
 
                     referenceOffset = f - 1;
@@ -638,7 +638,7 @@ final class HtmlEscapeUtil {
 
 
             /*
-             * At this point we know for sure we will need some kind of unescaping, so we
+             * At this point we know for sure we will need some kind of unescape, so we
              * can increase the offset and initialize the string builder if needed, along with
              * copying to it all the contents pending up to this point.
              */
@@ -657,7 +657,7 @@ final class HtmlEscapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescaping
+             * Peform the real unescape
              *
              * --------------------------
              */
@@ -665,7 +665,7 @@ final class HtmlEscapeUtil {
             if (codepoint > '\uFFFF') {
                 strBuilder.append(Character.toChars(codepoint));
             } else if (codepoint < 0) {
-                // This is a double-codepoint unescaping operation
+                // This is a double-codepoint unescape operation
                 final int[] codepoints = symbols.DOUBLE_CODEPOINTS[((-1) * codepoint) - 1];
                 if (codepoints[0] > '\uFFFF') {
                     strBuilder.append(Character.toChars(codepoints[0]));
@@ -686,7 +686,7 @@ final class HtmlEscapeUtil {
 
         /*
          * -----------------------------------------------------------------------------------------------
-         * Final cleaning: return the original String object if no unescaping was actually needed. Otherwise
+         * Final cleaning: return the original String object if no unescape was actually needed. Otherwise
          *                 append the remaining escaped text to the string builder and return.
          * -----------------------------------------------------------------------------------------------
          */
@@ -710,7 +710,7 @@ final class HtmlEscapeUtil {
 
     /*
      * Perform an unescape operation based on char[]. Unescape operations are always based on the HTML5 symbol set.
-     * Unescaping operations will be performed in the most similar way possible to the process a browser follows for
+     * Unescape operations will be performed in the most similar way possible to the process a browser follows for
      * showing HTML5 escaped code. See: http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
      */
     static void unescape(final char[] text, final int offset, final int len, final Writer writer)
@@ -789,7 +789,7 @@ final class HtmlEscapeUtil {
 
                         codepoint = translateIllFormedCodepoint(codepoint);
 
-                        // Don't continue here, just let the unescaping code below do its job
+                        // Don't continue here, just let the unescape code below do its job
 
                     } else if (c2 >= '0' && c2 <= '9') {
                         // This is a decimal reference
@@ -817,7 +817,7 @@ final class HtmlEscapeUtil {
 
                         codepoint = translateIllFormedCodepoint(codepoint);
 
-                        // Don't continue here, just let the unescaping code below do its job
+                        // Don't continue here, just let the unescape code below do its job
 
                     } else {
                         // This is not a valid reference, just discard
@@ -861,7 +861,7 @@ final class HtmlEscapeUtil {
                         f -= ((f - i) - partialMatch.length); // un-consume the chars remaining from the partial match
                     } else {
                         // Should never happen!
-                        throw new RuntimeException("Invalid unescaping codepoint after search: " + ncrPosition);
+                        throw new RuntimeException("Invalid unescape codepoint after search: " + ncrPosition);
                     }
 
                     referenceOffset = f - 1;
@@ -872,7 +872,7 @@ final class HtmlEscapeUtil {
 
 
             /*
-             * At this point we know for sure we will need some kind of unescaping, so we
+             * At this point we know for sure we will need some kind of unescape, so we
              * write all the contents pending up to this point.
              */
 
@@ -886,7 +886,7 @@ final class HtmlEscapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescaping
+             * Peform the real unescape
              *
              * --------------------------
              */
@@ -894,7 +894,7 @@ final class HtmlEscapeUtil {
             if (codepoint > '\uFFFF') {
                 writer.write(Character.toChars(codepoint));
             } else if (codepoint < 0) {
-                // This is a double-codepoint unescaping operation
+                // This is a double-codepoint unescape operation
                 final int[] codepoints = symbols.DOUBLE_CODEPOINTS[((-1) * codepoint) - 1];
                 if (codepoints[0] > '\uFFFF') {
                     writer.write(Character.toChars(codepoints[0]));

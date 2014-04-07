@@ -38,7 +38,7 @@ final class Html4EscapeSymbolsInitializer {
         /*
          * -----------------------------------------------------------
          *   HTML4 ESCAPE ENTITIES
-         *   See: http://www.w3.org/TR/REC-html40/sgml/entities.html
+         *   See: http://www.w3.org/TR/html4/sgml/entities.html
          * -----------------------------------------------------------
          */
 

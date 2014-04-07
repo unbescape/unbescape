@@ -29,12 +29,12 @@ import java.util.Map;
 
 /**
  * <p>
- *   Instances of this class group all the complex data structures needed to support full escaping and unescaping
- *   operations of HTML.
+ *   Instances of this class group all the complex data structures needed to support full escape and unescape
+ *   operations for HTML.
  * </p>
  * <p>
  *   Most of the fields in objects of this class are package-accessible, as the class itself is, in order to allow
- *   them (the fields) to be directly accessed from the classes doing the real escaping/unescaping (basically,
+ *   them (the fields) to be directly accessed from the classes doing the real escape/unescape (basically,
  *   the {@link HtmlEscapeUtil} class.
  * </p>
  * 
@@ -141,8 +141,8 @@ final class HtmlEscapeSymbols {
      * This array stores the sequences of two codepoints that are escaped as a single NCR. The indexes of this array are
      * referenced as negative numbers at the SORTED_CODEPOINTS array, and the values are int[2], containing the
      * sequence of codepoints. HTML4 has no NCRs like this, HTML5 has 93.
-     * - Note this array is only used in UNESCAPE operations. Double-codepoint NCR escaping is not performed because
-     *   the resulting characters are exactly equivalent to the escaping of the two codepoints separately.
+     * - Note this array is only used in UNESCAPE operations. Double-codepoint NCR escape is not performed because
+     *   the resulting characters are exactly equivalent to the escape of the two codepoints separately.
      * - Max size in real world, when populated for HTML5 (rough approximate): 93 * (4 (ref) + 16 + 2 * 4) = 2604 bytes
      */
     final int[][] DOUBLE_CODEPOINTS;
@@ -338,7 +338,7 @@ final class HtmlEscapeSymbols {
      * return a negative number < -10 when a partial match is possible, this is, when the specified text
      * fragment contains a complete NCR at its first chars but contains more chars afterwards. This is
      * useful for matching HTML5 NCRs which do not end in ; (like '&aacute'), which will come in bigger fragments
-     * because the unescaping method will have no way of differentiating the chars after the NCR from chars that
+     * because the unescape method will have no way of differentiating the chars after the NCR from chars that
      * could be in fact part of the NCR. Also note that, in the case of a partial match, (-1) * (returnValue + 10)
      * will specify the number of matched chars.
      */
@@ -392,7 +392,7 @@ final class HtmlEscapeSymbols {
 
 
     /*
-     * These two methods (two versions: for String and for char[]) are used during unescaping at the
+     * These two methods (two versions: for String and for char[]) are used during unescape at the
      * {@link HtmlEscapeUtil} class in order to quickly find the NCR corresponding to a preselected fragment
      * of text (if there is such NCR).
      *
