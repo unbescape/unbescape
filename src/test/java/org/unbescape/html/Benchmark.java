@@ -19,6 +19,10 @@
  */
 package org.unbescape.html;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.owasp.esapi.codecs.HTMLEntityCodec;
 import org.springframework.web.util.HtmlUtils;
@@ -30,151 +34,242 @@ import org.springframework.web.util.HtmlUtils;
  * @since 1.0
  *
  */
-public class Benchmark {
+public final class Benchmark {
+
+    private static final int BENCHMARK_EXECS = 1000000;
+
+    private static final String[] ESCAPE_TEXTS =
+            new String[] {
+                    "<\"[\u0163\u00E1aeiouABC0123\uD840\uDC00']\ud835\udccd>",
+                    "<\"[\u0163\u00E1&aeiouABC0123\uD840\uDC00']\ud835\udccd>",
+                    "<\"[\u00E1aeiouABC0123']>",
+                    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+            };
+    // Arrays containing textual results
+    private static final String[] ESCAPE_TEXTS_UNBESCAPE = new String[ESCAPE_TEXTS.length];
+    private static final String[] ESCAPE_TEXTS_STRING_ESCAPE_UTILS = new String[ESCAPE_TEXTS.length];
+    private static final String[] ESCAPE_TEXTS_SPRING_HTML_UTILS = new String[ESCAPE_TEXTS.length];
+    private static final String[] ESCAPE_TEXTS_ESAPI = new String[ESCAPE_TEXTS.length];
+    private static final boolean[] ESCAPE_NEW_OBJECT_UNBESCAPE = new boolean[ESCAPE_TEXTS.length];
+    private static final boolean[] ESCAPE_NEW_OBJECT_STRING_ESCAPE_UTILS = new boolean[ESCAPE_TEXTS.length];
+    private static final boolean[] ESCAPE_NEW_OBJECT_SPRING_HTML_UTILS = new boolean[ESCAPE_TEXTS.length];
+    private static final boolean[] ESCAPE_NEW_OBJECT_ESAPI = new boolean[ESCAPE_TEXTS.length];
+
+
+
+    private static final String[] UNESCAPE_TEXTS =
+            new String[] {
+                    "&lt;&quot;[&tcedil;&aacute;aeiouABC0123&#131072;&#39;]&xscr;&gt;",
+                    "&lt;&quot;[&tcedil;&aacute;&amp;aeiouABC0123&#131072;&#39;]&xscr;&gt;",
+                    "&lt;&quot;[&aacute;aeiouABC0123&#39;]&gt;",
+                    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+            };
+    // Arrays containing textual results
+    private static final String[] UNESCAPE_TEXTS_UNBESCAPE = new String[UNESCAPE_TEXTS.length];
+    private static final String[] UNESCAPE_TEXTS_STRING_ESCAPE_UTILS = new String[UNESCAPE_TEXTS.length];
+    private static final String[] UNESCAPE_TEXTS_SPRING_HTML_UTILS = new String[UNESCAPE_TEXTS.length];
+    private static final String[] UNESCAPE_TEXTS_ESAPI = new String[UNESCAPE_TEXTS.length];
+    private static final boolean[] UNESCAPE_NEW_OBJECT_UNBESCAPE = new boolean[UNESCAPE_TEXTS.length];
+    private static final boolean[] UNESCAPE_NEW_OBJECT_STRING_ESCAPE_UTILS = new boolean[UNESCAPE_TEXTS.length];
+    private static final boolean[] UNESCAPE_NEW_OBJECT_SPRING_HTML_UTILS = new boolean[UNESCAPE_TEXTS.length];
+    private static final boolean[] UNESCAPE_NEW_OBJECT_ESAPI = new boolean[UNESCAPE_TEXTS.length];
+
+    // ESAPI requires initialization of an HTMLEntityCodec object
+    private static final HTMLEntityCodec htmlEntityCodec = new HTMLEntityCodec();
+    private static final char[] immune = new char[0];
 
 
 
 
+    static {
 
-    static String asHexCharString(final String text) {
-        final StringBuilder strBuilder = new StringBuilder();
-        final int textLen = text.length();
-        for (int i = 0; i < textLen; i++) {
-            final char c = text.charAt(i);
-            strBuilder.append("\\u" + Integer.toHexString((int)c).toUpperCase());
+        // Compute textual escape results
+        for (int i = 0; i < ESCAPE_TEXTS.length; i++) {
+
+            ESCAPE_TEXTS_UNBESCAPE[i] = HtmlEscape.escapeHtml5(ESCAPE_TEXTS[i]);
+            ESCAPE_NEW_OBJECT_UNBESCAPE[i] = (ESCAPE_TEXTS[i] == ESCAPE_TEXTS_UNBESCAPE[i]);
+
+            ESCAPE_TEXTS_STRING_ESCAPE_UTILS[i] = StringEscapeUtils.escapeHtml4(ESCAPE_TEXTS[i]);
+            ESCAPE_NEW_OBJECT_STRING_ESCAPE_UTILS[i] = (ESCAPE_TEXTS[i] == ESCAPE_TEXTS_STRING_ESCAPE_UTILS[i]);
+
+            ESCAPE_TEXTS_SPRING_HTML_UTILS[i] = HtmlUtils.htmlEscape(ESCAPE_TEXTS[i]);
+            ESCAPE_NEW_OBJECT_SPRING_HTML_UTILS[i] = (ESCAPE_TEXTS[i] == ESCAPE_TEXTS_SPRING_HTML_UTILS[i]);
+
+            ESCAPE_TEXTS_ESAPI[i] = htmlEntityCodec.encode(immune, ESCAPE_TEXTS[i]);
+            ESCAPE_NEW_OBJECT_ESAPI[i] = (ESCAPE_TEXTS[i] == ESCAPE_TEXTS_ESAPI[i]);
+
         }
-        return strBuilder.toString();
+
+        // Compute textual unescape results
+        for (int i = 0; i < UNESCAPE_TEXTS.length; i++) {
+
+            UNESCAPE_TEXTS_UNBESCAPE[i] = HtmlEscape.unescapeHtml(UNESCAPE_TEXTS[i]);
+            UNESCAPE_NEW_OBJECT_UNBESCAPE[i] = (UNESCAPE_TEXTS[i] == UNESCAPE_TEXTS_UNBESCAPE[i]);
+
+            UNESCAPE_TEXTS_STRING_ESCAPE_UTILS[i] = StringEscapeUtils.unescapeHtml4(UNESCAPE_TEXTS[i]);
+            UNESCAPE_NEW_OBJECT_STRING_ESCAPE_UTILS[i] = (UNESCAPE_TEXTS[i] == UNESCAPE_TEXTS_STRING_ESCAPE_UTILS[i]);
+
+            UNESCAPE_TEXTS_SPRING_HTML_UTILS[i] = HtmlUtils.htmlUnescape(UNESCAPE_TEXTS[i]);
+            UNESCAPE_NEW_OBJECT_SPRING_HTML_UTILS[i] = (UNESCAPE_TEXTS[i] == UNESCAPE_TEXTS_SPRING_HTML_UTILS[i]);
+
+            UNESCAPE_TEXTS_ESAPI[i] = htmlEntityCodec.decode(UNESCAPE_TEXTS[i]);
+            UNESCAPE_NEW_OBJECT_ESAPI[i] = (UNESCAPE_TEXTS[i] == UNESCAPE_TEXTS_ESAPI[i]);
+
+        }
+
     }
+
+
+
+    private static void warmup(final Writer writer) throws IOException {
+        final int warmupIters = 10000;
+        writer.write(String.format("[WARMUP] Starting warmup (%d iterations)\n", Integer.valueOf(warmupIters))); writer.flush();
+        for (int i = 0; i < warmupIters; i++) {
+            final String res01 = HtmlEscape.escapeHtml5(ESCAPE_TEXTS[i % ESCAPE_TEXTS.length]);
+            final String res02 = StringEscapeUtils.escapeHtml4(ESCAPE_TEXTS[i % ESCAPE_TEXTS.length]);
+            final String res03 = HtmlUtils.htmlEscape(ESCAPE_TEXTS[i % ESCAPE_TEXTS.length]);
+            final String res04 = htmlEntityCodec.encode(immune, ESCAPE_TEXTS[i % ESCAPE_TEXTS.length]);
+        }
+        for (int i = 0; i < warmupIters; i++) {
+            final String res01 = HtmlEscape.unescapeHtml(UNESCAPE_TEXTS[i % UNESCAPE_TEXTS.length]);
+            final String res02 = StringEscapeUtils.unescapeHtml4(UNESCAPE_TEXTS[i % UNESCAPE_TEXTS.length]);
+            final String res03 = HtmlUtils.htmlUnescape(UNESCAPE_TEXTS[i % UNESCAPE_TEXTS.length]);
+            final String res04 = htmlEntityCodec.decode(UNESCAPE_TEXTS[i % UNESCAPE_TEXTS.length]);
+        }
+        writer.write(String.format("[WARMUP] Finished warmup (%d iterations)\n", Integer.valueOf(warmupIters))); writer.flush();
+    }
+
+
+
+    private static void performEscapeBenchmark(final int n, final Writer writer) throws IOException {
+
+        writer.write(String.format("[BENCHMARK][ESCAPE  ][%02d][START  ] Starting benchmark\n", Integer.valueOf(n)));
+        writer.write(String.format("[BENCHMARK][ESCAPE  ][%02d][DATA   ] Escaping %10d times:                                   \"%s\"\n",
+                Integer.valueOf(n), Integer.valueOf(BENCHMARK_EXECS), ESCAPE_TEXTS[n]));
+        writer.flush();
+
+        final long ustart = System.nanoTime();
+        for (int i = 0; i < BENCHMARK_EXECS; i++) {
+            final String result = HtmlEscape.escapeHtml5(ESCAPE_TEXTS[n]);
+        }
+        final long ufinish = System.nanoTime();
+
+        final long cstart = System.nanoTime();
+        for (int i = 0; i < BENCHMARK_EXECS; i++) {
+            final String result = StringEscapeUtils.escapeHtml4(ESCAPE_TEXTS[n]);
+        }
+        final long cfinish = System.nanoTime();
+
+        final long sstart = System.nanoTime();
+        for (int i = 0; i < BENCHMARK_EXECS; i++) {
+            final String result = HtmlUtils.htmlEscape(ESCAPE_TEXTS[n]);
+        }
+        final long sfinish = System.nanoTime();
+
+        final long estart = System.nanoTime();
+        for (int i = 0; i < BENCHMARK_EXECS; i++) {
+            final String result = htmlEntityCodec.encode(immune, ESCAPE_TEXTS[n]);
+        }
+        final long efinish = System.nanoTime();
+
+        writer.write(String.format("[BENCHMARK][ESCAPE  ][%02d][FINISH ] Finished benchmark\n", Integer.valueOf(n)));
+
+        final long utime = ufinish - ustart;
+        final long ctime = cfinish - cstart;
+        final long stime = sfinish - sstart;
+        final long etime = efinish - estart;
+
+        final double cdiff = (100 / (double)utime) * (double)ctime;
+        final double sdiff = (100 / (double)utime) * (double)stime;
+        final double ediff = (100 / (double)utime) * (double)etime;
+
+        writer.write(String.format("[BENCHMARK][ESCAPE  ][%02d][RESULTS] Unbescape:         %15d nanosecs [**********] (%1s) \"%s\"\n",
+                new Object[] { Integer.valueOf(n), Long.valueOf(utime), (ESCAPE_NEW_OBJECT_UNBESCAPE[n]? "*" : ""), ESCAPE_TEXTS_UNBESCAPE[n] }));
+        writer.write(String.format("[BENCHMARK][ESCAPE  ][%02d][RESULTS] StringEscapeUtils: %15d nanosecs [%9.2f%%] (%1s) \"%s\"\n",
+                new Object[] { Integer.valueOf(n), Long.valueOf(ctime), Double.valueOf(cdiff), (ESCAPE_NEW_OBJECT_STRING_ESCAPE_UTILS[n]? "*" : ""), ESCAPE_TEXTS_STRING_ESCAPE_UTILS[n] }));
+        writer.write(String.format("[BENCHMARK][ESCAPE  ][%02d][RESULTS] Spring HtmlUtils:  %15d nanosecs [%9.2f%%] (%1s) \"%s\"\n",
+                new Object[] { Integer.valueOf(n), Long.valueOf(stime), Double.valueOf(sdiff), (ESCAPE_NEW_OBJECT_SPRING_HTML_UTILS[n]? "*" : ""), ESCAPE_TEXTS_SPRING_HTML_UTILS[n] }));
+        writer.write(String.format("[BENCHMARK][ESCAPE  ][%02d][RESULTS] OWASP ESAPI:       %15d nanosecs [%9.2f%%] (%1s) \"%s\"\n",
+                new Object[] { Integer.valueOf(n), Long.valueOf(etime), Double.valueOf(ediff), (ESCAPE_NEW_OBJECT_ESAPI[n]? "*" : ""), ESCAPE_TEXTS_ESAPI[n]}));
+        writer.flush();
+
+    }
+
+
+
+
+    private static void performUnescapeBenchmark(final int n, final Writer writer) throws IOException {
+
+        writer.write(String.format("[BENCHMARK][UNESCAPE][%02d][START  ] Starting benchmark\n", Integer.valueOf(n)));
+        writer.write(String.format("[BENCHMARK][UNESCAPE][%02d][DATA   ] Unescaping %10d times:                                 \"%s\"\n",
+                Integer.valueOf(n), Integer.valueOf(BENCHMARK_EXECS), UNESCAPE_TEXTS[n]));
+        writer.flush();
+
+        final long ustart = System.nanoTime();
+        for (int i = 0; i < BENCHMARK_EXECS; i++) {
+            final String result = HtmlEscape.unescapeHtml(UNESCAPE_TEXTS[n]);
+        }
+        final long ufinish = System.nanoTime();
+
+        final long cstart = System.nanoTime();
+        for (int i = 0; i < BENCHMARK_EXECS; i++) {
+            final String result = StringEscapeUtils.unescapeHtml4(UNESCAPE_TEXTS[n]);
+        }
+        final long cfinish = System.nanoTime();
+
+        final long sstart = System.nanoTime();
+        for (int i = 0; i < BENCHMARK_EXECS; i++) {
+            final String result = HtmlUtils.htmlUnescape(UNESCAPE_TEXTS[n]);
+        }
+        final long sfinish = System.nanoTime();
+
+        final long estart = System.nanoTime();
+        for (int i = 0; i < BENCHMARK_EXECS; i++) {
+            final String result = htmlEntityCodec.decode(UNESCAPE_TEXTS[n]);
+        }
+        final long efinish = System.nanoTime();
+
+        writer.write(String.format("[BENCHMARK][UNESCAPE][%02d][FINISH ] Finished benchmark\n", Integer.valueOf(n)));
+
+        final long utime = ufinish - ustart;
+        final long ctime = cfinish - cstart;
+        final long stime = sfinish - sstart;
+        final long etime = efinish - estart;
+
+        final double cdiff = (100 / (double)utime) * (double)ctime;
+        final double sdiff = (100 / (double)utime) * (double)stime;
+        final double ediff = (100 / (double)utime) * (double)etime;
+
+        writer.write(String.format("[BENCHMARK][UNESCAPE][%02d][RESULTS] Unbescape:         %15d nanosecs [**********] (%1s) \"%s\"\n",
+                new Object[] { Integer.valueOf(n), Long.valueOf(utime), (UNESCAPE_NEW_OBJECT_UNBESCAPE[n]? "*" : ""), UNESCAPE_TEXTS_UNBESCAPE[n] }));
+        writer.write(String.format("[BENCHMARK][UNESCAPE][%02d][RESULTS] StringEscapeUtils: %15d nanosecs [%9.2f%%] (%1s) \"%s\"\n",
+                new Object[] { Integer.valueOf(n), Long.valueOf(ctime), Double.valueOf(cdiff), (UNESCAPE_NEW_OBJECT_STRING_ESCAPE_UTILS[n]? "*" : ""), UNESCAPE_TEXTS_STRING_ESCAPE_UTILS[n] }));
+        writer.write(String.format("[BENCHMARK][UNESCAPE][%02d][RESULTS] Spring HtmlUtils:  %15d nanosecs [%9.2f%%] (%1s) \"%s\"\n",
+                new Object[] { Integer.valueOf(n), Long.valueOf(stime), Double.valueOf(sdiff), (UNESCAPE_NEW_OBJECT_SPRING_HTML_UTILS[n]? "*" : ""), UNESCAPE_TEXTS_SPRING_HTML_UTILS[n] }));
+        writer.write(String.format("[BENCHMARK][UNESCAPE][%02d][RESULTS] OWASP ESAPI:       %15d nanosecs [%9.2f%%] (%1s) \"%s\"\n",
+                new Object[] { Integer.valueOf(n), Long.valueOf(etime), Double.valueOf(ediff), (UNESCAPE_NEW_OBJECT_ESAPI[n]? "*" : ""), UNESCAPE_TEXTS_ESAPI[n]}));
+        writer.flush();
+
+    }
+
+
 
 
     public static void main(String[] args) throws Exception {
 
+        final Writer writer = new PrintWriter(System.out, true);
 
-        final HTMLEntityCodec htmlEntityCodec = new HTMLEntityCodec();
-        final char[] immune = new char[0];
+        warmup(writer);
 
-        final String s1 = "[\u0163\u00E1aeiouABC0123&#x20000;']\ud835\udccd";
-        System.out.println(s1);
-        final String s2 = StringEscapeUtils.unescapeHtml4(s1);
-        System.out.println("UNESCAPED:         " + s2 + " -> " + asHexCharString(s2));
-        final String s3 = HtmlEscape.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA);
-        System.out.println("UNBESCAPE:      " + s3);
-        final String s4 = StringEscapeUtils.escapeHtml4(s2);
-        System.out.println("STRINGESCAPEUTILS: " + s4);
-        final String s5 = HtmlUtils.htmlEscape(s2);
-        System.out.println("SPRING HTMLUTILS:  " + s5);
-        final String s6 = htmlEntityCodec.encode(immune, s2);
-        System.out.println("ESAPI:             " + s6);
-
-
-        String testMsg = "\"Im < 355, & you\u00E1?\"";
-//        String testMsg = "\u0163\"I'm < 355, & you\u00E1?\"";
-//        String testMsg = "Im less than 355, and you?";
-        for (int i = 0; i < 5; i++) {
-            testMsg = testMsg + testMsg;
-        }
-        final int execs = 100000;
-
-        // Warmup
-        for (int i = 0; i < 100; i++) {
-            final String result1 = HtmlEscape.escapeHtml(testMsg, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
-            final String result2 = StringEscapeUtils.escapeHtml4(testMsg);
-            final String result3 = HtmlUtils.htmlEscape(testMsg);
-            final String result4 = htmlEntityCodec.encode(immune, testMsg);
+        for (int i = 0; i < ESCAPE_TEXTS.length; i++) {
+            performEscapeBenchmark(i, writer);
         }
 
-        final long jstart = System.nanoTime();
-        for (int i = 0; i < execs; i++) {
-            final String result = HtmlEscape.escapeHtml(testMsg, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
-        }
-        final long jfinish = System.nanoTime();
-
-        final long cstart = System.nanoTime();
-        for (int i = 0; i < execs; i++) {
-            final String result = StringEscapeUtils.escapeHtml4(testMsg);
-        }
-        final long cfinish = System.nanoTime();
-
-        final long gstart = System.nanoTime();
-        for (int i = 0; i < execs; i++) {
-            final String result = HtmlUtils.htmlEscape(testMsg);
-        }
-        final long gfinish = System.nanoTime();
-
-        System.out.println(String.format("J: %15d nanosecs", Long.valueOf(jfinish - jstart)));
-        System.out.println(String.format("C: %15d nanosecs", Long.valueOf(cfinish - cstart)));
-        System.out.println(String.format("S: %15d nanosecs", Long.valueOf(gfinish - gstart)));
-
-        System.out.println(HtmlEscape.escapeHtml(testMsg));
-        System.out.println(HtmlEscape.escapeHtml(testMsg) == testMsg);
-        System.out.println(StringEscapeUtils.escapeHtml4(testMsg));
-        System.out.println(StringEscapeUtils.escapeHtml4(testMsg) == testMsg);
-        System.out.println(HtmlUtils.htmlEscape(testMsg));
-        System.out.println(HtmlUtils.htmlEscape(testMsg) == testMsg);
-
-
-        System.out.println("UNESCAPE: " + HtmlEscape.unescapeHtml(
-                HtmlEscape.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA)));
-        System.out.println("UNESCAPE: " + HtmlEscape.unescapeHtml(
-                HtmlEscape.escapeHtml(s2, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL)));
-        System.out.println("UNESCAPE: " + HtmlEscape.unescapeHtml("&euro; - &#x20aC; - &#8364; - &#x80; - &#128; - &#x80gs - &#128as"));
-
-//        final String testUnescMsg = HtmlEscape.escapeHtml(s2, HtmlEscape.HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL);
-        final String testUnescMsg = "&lsqb;&tcedil;&aacuteaeiouABC0123&#131072;&#39;&rsqb;&xscr;";
-
-        System.out.println("ESCAPED:           " + testUnescMsg);
-        final String u3 = HtmlEscape.unescapeHtml(testUnescMsg);
-        System.out.println("UNBESCAPE:         " + u3);
-        final String u4 = StringEscapeUtils.unescapeHtml4(testUnescMsg);
-        System.out.println("STRINGESCAPEUTILS: " + u4);
-        final String u5 = HtmlUtils.htmlUnescape(testUnescMsg);
-        System.out.println("SPRING HTMLUTILS:  " + u5);
-        final String u6 = htmlEntityCodec.decode(testUnescMsg);
-        System.out.println("ESAPI:             " + u6);
-
-
-        // Warmup
-        for (int i = 0; i < 100; i++) {
-            final String result1 = HtmlEscape.unescapeHtml(testUnescMsg);
-            final String result2 = StringEscapeUtils.unescapeHtml4(testUnescMsg);
-            final String result3 = HtmlUtils.htmlUnescape(testUnescMsg);
-            final String result4 = htmlEntityCodec.decode(testUnescMsg);
+        for (int i = 0; i < UNESCAPE_TEXTS.length; i++) {
+            performUnescapeBenchmark(i, writer);
         }
 
-        final long ujstart = System.nanoTime();
-        for (int i = 0; i < execs; i++) {
-            final String result = HtmlEscape.unescapeHtml(testUnescMsg);
-        }
-        final long ujfinish = System.nanoTime();
-
-        final long ucstart = System.nanoTime();
-        for (int i = 0; i < execs; i++) {
-            final String result = StringEscapeUtils.unescapeHtml4(testUnescMsg);
-        }
-        final long ucfinish = System.nanoTime();
-
-        final long ugstart = System.nanoTime();
-        for (int i = 0; i < execs; i++) {
-            final String result = HtmlUtils.htmlUnescape(testUnescMsg);
-        }
-        final long ugfinish = System.nanoTime();
-
-        final long uestart = System.nanoTime();
-        for (int i = 0; i < execs; i++) {
-            final String result = htmlEntityCodec.decode(testUnescMsg);
-        }
-        final long uefinish = System.nanoTime();
-
-        System.out.println(String.format("J: %15d nanosecs", Long.valueOf(ujfinish - ujstart)));
-        System.out.println(String.format("C: %15d nanosecs", Long.valueOf(ucfinish - ucstart)));
-        System.out.println(String.format("S: %15d nanosecs", Long.valueOf(ugfinish - ugstart)));
-        System.out.println(String.format("E: %15d nanosecs", Long.valueOf(uefinish - uestart)));
-
-        final String partial01 = "&lsqb;&tcedil;&aacuteaeiouABC0123&#131072;&#39;&rsqb;&xscr;";
-        final String uPartial01 = HtmlEscape.unescapeHtml(partial01);
-        System.out.println("UNBESCAPE PARTIAL:         " + uPartial01);
-        final String uPartial02 = StringEscapeUtils.unescapeHtml4(partial01);
-        System.out.println("STRINGESCAPEUTILS PARTIAL: " + uPartial02);
+        writer.flush();
 
     }
 
