@@ -369,7 +369,7 @@ public final class HtmlEscape {
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>String</kbd> to be escaped.
+     * @param text the <kbd>char[]</kbd> to be escaped.
      * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
      * @param len the number of characters in <kbd>text</kbd> that should be escaped.
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
@@ -382,6 +382,42 @@ public final class HtmlEscape {
     }
 
 
+    /**
+     * <p>
+     *   Perform an HTML5 level 1 (XML-style) <strong>escape</strong> operation on a <kbd>char[]</kbd> input.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the five markup-significant characters:
+     *   <kbd>&lt;</kbd>, <kbd>&gt;</kbd>, <kbd>&amp;</kbd>, <kbd>&quot</kbd> and <kbd>&apos;</kbd>. It is called
+     *   <em>XML-style</em> in order to link it with JSP's <kbd>escapeXml</kbd> attribute in JSTL's
+     *   <kbd>&lt;c:out ... /&gt;</kbd> tags.
+     * </p>
+     * <p>
+     *  Note this method may <strong>not</strong> produce the same results as
+     *  {@link #escapeHtml4Xml(char[], int, int, java.io.Writer)} because
+     *  it will escape the apostrophe as <kbd>&amp;apos;</kbd>, whereas in HTML 4 such NCR does not exist
+     *  (the decimal numeric reference <kbd>&amp;#39;</kbd> is used instead).
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeHtml(char[], int, int, java.io.Writer, HtmlEscapeType, HtmlEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><kbd>type</kbd>:
+     *       {@link org.unbescape.html.HtmlEscapeType#HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL}</li>
+     *   <li><kbd>level</kbd>:
+     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT_WITH_APOS}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
     public static void escapeHtml5Xml(final char[] text, final int offset, final int len, final Writer writer)
                                       throws IOException {
         escapeHtml(text, offset, len, writer, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
@@ -420,7 +456,7 @@ public final class HtmlEscape {
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>String</kbd> to be escaped.
+     * @param text the <kbd>char[]</kbd> to be escaped.
      * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
      * @param len the number of characters in <kbd>text</kbd> that should be escaped.
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
@@ -433,6 +469,41 @@ public final class HtmlEscape {
     }
 
 
+    /**
+     * <p>
+     *   Perform an HTML 4 level 1 (XML-style) <strong>escape</strong> operation on a <kbd>char[]</kbd> input.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the five markup-significant characters:
+     *   <kbd>&lt;</kbd>, <kbd>&gt;</kbd>, <kbd>&amp;</kbd>, <kbd>&quot</kbd> and <kbd>&apos;</kbd>. It is called
+     *   <em>XML-style</em> in order to link it with JSP's <kbd>escapeXml</kbd> attribute in JSTL's
+     *   <kbd>&lt;c:out ... /&gt;</kbd> tags.
+     * </p>
+     * <p>
+     *  Note this method may <strong>not</strong> produce the same results as
+     *  {@link #escapeHtml5Xml(char[], int, int, java.io.Writer)}  because it will escape the apostrophe as
+     *  <kbd>&amp;#39;</kbd>, whereas in HTML5 there is a specific NCR for such character (<kbd>&amp;apos;</kbd>).
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeHtml(char[], int, int, java.io.Writer, HtmlEscapeType, HtmlEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><kbd>type</kbd>:
+     *       {@link org.unbescape.html.HtmlEscapeType#HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL}</li>
+     *   <li><kbd>level</kbd>:
+     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT_WITH_APOS}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
     public static void escapeHtml4Xml(final char[] text, final int offset, final int len, final Writer writer)
                                       throws IOException {
         escapeHtml(text, offset, len, writer, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
