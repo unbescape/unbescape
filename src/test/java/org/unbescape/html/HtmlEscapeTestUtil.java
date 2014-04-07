@@ -271,7 +271,7 @@ public class HtmlEscapeTestUtil {
 
         final char[] textCharArray = (text == null? null : text.toCharArray());
         StringWriter stringWriter = new StringWriter();
-        HtmlEscape.escapeHtml(textCharArray, stringWriter, type, level);
+        HtmlEscape.escapeHtml(textCharArray, 0, (textCharArray == null? 0 : textCharArray.length), stringWriter, type, level);
         if (textCharArray == null) {
             Assert.assertEquals("", stringWriter.toString());
         } else {
@@ -318,7 +318,7 @@ public class HtmlEscapeTestUtil {
 
         final char[] textCharArray = (text == null? null : text.toCharArray());
         StringWriter stringWriter = new StringWriter();
-        HtmlEscape.unescapeHtml(textCharArray, stringWriter);
+        HtmlEscape.unescapeHtml(textCharArray, 0, (textCharArray == null? 0 : textCharArray.length), stringWriter);
         if (textCharArray == null) {
             Assert.assertEquals("", stringWriter.toString());
         } else {
