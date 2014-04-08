@@ -22,6 +22,9 @@ package org.unbescape.html;
 import java.util.Arrays;
 
 /**
+ * <p>
+ *   This class initializes the {@link org.unbescape.html.HtmlEscapeSymbols#HTML4_SYMBOLS} structure.
+ * </p>
  * 
  * @author Daniel Fern&aacute;ndez
  * 
@@ -36,18 +39,19 @@ final class Html4EscapeSymbolsInitializer {
         final HtmlEscapeSymbols.References html4References = new HtmlEscapeSymbols.References();
 
         /*
-         * -----------------------------------------------------------
-         *   HTML4 ESCAPE ENTITIES
+         * -----------------------------------------------------------------
+         *   HTML4 NAMED CHARACTER REFERENCES (CHARACTER ENTITY REFERENCES)
          *   See: http://www.w3.org/TR/html4/sgml/entities.html
-         * -----------------------------------------------------------
+         * -----------------------------------------------------------------
          */
 
-        /* HTML ESCAPE ENTITIES FOR MARKUP-SIGNIFICANT CHARACTERS */
+        /* HTML NCRs FOR MARKUP-SIGNIFICANT CHARACTERS */
+        // (Note HTML 4 does not include &apos; as a valid NCR)
         html4References.addReference('"', "&quot;");
         html4References.addReference('&', "&amp;");
         html4References.addReference('<', "&lt;");
         html4References.addReference('>', "&gt;");
-        /* HTML ESCAPE ENTITIES FOR ISO-8859-1 CHARACTERS */
+        /* HTML NCRs FOR ISO-8859-1 CHARACTERS */
         html4References.addReference('\u00A0', "&nbsp;");
         html4References.addReference('\u00A1', "&iexcl;");
         html4References.addReference('\u00A2', "&cent;");
@@ -144,7 +148,7 @@ final class Html4EscapeSymbolsInitializer {
         html4References.addReference('\u00FD', "&yacute;");
         html4References.addReference('\u00FE', "&thorn;");
         html4References.addReference('\u00FF', "&yuml;");
-        /* HTML ESCAPE ENTITIES FOR SYMBOLS, MATHEMATICAL SYMBOLS AND GREEK LETTERS */
+        /* HTML NCRs FOR SYMBOLS, MATHEMATICAL SYMBOLS AND GREEK LETTERS */
         /* - Greek */
         html4References.addReference('\u0192', "&fnof;");
         html4References.addReference('\u0391', "&Alpha;");
@@ -276,7 +280,7 @@ final class Html4EscapeSymbolsInitializer {
         html4References.addReference('\u2663', "&clubs;");
         html4References.addReference('\u2665', "&hearts;");
         html4References.addReference('\u2666', "&diams;");
-        /* HTML ESCAPE ENTITIES FOR INTERNATIONALIZATION CHARACTERS */
+        /* HTML NCRs FOR INTERNATIONALIZATION CHARACTERS */
         /* - Latin Extended-A */
         html4References.addReference('\u0152', "&OElig;");
         html4References.addReference('\u0153', "&oelig;");
@@ -311,13 +315,12 @@ final class Html4EscapeSymbolsInitializer {
 
 
         /*
-         * Initialization of escape levels for the ASCII plane (0x0 to 0x7f)
-         *
+         * Initialization of escape levels.
          * Defined levels :
          *
-         *    - Level 0 : Only markup-significant characters, excluding '
-         *    - Level 1 : Only markup-significant characters, including '
-         *    - Level 2 : Markup-significant characters including ', plus all ASCII
+         *    - Level 0 : Only markup-significant characters except the apostrophe (')
+         *    - Level 1 : Only markup-significant characters (including the apostrophe)
+         *    - Level 2 : Markup-significant characters plus all non-ASCII
          *    - Level 3 : All non-alphanumeric characters
          *    - Level 4 : All characters
          */

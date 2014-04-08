@@ -23,7 +23,10 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * 
+ * <p>
+ *   Internal class in charge of performing the real escape/unescape operations.
+ * </p>
+ *
  * @author Daniel Fern&aacute;ndez
  * 
  * @since 1.0
@@ -36,14 +39,24 @@ final class HtmlEscapeUtil {
     /*
      * GLOSSARY
      * ------------------------
-     *    NCR: Named Character Reference:       &aacute;
-     *    DCR: Decimal Character Reference:     &#225;
-     *    HCR: Hexadecimal Character Reference: &#xE1;
-     *    Codepoint: each of the int values conforming the Unicode code space.
-     *               Normally corresponding to a Java char primitive value (codepoint <= U+FFFF), but might be two
-     *               chars for codepoints U+FFFF to U+10FFFF if the first char is a high surrogate (\uD800 to \uDBFF)
-     *               and the second is a low surrogate (\uDC00 to \uDFFF).
-     *               See: http://www.oracle.com/technetwork/articles/javase/supplementary-142654.html
+     *
+     *   NCR
+     *      Named Character Reference or Character Entity Reference: textual
+     *      representation of an Unicode codepoint: &aacute;
+     *
+     *   DCR
+     *      Decimal Character Reference: base-10 numerical representation of an Unicode codepoint: &#225;
+     *
+     *   HCR
+     *      Hexadecimal Character Reference: hexadecimal numerical representation of an Unicode codepoint: &#xE1;
+     *
+     *   Unicode Codepoint
+     *      Each of the int values conforming the Unicode code space.
+     *      Normally corresponding to a Java char primitive value (codepoint <= \uFFFF),
+     *      but might be two chars for codepoints \u10000 to \u10FFFF if the first char is a high
+     *      surrogate (\uD800 to \uDBFF) and the second is a low surrogate (\uDC00 to \uDFFF).
+     *      See: http://www.oracle.com/technetwork/articles/javase/supplementary-142654.html
+     *
      */
 
 

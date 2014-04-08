@@ -24,10 +24,10 @@ import java.io.Writer;
 
 /**
  * <p>
- *   Static utility class for performing HTML escape/unescape operations.
+ *   Utility class for performing HTML escape/unescape operations.
  * </p>
  *
- * <h4><u>Configuration</u></h4>
+ * <h4><u>Configuration of escape/unescape operations</u></h4>
  *
  * <p>
  *   <strong>Escape</strong> operations can be configured by means of:
@@ -92,6 +92,26 @@ import java.io.Writer;
  *       the whole <kbd>char[]</kbd>.</li>
  * </ul>
  *
+ * <h4><u>Glossary</u></h4>
+ *
+ * <dl>
+ *   <dt>NCR</dt>
+ *     <dd>Named Character Reference or <em>Character Entity Reference</em>: textual
+ *         representation of an Unicode codepoint: <kbd>&amp;aacute;</kbd></dd>
+ *   <dt>DCR</dt>
+ *     <dd>Decimal Character Reference: base-10 numerical representation of an Unicode codepoint:
+ *         <kbd>&amp;#225;</kbd></dd>
+ *   <dt>HCR</dt>
+ *     <dd>Hexadecimal Character Reference: hexadecimal numerical representation of an Unicode codepoint:
+ *         <kbd>&amp;#xE1;</kbd></dd>
+ *   <dt>Unicode Codepoint</dt>
+ *     <dd>Each of the <kbd>int</kbd> values conforming the Unicode code space.
+ *         Normally corresponding to a Java <kbd>char</kbd> primitive value (codepoint <= <kbd>&bsol;uFFFF</kbd>),
+ *         but might be two <kbd>char</kbd>s for codepoints <kbd>&bsol;u10000</kbd> to <kbd>&bsol;u10FFFF</kbd> if the
+ *         first <kbd>char</kbd> is a high surrogate (<kbd>&bsol;uD800</kbd> to <kbd>&bsol;uDBFF</kbd>) and the
+ *         second is a low surrogate (<kbd>&bsol;uDC00</kbd> to <kbd>&bsol;uDFFF</kbd>).</dd>
+ * </dl>
+ *
  * <h4><u>References</u></h4>
  *
  * <p>
@@ -150,7 +170,7 @@ public final class HtmlEscape {
      *   <li><kbd>type</kbd>:
      *       {@link org.unbescape.html.HtmlEscapeType#HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS}</li>
+     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -164,7 +184,7 @@ public final class HtmlEscape {
      */
     public static String escapeHtml5(final String text) {
         return escapeHtml(text, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
-                HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS);
+                HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
     }
 
 
@@ -191,7 +211,7 @@ public final class HtmlEscape {
      *   <li><kbd>type</kbd>:
      *       {@link org.unbescape.html.HtmlEscapeType#HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT_WITH_APOS}</li>
+     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -205,7 +225,7 @@ public final class HtmlEscape {
      */
     public static String escapeHtml5Xml(final String text) {
         return escapeHtml(text, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
-                HtmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT_WITH_APOS);
+                HtmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
     }
 
 
@@ -234,7 +254,7 @@ public final class HtmlEscape {
      *   <li><kbd>type</kbd>:
      *       {@link org.unbescape.html.HtmlEscapeType#HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS}</li>
+     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -248,7 +268,7 @@ public final class HtmlEscape {
      */
     public static String escapeHtml4(final String text) {
         return escapeHtml(text, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
-                HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS);
+                HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
     }
 
 
@@ -275,7 +295,7 @@ public final class HtmlEscape {
      *   <li><kbd>type</kbd>:
      *       {@link org.unbescape.html.HtmlEscapeType#HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT_WITH_APOS}</li>
+     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -289,7 +309,7 @@ public final class HtmlEscape {
      */
     public static String escapeHtml4Xml(final String text) {
         return escapeHtml(text, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
-                HtmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT_WITH_APOS);
+                HtmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
     }
 
 
@@ -363,7 +383,7 @@ public final class HtmlEscape {
      *   <li><kbd>type</kbd>:
      *       {@link org.unbescape.html.HtmlEscapeType#HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS}</li>
+     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -378,7 +398,7 @@ public final class HtmlEscape {
     public static void escapeHtml5(final char[] text, final int offset, final int len, final Writer writer)
                                    throws IOException {
         escapeHtml(text, offset, len, writer, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
-                HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS);
+                HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
     }
 
 
@@ -406,7 +426,7 @@ public final class HtmlEscape {
      *   <li><kbd>type</kbd>:
      *       {@link org.unbescape.html.HtmlEscapeType#HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT_WITH_APOS}</li>
+     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -421,7 +441,7 @@ public final class HtmlEscape {
     public static void escapeHtml5Xml(final char[] text, final int offset, final int len, final Writer writer)
                                       throws IOException {
         escapeHtml(text, offset, len, writer, HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
-                HtmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT_WITH_APOS);
+                HtmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
     }
 
 
@@ -450,7 +470,7 @@ public final class HtmlEscape {
      *   <li><kbd>type</kbd>:
      *       {@link org.unbescape.html.HtmlEscapeType#HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS}</li>
+     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -465,7 +485,7 @@ public final class HtmlEscape {
     public static void escapeHtml4(final char[] text, final int offset, final int len, final Writer writer)
                                    throws IOException {
         escapeHtml(text, offset, len, writer, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
-                HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT_WITH_APOS);
+                HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
     }
 
 
@@ -492,7 +512,7 @@ public final class HtmlEscape {
      *   <li><kbd>type</kbd>:
      *       {@link org.unbescape.html.HtmlEscapeType#HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT_WITH_APOS}</li>
+     *       {@link org.unbescape.html.HtmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -507,7 +527,7 @@ public final class HtmlEscape {
     public static void escapeHtml4Xml(final char[] text, final int offset, final int len, final Writer writer)
                                       throws IOException {
         escapeHtml(text, offset, len, writer, HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
-                HtmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT_WITH_APOS);
+                HtmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
     }
 
 

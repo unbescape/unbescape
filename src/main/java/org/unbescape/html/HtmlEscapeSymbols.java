@@ -49,14 +49,24 @@ final class HtmlEscapeSymbols {
     /*
      * GLOSSARY
      * ------------------------
-     *    NCR: Named Character Reference:       &aacute;
-     *    DCR: Decimal Character Reference:     &#225;
-     *    HCR: Hexadecimal Character Reference: &#xE1;
-     *    Codepoint: each of the int values conforming the Unicode code space.
-     *               Normally corresponding to a Java char primitive value (codepoint <= U+FFFF), but might be two
-     *               chars for codepoints U+FFFF to U+10FFFF if the first char is a high surrogate (\uD800 to \uDBFF)
-     *               and the second is a low surrogate (\uDC00 to \uDFFF).
-     *               See: http://www.oracle.com/technetwork/articles/javase/supplementary-142654.html
+     *
+     *   NCR
+     *      Named Character Reference or Character Entity Reference: textual
+     *      representation of an Unicode codepoint: &aacute;
+     *
+     *   DCR
+     *      Decimal Character Reference: base-10 numerical representation of an Unicode codepoint: &#225;
+     *
+     *   HCR
+     *      Hexadecimal Character Reference: hexadecimal numerical representation of an Unicode codepoint: &#xE1;
+     *
+     *   Unicode Codepoint
+     *      Each of the int values conforming the Unicode code space.
+     *      Normally corresponding to a Java char primitive value (codepoint <= \uFFFF),
+     *      but might be two chars for codepoints \u10000 to \u10FFFF if the first char is a high
+     *      surrogate (\uD800 to \uDBFF) and the second is a low surrogate (\uDC00 to \uDFFF).
+     *      See: http://www.oracle.com/technetwork/articles/javase/supplementary-142654.html
+     *
      */
 
 
@@ -129,7 +139,7 @@ final class HtmlEscapeSymbols {
 
     /*
      * This array contains all the codepoints corresponding to the NCRs stored in SORTED_NCRS. This array is ordered
-     * so that each index in SORTED_NCRS can also be used to retrieve the original CODEPOINT when used on this array.
+     * so that each index in SORTED_NCRS can also be used to retrieve the corresponding CODEPOINT when used on this array.
      * - Values in this array can be positive (= single codepoint) or negative (= double codepoint, will need further
      *   resolution by means of the DOUBLE_CODEPOINTS array)
      * - Max size in real world, when populated for HTML5: 2125 NCRs * 4 bytes/objref -> 8500 bytes.

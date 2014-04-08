@@ -22,7 +22,10 @@ package org.unbescape.html;
 import java.util.Arrays;
 
 /**
- * 
+ * <p>
+ *   This class initializes the {@link org.unbescape.html.HtmlEscapeSymbols#HTML5_SYMBOLS} structure.
+ * </p>
+ *
  * @author Daniel Fern&aacute;ndez
  * 
  * @since 1.0
@@ -37,7 +40,7 @@ final class Html5EscapeSymbolsInitializer {
 
         /*
          * --------------------------------------------------------------------------------------------------
-         *   HTML5 ESCAPE ENTITIES
+         *   HTML5 NAMED CHARACTER REFERENCES
          *   See: http://www.w3.org/TR/html5/syntax.html#named-character-references  [HTML5]
          *        http://www.w3.org/TR/html51/syntax.html#named-character-references [HTML 5.1]
          * --------------------------------------------------------------------------------------------------
@@ -2275,13 +2278,12 @@ final class Html5EscapeSymbolsInitializer {
         html5References.addReference(120171, "&zopf;");
 
         /*
-         * Initialization of escape levels for the ASCII plane (0x0 to 0x7f)
-         *
+         * Initialization of escape levels.
          * Defined levels :
          *
-         *    - Level 0 : Only markup-significant characters, excluding '
-         *    - Level 1 : Only markup-significant characters, including '
-         *    - Level 2 : Markup-significant characters including ', plus all ASCII
+         *    - Level 0 : Only markup-significant characters except the apostrophe (')
+         *    - Level 1 : Only markup-significant characters (including the apostrophe)
+         *    - Level 2 : Markup-significant characters plus all non-ASCII
          *    - Level 3 : All non-alphanumeric characters
          *    - Level 4 : All characters
          */
