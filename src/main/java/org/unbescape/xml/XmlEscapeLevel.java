@@ -43,7 +43,14 @@ package org.unbescape.xml;
  * </ul>
  *
  * <p>
- *   No <em>level 0</em> exists, in order to keep consistency with HTML escape levels defined in
+ *   Note that, apart from the settings established by each of these levels, different XML versions might establish
+ *   the required escaping of a series of <em>control characteres</em> (basically, all the allowed ones). These
+ *   control character will be <em>always</em> escaped, from level 1. Besides, some characters considered invalid
+ *   in such versions of XML might be directly removed from output.
+ * </p>
+ *
+ * <p>
+ *   Also note that no <em>level 0</em> exists, in order to keep consistency with HTML escape levels defined in
  *   {@link org.unbescape.html.HtmlEscapeLevel}.
  * </p>
  *
