@@ -125,23 +125,6 @@ final class XmlEscapeUtil {
 
 
             /*
-             * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
-             * all for them
-             */
-            if (c <= symbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[c]) {
-                continue;
-            }
-
-
-            /*
-             * Shortcut: we might not want to escape non-ASCII chars at all either.
-             */
-            if (c > symbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[symbols.MAX_ASCII_CHAR + 1]) {
-                continue;
-            }
-
-
-            /*
              * Compute the codepoint. This will be used instead of the char for the rest of the process.
              */
 
@@ -160,6 +143,37 @@ final class XmlEscapeUtil {
             }
 
 
+            boolean codepointValid = symbols.CODEPOINT_VALIDATOR.isValid(codepoint);
+
+
+            /*
+             * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
+             * all for them
+             */
+            if (codepoint <= (XmlEscapeSymbols.LEVELS_LEN - 2)
+                    && level < symbols.ESCAPE_LEVELS[codepoint]
+                    && codepointValid) {
+                continue;
+            }
+
+
+            /*
+             * Shortcut: we might not want to escape non-ASCII chars at all either.
+             */
+            if (codepoint > (XmlEscapeSymbols.LEVELS_LEN - 2)
+                    && level < symbols.ESCAPE_LEVELS[XmlEscapeSymbols.LEVELS_LEN - 1]
+                    && codepointValid) {
+
+                if (Character.charCount(codepoint) > 1) {
+                    // This is to compensate that we are actually escaping two char[] positions with a single codepoint.
+                    i++;
+                }
+
+                continue;
+
+            }
+
+
             /*
              * At this point we know for sure we will need some kind of escape, so we
              * can increase the offset and initialize the string builder if needed, along with
@@ -175,11 +189,20 @@ final class XmlEscapeUtil {
             }
 
             if (Character.charCount(codepoint) > 1) {
-                // This is to compensate that we are actually escaping two char[] positions with a single codepoint.
+                // This is to compensate that we are actually reading two char[] positions with a single codepoint.
                 i++;
             }
 
             readOffset = i + 1;
+
+
+            /*
+             * If the char is invalid, there is nothing to write, simply skip it (which we already did by
+             * incrementing the readOffset.
+             */
+            if (!codepointValid) {
+                continue;
+            }
 
 
             /*
@@ -269,23 +292,6 @@ final class XmlEscapeUtil {
 
 
             /*
-             * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
-             * all for them
-             */
-            if (c <= symbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[c]) {
-                continue;
-            }
-
-
-            /*
-             * Shortcut: we might not want to escape non-ASCII chars at all either.
-             */
-            if (c > symbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[symbols.MAX_ASCII_CHAR + 1]) {
-                continue;
-            }
-
-
-            /*
              * Compute the codepoint. This will be used instead of the char for the rest of the process.
              */
 
@@ -304,6 +310,37 @@ final class XmlEscapeUtil {
             }
 
 
+            boolean codepointValid = symbols.CODEPOINT_VALIDATOR.isValid(codepoint);
+
+
+            /*
+             * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
+             * all for them
+             */
+            if (codepoint <= (XmlEscapeSymbols.LEVELS_LEN - 2)
+                    && level < symbols.ESCAPE_LEVELS[codepoint]
+                    && codepointValid) {
+                continue;
+            }
+
+
+            /*
+             * Shortcut: we might not want to escape non-ASCII chars at all either.
+             */
+            if (codepoint > (XmlEscapeSymbols.LEVELS_LEN - 2)
+                    && level < symbols.ESCAPE_LEVELS[XmlEscapeSymbols.LEVELS_LEN - 1]
+                    && codepointValid) {
+
+                if (Character.charCount(codepoint) > 1) {
+                    // This is to compensate that we are actually reading two char[] positions with a single codepoint.
+                    i++;
+                }
+
+                continue;
+
+            }
+
+
             /*
              * At this point we know for sure we will need some kind of escape, so we
              * can write all the contents pending up to this point.
@@ -319,6 +356,15 @@ final class XmlEscapeUtil {
             }
 
             readOffset = i + 1;
+
+
+            /*
+             * If the char is invalid, there is nothing to write, simply skip it (which we already did by
+             * incrementing the readOffset.
+             */
+            if (!codepointValid) {
+                continue;
+            }
 
 
             /*
@@ -494,12 +540,14 @@ final class XmlEscapeUtil {
                             continue;
                         }
 
-                        codepoint = parseIntFromReference(text, i + 3, f, 16);
-                        referenceOffset = f - 1;
-
-                        if ((f < max) && text.charAt(f) == REFERENCE_SUFFIX) {
-                            referenceOffset++;
+                        if ((f >= max) || text.charAt(f) != REFERENCE_SUFFIX) {
+                            continue;
                         }
+
+                        f++; // Count the REFERENCE_SUFFIX (semi-colon)
+
+                        codepoint = parseIntFromReference(text, i + 3, f - 1, 16);
+                        referenceOffset = f - 1;
 
                         // Don't continue here, just let the unescape code below do its job
 
@@ -520,12 +568,14 @@ final class XmlEscapeUtil {
                             continue;
                         }
 
-                        codepoint = parseIntFromReference(text, i + 2, f, 10);
-                        referenceOffset = f - 1;
-
-                        if ((f < max) && text.charAt(f) == REFERENCE_SUFFIX) {
-                            referenceOffset++;
+                        if ((f >= max) || text.charAt(f) != REFERENCE_SUFFIX) {
+                            continue;
                         }
+
+                        f++; // Count the REFERENCE_SUFFIX (semi-colon)
+
+                        codepoint = parseIntFromReference(text, i + 2, f - 1, 10);
+                        referenceOffset = f - 1;
 
                         // Don't continue here, just let the unescape code below do its job
 
@@ -699,12 +749,14 @@ final class XmlEscapeUtil {
                             continue;
                         }
 
-                        codepoint = parseIntFromReference(text, i + 3, f, 16);
-                        referenceOffset = f - 1;
-
-                        if ((f < max) && text[f] == REFERENCE_SUFFIX) {
-                            referenceOffset++;
+                        if ((f >= max) || text[f] != REFERENCE_SUFFIX) {
+                            continue;
                         }
+
+                        f++; // Count the REFERENCE_SUFFIX (semi-colon)
+
+                        codepoint = parseIntFromReference(text, i + 3, f - 1, 16);
+                        referenceOffset = f - 1;
 
                         // Don't continue here, just let the unescape code below do its job
 
@@ -725,12 +777,14 @@ final class XmlEscapeUtil {
                             continue;
                         }
 
-                        codepoint = parseIntFromReference(text, i + 2, f, 10);
-                        referenceOffset = f - 1;
-
-                        if ((f < max) && text[f] == REFERENCE_SUFFIX) {
-                            referenceOffset++;
+                        if ((f >= max) || text[f] != REFERENCE_SUFFIX) {
+                            continue;
                         }
+
+                        f++; // Count the REFERENCE_SUFFIX (semi-colon)
+
+                        codepoint = parseIntFromReference(text, i + 2, f - 1, 10);
+                        referenceOffset = f - 1;
 
                         // Don't continue here, just let the unescape code below do its job
 
@@ -764,7 +818,7 @@ final class XmlEscapeUtil {
 
                     final int ncrPosition = XmlEscapeSymbols.binarySearch(symbols.SORTED_CERS, text, i, f);
                     if (ncrPosition >= 0) {
-                        codepoint = symbols.SORTED_CODEPOINTS[ncrPosition];
+                        codepoint = symbols.SORTED_CODEPOINTS_BY_CER[ncrPosition];
                     } else {
                         // Not found! Just ignore our efforts to find a match.
                         continue;
