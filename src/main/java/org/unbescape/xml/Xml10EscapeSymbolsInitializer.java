@@ -23,7 +23,7 @@ import java.util.Arrays;
 
 /**
  * <p>
- *   This class initializes the {@link org.unbescape.xml.XmlEscapeSymbols#XML11_SYMBOLS} structure.
+ *   This class initializes the {@link XmlEscapeSymbols#XML10_SYMBOLS} structure.
  * </p>
  *
  * @author Daniel Fern&aacute;ndez
@@ -31,24 +31,24 @@ import java.util.Arrays;
  * @since 1.0
  *
  */
-final class Xml11EscapeSymbolsInitializer {
+final class Xml10EscapeSymbolsInitializer {
 
 
-    static XmlEscapeSymbols initializeXml11() {
+    static XmlEscapeSymbols initializeXml10() {
 
-        final XmlEscapeSymbols.References xml11References = new XmlEscapeSymbols.References();
+        final XmlEscapeSymbols.References xml10References = new XmlEscapeSymbols.References();
 
         /*
          * --------------------------------------------------------------------------------------------------
-         *   XML 1.1 CHARACTER ENTITY REFERENCES
-         *   See: http://www.w3.org/TR/xml11
+         *   XML 1.0 CHARACTER ENTITY REFERENCES
+         *   See: http://www.w3.org/TR/xml
          * --------------------------------------------------------------------------------------------------
          */
-        xml11References.addReference( 34, "&quot;");
-        xml11References.addReference( 38, "&amp;");
-        xml11References.addReference( 39, "&apos;");
-        xml11References.addReference( 60, "&lt;");
-        xml11References.addReference( 62, "&gt;");
+        xml10References.addReference(34, "&quot;");
+        xml10References.addReference(38, "&amp;");
+        xml10References.addReference(39, "&apos;");
+        xml10References.addReference(60, "&lt;");
+        xml10References.addReference(62, "&gt;");
 
 
         /*
@@ -59,8 +59,6 @@ final class Xml11EscapeSymbolsInitializer {
          *    - Level 2 : Markup-significant characters plus all non-ASCII
          *    - Level 3 : All non-alphanumeric characters
          *    - Level 4 : All characters
-         *
-         * Note all XML 1.1 levels include the escape of allowed control characteres.
          *
          */
         final byte[] escapeLevels = new byte[XmlEscapeSymbols.LEVELS_LEN];
@@ -100,17 +98,9 @@ final class Xml11EscapeSymbolsInitializer {
         escapeLevels['&'] = 1;
 
         /*
-         * XML 1.1 allows a series of control characters, but they should appear
-         * escaped: [#x1-#x8] | [#xB-#xC] | [#xE-#x1F] | [#x7F-#x84] | [#x86-#x9F]
+         * XML 1.0 allows a series of control characters, but they should appear
+         * escaped: [#x7F-#x84] | [#x86-#x9F]
          */
-        for (char c = 0x1; c <= 0x8; c++) {
-            escapeLevels[c] = 1;
-        }
-        escapeLevels[0xB] = 1;
-        escapeLevels[0xC] = 1;
-        for (char c = 0xE; c <= 0x1F; c++) {
-            escapeLevels[c] = 1;
-        }
         for (char c = 0x7F; c <= 0x84; c++) {
             escapeLevels[c] = 1;
         }
@@ -121,27 +111,27 @@ final class Xml11EscapeSymbolsInitializer {
         /*
          * Create the new symbols structure
          */
-        return new XmlEscapeSymbols(xml11References, escapeLevels, new Xml11CodepointValidator());
+        return new XmlEscapeSymbols(xml10References, escapeLevels, new Xml10CodepointValidator());
 
     }
 
 
 
-    private Xml11EscapeSymbolsInitializer() {
+    private Xml10EscapeSymbolsInitializer() {
         super();
     }
 
 
 
-    static final class Xml11CodepointValidator implements XmlCodepointValidator {
+    static final class Xml10CodepointValidator implements XmlCodepointValidator {
 
         /*
-         * XML 1.1 does not allow the null byte, nor unpaired surrogate chars
+         * XML 1.0 does not allow many control characters, nor unpaired surrogate chars
          * (characters used for composing two-char codepoints, but appearing on their own).
          */
         public boolean isValid(final int codepoint) {
-            if (codepoint == 0x0) {
-                return false;
+            if (codepoint < 0x20) {
+                return (codepoint == 0x9 || codepoint == 0xA || codepoint == 0xD);
             }
             if (codepoint <= 0xD7FF) { // U+D800 - U+DFFF are reserved for low + high surrogates
                 return true;

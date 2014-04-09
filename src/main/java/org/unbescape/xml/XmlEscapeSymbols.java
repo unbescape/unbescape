@@ -87,17 +87,17 @@ final class XmlEscapeSymbols {
 
 
     /*
-     * Constants holding the definition of all the HtmlEscapeSymbols for HTML4 and HTML5, to be used in escape and
+     * Constants holding the definition of all the XmlEscapeSymbols for XML 1.0 and 1.1, to be used in escape and
      * unescape operations.
      */
+    static final XmlEscapeSymbols XML10_SYMBOLS;
     static final XmlEscapeSymbols XML11_SYMBOLS;
 
 
 
     static {
 
-        // TODO GENERAL XML: http://www.w3.org/TR/xml-entity-names/
-        // TODO See 1.3 Rationale and list of changes for XML 1.1 in http://www.w3.org/TR/xml11/ for VALID CHARACTERS
+        XML10_SYMBOLS = Xml10EscapeSymbolsInitializer.initializeXml10();
         XML11_SYMBOLS = Xml11EscapeSymbolsInitializer.initializeXml11();
 
     }
@@ -116,20 +116,15 @@ final class XmlEscapeSymbols {
 
 
     /*
-     * Maximum char value inside the ASCII plane
+     * Size of the array specifying the escape levels.
      */
-    final char MAX_ASCII_CHAR = 0x7f;
+    static final char LEVELS_LEN = 0x9f + 2;
 
     /*
-     * This array will hold the 'escape level' assigned to each ASCII character (codepoint), 0x0 to 0x7f and also
-     * a level for the rest of non-ASCII characters.
-     * - These levels are used to configure how (and if) escape operations should ignore ASCII or non-ASCII
-     *   characters, or escape them somehow if required.
-     * - Each XmlEscapeSymbols structure will define a different set of levels for ASCII chars, according to their needs.
-     * - Position 0x7f + 1 represents all the non-ASCII characters. The specified value will determine whether
-     *   all non-ASCII characters have to be escaped or not.
+     * This array will hold the 'escape level' assigned to chars (not codepoints) up to LEVELS_LEN.
+     * - The last position of this array will be used for determining the level of all codepoints >= (LEVELS_LEN - 1)
      */
-    final byte[] ESCAPE_LEVELS = new byte[MAX_ASCII_CHAR + 2];
+    final byte[] ESCAPE_LEVELS = new byte[LEVELS_LEN];
 
     /*
      * This array will contain all the codepoints that might be escaped, numerically ordered.
@@ -163,6 +158,12 @@ final class XmlEscapeSymbols {
      */
     final int[] SORTED_CODEPOINTS_BY_CER;
 
+    /*
+     * This object will be in charge of validating each codepoint in input, in order to determine
+     * whether such codepoint will be allowed in escaped output (escaped or not). Invalid codepoints
+     * will be simply discarded.
+     */
+    final XmlCodepointValidator CODEPOINT_VALIDATOR;
 
 
 
@@ -173,12 +174,15 @@ final class XmlEscapeSymbols {
      * Create a new XmlEscapeSymbols structure. This will initialize all the structures needed to cover the
      * specified references and escape levels, including sorted arrays, overflow maps, etc.
      */
-    XmlEscapeSymbols(final References references, final byte[] escapeLevels) {
+    XmlEscapeSymbols(final References references, final byte[] escapeLevels,
+                     final XmlCodepointValidator codepointValidator) {
 
         super();
 
-        // Initialize ASCII escape levels: just copy the array
-        System.arraycopy(escapeLevels, 0, ESCAPE_LEVELS, 0, (0x7f + 2));
+        this.CODEPOINT_VALIDATOR = codepointValidator;
+
+        // Initialize escape levels: just copy the array
+        System.arraycopy(escapeLevels, 0, ESCAPE_LEVELS, 0, LEVELS_LEN);
 
         // Initialize the length of the escaping structures
         final int structureLen = references.references.size();
@@ -189,7 +193,7 @@ final class XmlEscapeSymbols {
 
         // For each reference, initialize its corresponding codepoint -> CER and CER -> codepoint structures
         for (final Reference reference : references.references) {
-            cers.add(reference.cer);
+            cers.add(reference.cer); // can be null
             codepoints.add(Integer.valueOf(reference.codepoint));
         }
 
@@ -388,6 +392,7 @@ final class XmlEscapeSymbols {
 
         private Reference(final String cer, final int codepoint) {
             super();
+            // cer CAN be null -> codepoint should be removed from escaped output.
             this.cer = cer.toCharArray();
             this.codepoint = codepoint;
         }
