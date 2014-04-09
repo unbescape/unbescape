@@ -123,7 +123,7 @@ final class HtmlEscapeUtil {
              * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
              * all for them
              */
-            if (c <= symbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[c]) {
+            if (c <= HtmlEscapeSymbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[c]) {
                 continue;
             }
 
@@ -131,7 +131,8 @@ final class HtmlEscapeUtil {
             /*
              * Shortcut: we might not want to escape non-ASCII chars at all either.
              */
-            if (c > symbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[symbols.MAX_ASCII_CHAR + 1]) {
+            if (c > HtmlEscapeSymbols.MAX_ASCII_CHAR
+                    && level < symbols.ESCAPE_LEVELS[HtmlEscapeSymbols.MAX_ASCII_CHAR + 1]) {
                 continue;
             }
 

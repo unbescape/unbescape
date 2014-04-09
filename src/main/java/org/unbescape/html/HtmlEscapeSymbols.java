@@ -109,7 +109,7 @@ final class HtmlEscapeSymbols {
     /*
      * Maximum char value inside the ASCII plane
      */
-    final char MAX_ASCII_CHAR = 0x7f;
+    static final char MAX_ASCII_CHAR = 0x7f;
 
     /*
      * This array will hold the 'escape level' assigned to each ASCII character (codepoint), 0x0 to 0x7f and also
