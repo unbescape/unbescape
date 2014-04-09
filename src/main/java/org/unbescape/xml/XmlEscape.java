@@ -215,6 +215,44 @@ public final class XmlEscape {
     }
 
 
+    /**
+     * <p>
+     *   Perform an XML 1.0 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <kbd>String</kbd> input.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The five markup-significant characters: <kbd>&lt;</kbd>, <kbd>&gt;</kbd>, <kbd>&amp;</kbd>,
+     *       <kbd>&quot</kbd> and <kbd>&apos;</kbd></li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by replacing those chars by the corresponding XML Character Entity References
+     *   (e.g. <kbd>'&amp;lt;'</kbd>) when such CER exists for the replaced character, and replacing by a hexadecimal
+     *   character reference (e.g. <kbd>'&amp;#x2430;'</kbd>) when there there is no CER for the replaced character.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml10(String, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><kbd>type</kbd>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><kbd>level</kbd>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
     public static String escapeXml10Ascii(final String text) {
         return escapeXml(text, XmlEscapeSymbols.XML10_SYMBOLS,
                 XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
@@ -222,6 +260,44 @@ public final class XmlEscape {
     }
 
 
+    /**
+     * <p>
+     *   Perform an XML 1.1 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <kbd>String</kbd> input.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The five markup-significant characters: <kbd>&lt;</kbd>, <kbd>&gt;</kbd>, <kbd>&amp;</kbd>,
+     *       <kbd>&quot</kbd> and <kbd>&apos;</kbd></li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by replacing those chars by the corresponding XML Character Entity References
+     *   (e.g. <kbd>'&amp;lt;'</kbd>) when such CER exists for the replaced character, and replacing by a hexadecimal
+     *   character reference (e.g. <kbd>'&amp;#x2430;'</kbd>) when there there is no CER for the replaced character.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml11(String, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><kbd>type</kbd>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><kbd>level</kbd>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
     public static String escapeXml11Ascii(final String text) {
         return escapeXml(text, XmlEscapeSymbols.XML11_SYMBOLS,
                 XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
@@ -390,6 +466,44 @@ public final class XmlEscape {
     }
 
 
+    /**
+     * <p>
+     *   Perform an XML 1.0 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <kbd>char[]</kbd> input.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The five markup-significant characters: <kbd>&lt;</kbd>, <kbd>&gt;</kbd>, <kbd>&amp;</kbd>,
+     *       <kbd>&quot</kbd> and <kbd>&apos;</kbd></li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by replacing those chars by the corresponding XML Character Entity References
+     *   (e.g. <kbd>'&amp;lt;'</kbd>) when such CER exists for the replaced character, and replacing by a hexadecimal
+     *   character reference (e.g. <kbd>'&amp;#x2430;'</kbd>) when there there is no CER for the replaced character.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml10(char[], int, int, java.io.Writer, XmlEscapeType, XmlEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><kbd>type</kbd>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><kbd>level</kbd>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
     public static void escapeXml10Ascii(final char[] text, final int offset, final int len, final Writer writer)
                                         throws IOException {
         escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML10_SYMBOLS,
@@ -398,6 +512,44 @@ public final class XmlEscape {
     }
 
 
+    /**
+     * <p>
+     *   Perform an XML 1.1 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <kbd>char[]</kbd> input.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The five markup-significant characters: <kbd>&lt;</kbd>, <kbd>&gt;</kbd>, <kbd>&amp;</kbd>,
+     *       <kbd>&quot</kbd> and <kbd>&apos;</kbd></li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by replacing those chars by the corresponding XML Character Entity References
+     *   (e.g. <kbd>'&amp;lt;'</kbd>) when such CER exists for the replaced character, and replacing by a hexadecimal
+     *   character reference (e.g. <kbd>'&amp;#x2430;'</kbd>) when there there is no CER for the replaced character.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml11(char[], int, int, java.io.Writer, XmlEscapeType, XmlEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><kbd>type</kbd>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><kbd>level</kbd>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
     public static void escapeXml11Ascii(final char[] text, final int offset, final int len, final Writer writer)
                                         throws IOException {
         escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML11_SYMBOLS,
