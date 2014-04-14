@@ -460,26 +460,36 @@ final class JavaScriptEscapeUtil {
              * Check the need for an unescape operation at this point
              */
 
-            if (c != REFERENCE_PREFIX || (i + 1) >= max) {
+            if (c != ESCAPE_PREFIX || (i + 1) >= max) {
                 continue;
             }
 
-            int codepoint = 0;
+            int codepoint = -1;
 
-            if (c == REFERENCE_PREFIX) {
+            if (c == ESCAPE_PREFIX) {
 
                 final char c1 = text.charAt(i + 1);
 
-                if (c1 == '\u0020' || // SPACE
-                    c1 == '\n' ||     // LF
-                    c1 == '\u0009' || // TAB
-                    c1 == '\u000C' || // FF
-                    c1 == '\u003C' || // LES-THAN SIGN
-                    c1 == '\u0026') { // AMPERSAND
-                    // Not a character references. No characters are consumed, and nothing is returned.
-                    continue;
+                switch (c1) {
+                    case '0': /* TODO If not octal escape */ codepoint = 0x00; break;
+                    case 'b': codepoint = 0x08; break;
+                    case 't': codepoint = 0x09; break;
+                    case 'n': codepoint = 0x0A; break;
+                    case 'f': codepoint = 0x0C; break;
+                    case 'r': codepoint = 0x0D; break;
+                    case '"': codepoint = 0x22; break;
+                    case '\'': codepoint = 0x27; break;
+                    case '\\': codepoint = 0x5C; break;
+                }
 
-                } else if (c1 == REFERENCE_NUMERIC_PREFIX2) {
+                if (codepoint == -1) {
+
+                    // TODO Check xhexa and uhexa
+
+                }
+
+
+                if (c1 == REFERENCE_NUMERIC_PREFIX2) {
 
                     if (i + 2 >= max) {
                         // No reference possible
