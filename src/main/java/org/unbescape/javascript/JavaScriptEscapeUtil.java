@@ -23,10 +23,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 
-import org.unbescape.xml.XmlEscapeLevel;
-import org.unbescape.xml.XmlEscapeSymbols;
-import org.unbescape.xml.XmlEscapeType;
-
 /**
  * <p>
  *   Internal class in charge of performing the real escape/unescape operations.
@@ -48,25 +44,28 @@ final class JavaScriptEscapeUtil {
      *   See: http://www.ecmascript.org/docs.php
      *        http://mathiasbynens.be/notes/javascript-escapes
      *
+     *   (Note that, in the following examples, and in order to avoid escape problems during the compilation
+     *    of this class, the backslash symbol is replaced by the forward slash '/')
+     *
      *   - SINGLE ESCAPE CHARACTERS (SECs):
-     *        U+0000 -> \0
-     *        U+0008 -> \b
-     *        U+0009 -> \t
-     *        U+000A -> \n
-     *        U+000B -> \v  [NOT USED IN ESCAPE - Not supported by Internet Explorer < 9]
-     *        U+000C -> \f
-     *        U+000D -> \r
-     *        U+0022 -> \"
-     *        U+0027 -> \'
-     *        U+005C -> \\
-     *   - HEXADECIMAL ESCAPE [XHEXA] (only for characters <= U+00FF): \x??
+     *        U+0000 -> /0
+     *        U+0008 -> /b
+     *        U+0009 -> /t
+     *        U+000A -> /n
+     *        U+000B -> /v  [NOT USED IN ESCAPE - Not supported by Internet Explorer < 9]
+     *        U+000C -> /f
+     *        U+000D -> /r
+     *        U+0022 -> /"
+     *        U+0027 -> /'
+     *        U+005C -> //
+     *   - HEXADECIMAL ESCAPE [XHEXA] (only for characters <= U+00FF): /x??
      *   - UNICODE ESCAPE [UHEXA] (also hexadecimal)
-     *        Characters <= U+FFFF: \u????
-     *        Characters > U+FFFF : \u????\u???? (high + low surrogate chars)
-     *                              \u{?*} [NOT USED - Possible syntax for ECMAScript 6]
-     *   - OCTAL ESCAPE: \??? [NOT USED IN ESCAPE- Deprecated]
-     *   - GENERAL ESCAPE: \* -> * ('\a' -> 'a')
-     *                     (except the [\,\n] sequence, which is not an escape sequence but a line continuation)
+     *        Characters <= U+FFFF: /u????
+     *        Characters > U+FFFF : /u????/u???? (surrogate character pair)
+     *                              /u{?*} [NOT USED - Possible syntax for ECMAScript 6]
+     *   - OCTAL ESCAPE: /377 [NOT USED IN ESCAPE- Deprecated]
+     *   - GENERAL ESCAPE: /* -> * ('/a' -> 'a')
+     *                     (except the [/,/n] sequence, which is not an escape sequence but a line continuation)
      *
      */
 
@@ -88,6 +87,105 @@ final class JavaScriptEscapeUtil {
     private static char[] HEXA_CHARS_LOWER = "0123456789abcdef".toCharArray();
 
 
+    /*
+     * Structures for holding the Single Escape Characters
+     */
+    private static int SEC_CHARS_LEN = '\'' + 1; // 0x5C + 1 = 0x5D
+    private static char SEC_CHARS_NO_SEC = '*';
+    private static char[] SEC_CHARS;
+
+    /*
+     * Structured for holding the 'escape level' assigned to chars (not codepoints) up to ESCAPE_LEVELS_LEN.
+     * - The last position of the ESCAPE_LEVELS array will be used for determining the level of all
+     *   codepoints >= (ESCAPE_LEVELS_LEN - 1)
+     */
+    private static final char ESCAPE_LEVELS_LEN = 0x9f + 2; // Last relevant char to be indexed is 0x9f
+    private static final byte[] ESCAPE_LEVELS;
+
+
+
+    static {
+
+        /*
+         * Initialize Single Escape Characters
+         */
+        SEC_CHARS = new char[SEC_CHARS_LEN];
+        Arrays.fill(SEC_CHARS,SEC_CHARS_NO_SEC);
+        SEC_CHARS[0x00] = '0';
+        SEC_CHARS[0x08] = 'b';
+        SEC_CHARS[0x09] = 't';
+        SEC_CHARS[0x0A] = 'n';
+        SEC_CHARS[0x0C] = 'f';
+        SEC_CHARS[0x0D] = 'r';
+        SEC_CHARS[0x22] = '"';
+        SEC_CHARS[0x27] = '\'';
+        SEC_CHARS[0x5C] = '\\';
+
+
+
+        /*
+         * Initialization of escape levels.
+         * Defined levels :
+         *
+         *    - Level 1 : Basic escape set
+         *    - Level 2 : Basic escape set plus all non-ASCII
+         *    - Level 3 : All non-alphanumeric characters
+         *    - Level 4 : All characters
+         *
+         */
+        ESCAPE_LEVELS = new byte[ESCAPE_LEVELS_LEN];
+
+        /*
+         * Everything is level 3 unless contrary indication.
+         */
+        Arrays.fill(ESCAPE_LEVELS, (byte)3);
+
+        /*
+         * Everything non-ASCII is level 2 unless contrary indication.
+         */
+        for (char c = 0x80; c < ESCAPE_LEVELS_LEN; c++) {
+            ESCAPE_LEVELS[c] = 2;
+        }
+
+        /*
+         * Alphanumeric characters are level 4.
+         */
+        for (char c = 'A'; c <= 'Z'; c++) {
+            ESCAPE_LEVELS[c] = 4;
+        }
+        for (char c = 'a'; c <= 'z'; c++) {
+            ESCAPE_LEVELS[c] = 4;
+        }
+        for (char c = '0'; c <= '9'; c++) {
+            ESCAPE_LEVELS[c] = 4;
+        }
+
+        /*
+         * Simple Escape Character will be level 1 (always escaped)
+         */
+        ESCAPE_LEVELS[0x00] = 1;
+        ESCAPE_LEVELS[0x08] = 1;
+        ESCAPE_LEVELS[0x09] = 1;
+        ESCAPE_LEVELS[0x0A] = 1;
+        ESCAPE_LEVELS[0x0C] = 1;
+        ESCAPE_LEVELS[0x0D] = 1;
+        ESCAPE_LEVELS[0x22] = 1;
+        ESCAPE_LEVELS[0x27] = 1;
+        ESCAPE_LEVELS[0x5C] = 1;
+
+        /*
+         * JavaScript defines two ranges of non-displayable, control characters (some of which are already part of the
+         * Single Escape Characters list): U+0001 to U+001F and U+007F to U+009F.
+         */
+        for (char c = 0x01; c <= 0x1F; c++) {
+            ESCAPE_LEVELS[c] = 1;
+        }
+        for (char c = 0x7F; c <= 0x9F; c++) {
+            ESCAPE_LEVELS[c] = 1;
+        }
+
+    }
+
 
 
     private JavaScriptEscapeUtil() {
@@ -97,20 +195,30 @@ final class JavaScriptEscapeUtil {
 
 
 
+    private static String toXHexString(final int codepoint) {
+        return Integer.toHexString(codepoint);
+    }
+
+
+    private static String toUHexString(final int codepoint) {
+        return Integer.toHexString(codepoint);
+    }
+
+
 
     /*
      * Perform an escape operation, based on String, according to the specified level and type.
      */
-    static String escape(final String text, final XmlEscapeSymbols symbols,
-                         final XmlEscapeType escapeType, final XmlEscapeLevel escapeLevel) {
+    static String escape(final String text,
+                         final JavaScriptEscapeType escapeType, final JavaScriptEscapeLevel escapeLevel) {
 
         if (text == null) {
             return null;
         }
 
         final int level = escapeLevel.getEscapeLevel();
-        final boolean useCERs = escapeType.getUseCERs();
-        final boolean useHexa = escapeType.getUseHexa();
+        final boolean useSECs = escapeType.getUseSECs();
+        final boolean useXHexa = escapeType.getUseXHexa();
 
         StringBuilder strBuilder = null;
 
@@ -143,16 +251,11 @@ final class JavaScriptEscapeUtil {
             }
 
 
-            boolean codepointValid = symbols.CODEPOINT_VALIDATOR.isValid(codepoint);
-
-
             /*
              * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
              * all for them
              */
-            if (codepoint <= (XmlEscapeSymbols.LEVELS_LEN - 2)
-                    && level < symbols.ESCAPE_LEVELS[codepoint]
-                    && codepointValid) {
+            if (codepoint <= (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[codepoint]) {
                 continue;
             }
 
@@ -160,9 +263,7 @@ final class JavaScriptEscapeUtil {
             /*
              * Shortcut: we might not want to escape non-ASCII chars at all either.
              */
-            if (codepoint > (XmlEscapeSymbols.LEVELS_LEN - 2)
-                    && level < symbols.ESCAPE_LEVELS[XmlEscapeSymbols.LEVELS_LEN - 1]
-                    && codepointValid) {
+            if (codepoint > (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[XmlEscapeSymbols.LEVELS_LEN - 1]) {
 
                 if (Character.charCount(codepoint) > 1) {
                     // This is to compensate that we are actually escaping two char[] positions with a single codepoint.
@@ -197,48 +298,48 @@ final class JavaScriptEscapeUtil {
 
 
             /*
-             * If the char is invalid, there is nothing to write, simply skip it (which we already did by
-             * incrementing the readOffset.
-             */
-            if (!codepointValid) {
-                continue;
-            }
-
-
-            /*
              * -----------------------------------------------------------------------------------------
              *
-             * Peform the real escape, attending the different combinations of NCR, DCR and HCR needs.
+             * Peform the real escape, attending the different combinations of SECs, XHEXA and UHEXA
              *
              * -----------------------------------------------------------------------------------------
              */
 
-            if (useCERs) {
-                // We will try to use a CER
+            if (useSECs && codepoint < SEC_CHARS_LEN) {
+                // We will try to use a SEC
 
-                final int codepointIndex =
-                        Arrays.binarySearch(symbols.SORTED_CODEPOINTS, codepoint);
+                final char sec = SEC_CHARS[codepoint];
 
-                if (codepointIndex >= 0) {
-                    // CER found! just write it and go for the next char
-                    strBuilder.append(symbols.SORTED_CERS_BY_CODEPOINT[codepointIndex]);
+                if (sec != SEC_CHARS_NO_SEC) {
+                    // SEC found! just write it and go for the next char
+                    strBuilder.append(ESCAPE_PREFIX);
+                    strBuilder.append(sec);
                     continue;
                 }
 
             }
 
             /*
-             * No NCR-escape was possible (or allowed), so we need decimal/hexa escape.
+             * No SEC-escape was possible, so we need xhexa/uhexa escape.
              */
 
-            if (useHexa) {
-                strBuilder.append(REFERENCE_HEXA_PREFIX);
-                strBuilder.append(Integer.toHexString(codepoint));
-            } else {
-                strBuilder.append(REFERENCE_DECIMAL_PREFIX);
-                strBuilder.append(String.valueOf(codepoint));
+            if (useXHexa && codepoint <= 0xFF) {
+                // Codepoint is <= 0xFF, so we can use XHEXA escapes
+                strBuilder.append(ESCAPE_XHEXA_PREFIX);
+                strBuilder.append(toXHexString(codepoint));
+                continue;
             }
-            strBuilder.append(REFERENCE_SUFFIX);
+
+            if (Character.charCount(codepoint) > 1) {
+                final char[] codepointChars = Character.toChars(codepoint);
+                strBuilder.append(ESCAPE_UHEXA_PREFIX);
+                strBuilder.append(toUHexString(codepointChars[0]));
+                strBuilder.append(ESCAPE_UHEXA_PREFIX);
+                strBuilder.append(toUHexString(codepointChars[1]));
+            }
+
+            strBuilder.append(ESCAPE_UHEXA_PREFIX);
+            strBuilder.append(toUHexString(codepoint));
 
         }
 
@@ -270,8 +371,7 @@ final class JavaScriptEscapeUtil {
      * Perform an escape operation, based on char[], according to the specified level and type.
      */
     static void escape(final char[] text, final int offset, final int len, final Writer writer,
-                       final XmlEscapeSymbols symbols,
-                       final XmlEscapeType escapeType, final XmlEscapeLevel escapeLevel)
+                       final JavaScriptEscapeType escapeType, final JavaScriptEscapeLevel escapeLevel)
                        throws IOException {
 
         if (text == null || text.length == 0) {
@@ -338,7 +438,7 @@ final class JavaScriptEscapeUtil {
     /*
      * Perform an unescape operation based on String.
      */
-    static String unescape(final String text, final XmlEscapeSymbols symbols) {
+    static String unescape(final String text) {
 
         if (text == null) {
             return null;
@@ -548,8 +648,7 @@ final class JavaScriptEscapeUtil {
     /*
      * Perform an unescape operation based on char[].
      */
-    static void unescape(final char[] text, final int offset, final int len, final Writer writer,
-                         final XmlEscapeSymbols symbols)
+    static void unescape(final char[] text, final int offset, final int len, final Writer writer)
                          throws IOException {
 
         if (text == null) {
