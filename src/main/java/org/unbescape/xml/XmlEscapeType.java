@@ -26,13 +26,11 @@ package org.unbescape.xml;
  *
  * <ul>
  *     <li><kbd><strong>CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_DECIMAL</strong></kbd>: Replace escaped characters
- *         with Character Entity References (from the specified {@link org.unbescape.xml.XmlEscapeSymbols}
- *         instance) whenever possible (depending on the specified
+ *         with Character Entity References whenever possible (depending on the specified
  *         {@link org.unbescape.xml.XmlEscapeLevel}), and default to using <em>Decimal Character References</em>
  *         for escaped characters that do not have an associated CER.</li>
  *     <li><kbd><strong>CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_DECIMAL</strong></kbd>: Replace escaped characters
- *         with Character Entity References (from the specified {@link org.unbescape.xml.XmlEscapeSymbols}
- *         instance) whenever possible (depending on the specified
+ *         with Character Entity References whenever possible (depending on the specified
  *         {@link org.unbescape.xml.XmlEscapeLevel}), and default to using <em>Hexadecimal Character References</em>
  *         for escaped characters that do not have an associated CER.</li>
  *     <li><kbd><strong>DECIMAL_REFERENCES</strong></kbd>: Replace escaped characters with
