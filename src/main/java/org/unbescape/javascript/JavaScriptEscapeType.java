@@ -21,25 +21,26 @@ package org.unbescape.javascript;
 
 /**
  * <p>
- *   Types of escape operations to be performed on XML text:
+ *   Types of escape operations to be performed on JavaScript text:
  * </p>
  *
  * <ul>
  *     <li><kbd><strong>SINGLE_ESCAPE_CHARS_DEFAULT_TO_XHEXA_AND_UHEXA</strong></kbd>: Use
  *         Single Escape Chars whenever possible (depending on the specified
  *         {@link org.unbescape.javascript.JavaScriptEscapeLevel}). For escaped characters that do
- *         not have an associated SEC, default to using <kbd>&#92;x??</kbd> Hexadecimal Character References
- *         if possible (characters <= <kbd>U+00FF</kbd>), then default to <kbd>&#92;u????</kbd>
- *         Hexadecimal Character References.</li>
+ *         not have an associated SEC, default to using <kbd>&#92;xFF</kbd> Hexadecimal Character References
+ *         if possible (characters <= <kbd>U+00FF</kbd>), then default to <kbd>&#92;uFFFF</kbd>
+ *         Hexadecimal Character References. This type of escape <u>produces the smallest escaped string
+ *         possible</u>.</li>
  *     <li><kbd><strong>SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA</strong></kbd>: Use
  *         Single Escape Chars whenever possible (depending on the specified
  *         {@link org.unbescape.javascript.JavaScriptEscapeLevel}). For escaped characters that do
- *         not have an associated SEC, default to using <kbd>&#92;u????</kbd> Hexadecimal Character References.</li>
+ *         not have an associated SEC, default to using <kbd>&#92;uFFFF</kbd> Hexadecimal Character References.</li>
  *     <li><kbd><strong>XHEXA_DEFAULT_TO_UHEXA</strong></kbd>: Replace escaped characters with
- *          <kbd>&#92;x??</kbd> Hexadecimal Character References if possible (characters <= <kbd>U+00FF</kbd>),
- *          default to <kbd>&#92;u????</kbd> Hexadecimal Character References.</li>
+ *          <kbd>&#92;xFF</kbd> Hexadecimal Character References if possible (characters <= <kbd>U+00FF</kbd>),
+ *          default to <kbd>&#92;uFFFF</kbd> Hexadecimal Character References.</li>
  *     <li><kbd><strong>UHEXA</strong></kbd>: Replace escaped characters with
- *         <kbd>&#92;u????</kbd> Hexadecimal Character References.</li>
+ *         <kbd>&#92;uFFFF</kbd> Hexadecimal Character References.</li>
  * </ul>
  *
  * <p>
@@ -55,24 +56,24 @@ package org.unbescape.javascript;
 public enum JavaScriptEscapeType {
 
     /**
-     * Use Single Escape Chars if possible, default to &#92;x?? hexadecimal character references
-     * if possible (characters <= U+FF), then default to &#92;u???? hexadecimal character references.
+     * Use Single Escape Chars if possible, default to &#92;xFF hexadecimal character references
+     * if possible (characters <= U+FF), then default to &#92;uFFFF hexadecimal character references.
      */
     SINGLE_ESCAPE_CHARS_DEFAULT_TO_XHEXA_AND_UHEXA(true, true),
 
     /**
-     * Use Single Escape Chars if possible, default to &#92;u???? hexadecimal character references.
+     * Use Single Escape Chars if possible, default to &#92;uFFFF hexadecimal character references.
      */
     SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA(true, false),
 
     /**
-     * Use &#92;x?? hexadecimal character references if possible (characters <= U+FF), default
-     * to &#92;u???? hexadecimal character references.
+     * Use &#92;xFF hexadecimal character references if possible (characters <= U+FF), default
+     * to &#92;uFFFF hexadecimal character references.
      */
     XHEXA_DEFAULT_TO_UHEXA(false, true),
 
     /**
-     * Always use &#92;u???? hexadecimal character references.
+     * Always use &#92;uFFFF hexadecimal character references.
      */
     UHEXA(false, false);
 
