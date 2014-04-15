@@ -659,17 +659,53 @@ public final class XmlEscape {
     }
 
 
-
-
-
+    /**
+     * <p>
+     *   Perform an XML <strong>unescape</strong> operation on a <kbd>String</kbd> input.
+     * </p>
+     * <p>
+     *   No additional configuration arguments are required. Unescape operations
+     *   will always perform <em>complete</em> XML 1.0/1.1 unescape of CERs, decimal
+     *   and hexadecimal references.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
     public static String unescapeXml(final String text) {
         // The chosen symbols (1.0 or 1.1) don't really matter, as both contain the same CERs
         return XmlEscapeUtil.unescape(text, XmlEscapeSymbols.XML11_SYMBOLS);
     }
 
 
+
+    /**
+     * <p>
+     *   Perform an XML <strong>unescape</strong> operation on a <kbd>char[]</kbd> input.
+     * </p>
+     * <p>
+     *   No additional configuration arguments are required. Unescape operations
+     *   will always perform <em>complete</em> XML 1.0/1.1 unescape of CERs, decimal
+     *   and hexadecimal references.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the unescape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
     public static void unescapeXml(final char[] text, final int offset, final int len, final Writer writer)
-                                    throws IOException{
+                                   throws IOException{
         if (writer == null) {
             throw new IllegalArgumentException("Argument 'writer' cannot be null");
         }
