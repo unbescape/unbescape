@@ -22,8 +22,6 @@ package org.unbescape.javascript;
 import java.io.IOException;
 import java.io.Writer;
 
-import netscape.javascript.JSException;
-
 /**
  *
  *
