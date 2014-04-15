@@ -90,7 +90,7 @@ final class JavaScriptEscapeUtil {
     /*
      * Structures for holding the Single Escape Characters
      */
-    private static int SEC_CHARS_LEN = '\'' + 1; // 0x5C + 1 = 0x5D
+    private static int SEC_CHARS_LEN = '\\' + 1; // 0x5C + 1 = 0x5D
     private static char SEC_CHARS_NO_SEC = '*';
     private static char[] SEC_CHARS;
 
@@ -195,13 +195,21 @@ final class JavaScriptEscapeUtil {
 
 
 
-    private static String toXHexString(final int codepoint) {
-        return Integer.toHexString(codepoint);
+    static char[] toXHexa(final int codepoint) {
+        final char[] result = new char[2];
+        result[1] = HEXA_CHARS_UPPER[codepoint % 0x10];
+        result[0] = HEXA_CHARS_UPPER[(codepoint >>> 4) % 0x10];
+        return result;
     }
 
 
-    private static String toUHexString(final int codepoint) {
-        return Integer.toHexString(codepoint);
+    static char[] toUHexa(final int codepoint) {
+        final char[] result = new char[4];
+        result[3] = HEXA_CHARS_UPPER[codepoint % 0x10];
+        result[2] = HEXA_CHARS_UPPER[(codepoint >>> 4) % 0x10];
+        result[1] = HEXA_CHARS_UPPER[(codepoint >>> 8) % 0x10];
+        result[0] = HEXA_CHARS_UPPER[(codepoint >>> 12) % 0x10];
+        return result;
     }
 
 
@@ -263,7 +271,7 @@ final class JavaScriptEscapeUtil {
             /*
              * Shortcut: we might not want to escape non-ASCII chars at all either.
              */
-            if (codepoint > (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[XmlEscapeSymbols.LEVELS_LEN - 1]) {
+            if (codepoint > (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[ESCAPE_LEVELS_LEN - 1]) {
 
                 if (Character.charCount(codepoint) > 1) {
                     // This is to compensate that we are actually escaping two char[] positions with a single codepoint.
@@ -326,20 +334,20 @@ final class JavaScriptEscapeUtil {
             if (useXHexa && codepoint <= 0xFF) {
                 // Codepoint is <= 0xFF, so we can use XHEXA escapes
                 strBuilder.append(ESCAPE_XHEXA_PREFIX);
-                strBuilder.append(toXHexString(codepoint));
+                strBuilder.append(toXHexa(codepoint));
                 continue;
             }
 
             if (Character.charCount(codepoint) > 1) {
                 final char[] codepointChars = Character.toChars(codepoint);
                 strBuilder.append(ESCAPE_UHEXA_PREFIX);
-                strBuilder.append(toUHexString(codepointChars[0]));
+                strBuilder.append(toUHexa(codepointChars[0]));
                 strBuilder.append(ESCAPE_UHEXA_PREFIX);
-                strBuilder.append(toUHexString(codepointChars[1]));
+                strBuilder.append(toUHexa(codepointChars[1]));
             }
 
             strBuilder.append(ESCAPE_UHEXA_PREFIX);
-            strBuilder.append(toUHexString(codepoint));
+            strBuilder.append(toUHexa(codepoint));
 
         }
 
@@ -378,7 +386,136 @@ final class JavaScriptEscapeUtil {
             return;
         }
 
-        // TODO Copy from the String version
+        final int level = escapeLevel.getEscapeLevel();
+        final boolean useSECs = escapeType.getUseSECs();
+        final boolean useXHexa = escapeType.getUseXHexa();
+
+        final int max = (offset + len);
+
+        int readOffset = offset;
+
+        for (int i = offset; i < max; i++) {
+
+            final char c = text[i];
+
+
+            /*
+             * Compute the codepoint. This will be used instead of the char for the rest of the process.
+             */
+
+            final int codepoint;
+            if (c < Character.MIN_HIGH_SURROGATE) { // shortcut: U+D800 is the lower limit of high-surrogate chars.
+                codepoint = (int) c;
+            } else if (Character.isHighSurrogate(c) && (i + 1) < max) {
+                final char c1 = text[i + 1];
+                if (Character.isLowSurrogate(c1)) {
+                    codepoint = Character.toCodePoint(c, c1);
+                } else {
+                    codepoint = (int) c;
+                }
+            } else { // just a normal, single-char, high-valued codepoint.
+                codepoint = (int) c;
+            }
+
+
+            /*
+             * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
+             * all for them
+             */
+            if (codepoint <= (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[codepoint]) {
+                continue;
+            }
+
+
+            /*
+             * Shortcut: we might not want to escape non-ASCII chars at all either.
+             */
+            if (codepoint > (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[ESCAPE_LEVELS_LEN - 1]) {
+
+                if (Character.charCount(codepoint) > 1) {
+                    // This is to compensate that we are actually escaping two char[] positions with a single codepoint.
+                    i++;
+                }
+
+                continue;
+
+            }
+
+
+            /*
+             * At this point we know for sure we will need some kind of escape, so we
+             * can write all the contents pending up to this point.
+             */
+
+            if (i - readOffset > 0) {
+                writer.write(text, readOffset, (i - readOffset));
+            }
+
+            if (Character.charCount(codepoint) > 1) {
+                // This is to compensate that we are actually reading two char[] positions with a single codepoint.
+                i++;
+            }
+
+            readOffset = i + 1;
+
+
+            /*
+             * -----------------------------------------------------------------------------------------
+             *
+             * Peform the real escape, attending the different combinations of SECs, XHEXA and UHEXA
+             *
+             * -----------------------------------------------------------------------------------------
+             */
+
+            if (useSECs && codepoint < SEC_CHARS_LEN) {
+                // We will try to use a SEC
+
+                final char sec = SEC_CHARS[codepoint];
+
+                if (sec != SEC_CHARS_NO_SEC) {
+                    // SEC found! just write it and go for the next char
+                    writer.write(ESCAPE_PREFIX);
+                    writer.write(sec);
+                    continue;
+                }
+
+            }
+
+            /*
+             * No SEC-escape was possible, so we need xhexa/uhexa escape.
+             */
+
+            if (useXHexa && codepoint <= 0xFF) {
+                // Codepoint is <= 0xFF, so we can use XHEXA escapes
+                writer.write(ESCAPE_XHEXA_PREFIX);
+                writer.write(toXHexa(codepoint));
+                continue;
+            }
+
+            if (Character.charCount(codepoint) > 1) {
+                final char[] codepointChars = Character.toChars(codepoint);
+                writer.write(ESCAPE_UHEXA_PREFIX);
+                writer.write(toUHexa(codepointChars[0]));
+                writer.write(ESCAPE_UHEXA_PREFIX);
+                writer.write(toUHexa(codepointChars[1]));
+            }
+
+            writer.write(ESCAPE_UHEXA_PREFIX);
+            writer.write(toUHexa(codepoint));
+
+        }
+
+
+        /*
+         * -----------------------------------------------------------------------------------------------
+         * Final cleaning: return the original String object if no escape was actually needed. Otherwise
+         *                 append the remaining unescaped text to the string builder and return.
+         * -----------------------------------------------------------------------------------------------
+         */
+
+        if (max - readOffset > 0) {
+            writer.write(text, readOffset, (max - readOffset));
+        }
 
     }
 
