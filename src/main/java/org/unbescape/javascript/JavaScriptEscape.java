@@ -19,6 +19,9 @@
  */
 package org.unbescape.javascript;
 
+import java.io.IOException;
+import java.io.Writer;
+
 /**
  *
  *
@@ -31,7 +34,89 @@ public final class JavaScriptEscape {
 
 
 
+    public static String escapeJavaScript(final String text,
+                                        final JavaScriptEscapeType type, final JavaScriptEscapeLevel level) {
 
+        if (type == null) {
+            throw new IllegalArgumentException("The 'type' argument cannot be null");
+        }
+
+        if (level == null) {
+            throw new IllegalArgumentException("The 'level' argument cannot be null");
+        }
+
+        return JavaScriptEscapeUtil.escape(text, type, level);
+
+    }
+
+
+
+    public static void escapeJavaScript(final char[] text, final int offset, final int len, final Writer writer,
+                                        final JavaScriptEscapeType type, final JavaScriptEscapeLevel level)
+                                        throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        if (type == null) {
+            throw new IllegalArgumentException("The 'type' argument cannot be null");
+        }
+
+        if (level == null) {
+            throw new IllegalArgumentException("The 'level' argument cannot be null");
+        }
+
+        final int textLen = (text == null? 0 : text.length);
+
+        if (offset < 0 || offset > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+
+        if (len < 0 || (offset + len) > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+
+        JavaScriptEscapeUtil.escape(text, offset, len, writer, type, level);
+
+    }
+
+
+
+
+
+
+
+
+    public static String unescapeJavaScript(final String text) {
+        return JavaScriptEscapeUtil.unescape(text);
+    }
+
+
+    public static void unescapeJavaScript(final char[] text, final int offset, final int len, final Writer writer)
+                                          throws IOException{
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        final int textLen = (text == null? 0 : text.length);
+
+        if (offset < 0 || offset > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+
+        if (len < 0 || (offset + len) > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+
+        // The chosen symbols (1.0 or 1.1) don't really matter, as both contain the same CERs
+        JavaScriptEscapeUtil.unescape(text, offset, len, writer);
+
+    }
 
 
 

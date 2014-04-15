@@ -568,6 +568,72 @@ final class JavaScriptEscapeUtil {
 
 
 
+    static boolean isOctalEscape(final String text, final int start, final int end) {
+
+        if (start >= end) {
+            return false;
+        }
+
+        final char c1 = text.charAt(start);
+        if (c1 < '0' || c1 > '7') {
+            return false;
+        }
+
+        if (start + 1 >= end) {
+            return (c1 != '0'); // It would not be an octal escape, but the U+0000 escape sequence.
+        }
+
+        final char c2 = text.charAt(start + 1);
+        if (c2 < '0' || c2 > '7') {
+            return (c1 != '0'); // It would not be an octal escape, but the U+0000 escape sequence.
+        }
+
+        if (start + 2 >= end) {
+            return (c1 != '0' || c2 != '0'); // It would not be an octal escape, but the U+0000 escape sequence + '0'.
+        }
+
+        final char c3 = text.charAt(start + 2);
+        if (c3 < '0' || c3 > '7') {
+            return (c1 != '0' || c2 != '0'); // It would not be an octal escape, but the U+0000 escape sequence + '0'.
+        }
+
+        return (c1 != '0' || c2 != '0' || c3 != '0'); // Check it's not U+0000 (escaped) + '00'
+
+    }
+
+
+    static boolean isOctalEscape(final char[] text, final int start, final int end) {
+
+        if (start >= end) {
+            return false;
+        }
+
+        final char c1 = text[start];
+        if (c1 < '0' || c1 > '7') {
+            return false;
+        }
+
+        if (start + 1 >= end) {
+            return (c1 != '0'); // It would not be an octal escape, but the U+0000 escape sequence.
+        }
+
+        final char c2 = text[start + 1];
+        if (c2 < '0' || c2 > '7') {
+            return (c1 != '0'); // It would not be an octal escape, but the U+0000 escape sequence.
+        }
+
+        if (start + 2 >= end) {
+            return (c1 != '0' || c2 != '0'); // It would not be an octal escape, but the U+0000 escape sequence + '0'.
+        }
+
+        final char c3 = text[start + 2];
+        if (c3 < '0' || c3 > '7') {
+            return (c1 != '0' || c2 != '0'); // It would not be an octal escape, but the U+0000 escape sequence + '0'.
+        }
+
+        return (c1 != '0' || c2 != '0' || c3 != '0'); // Check it's not U+0000 (escaped) + '00'
+
+    }
 
 
 
@@ -608,38 +674,24 @@ final class JavaScriptEscapeUtil {
                 final char c1 = text.charAt(i + 1);
 
                 switch (c1) {
-                    case '0': /* TODO If not octal escape */ codepoint = 0x00; break;
-                    case 'b': codepoint = 0x08; break;
-                    case 't': codepoint = 0x09; break;
-                    case 'n': codepoint = 0x0A; break;
-                    case 'f': codepoint = 0x0C; break;
-                    case 'r': codepoint = 0x0D; break;
-                    case '"': codepoint = 0x22; break;
-                    case '\'': codepoint = 0x27; break;
-                    case '\\': codepoint = 0x5C; break;
+                    case '0': if (!isOctalEscape(text,i + 1,max)) { codepoint = 0x00; referenceOffset = i + 1; }; break;
+                    case 'b': codepoint = 0x08; referenceOffset = i + 1; break;
+                    case 't': codepoint = 0x09; referenceOffset = i + 1; break;
+                    case 'n': codepoint = 0x0A; referenceOffset = i + 1; break;
+                    case 'f': codepoint = 0x0C; referenceOffset = i + 1; break;
+                    case 'r': codepoint = 0x0D; referenceOffset = i + 1; break;
+                    case '"': codepoint = 0x22; referenceOffset = i + 1; break;
+                    case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
+                    case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
                 }
 
                 if (codepoint == -1) {
 
-                    // TODO Check xhexa and uhexa
+                    if (c1 == ESCAPE_XHEXA_PREFIX2 && (i + 4) <= max) {
+                        // This can be a xhexa escape, we need exactly two more characters (thus the +4)
 
-                }
-
-
-                if (c1 == REFERENCE_NUMERIC_PREFIX2) {
-
-                    if (i + 2 >= max) {
-                        // No reference possible
-                        continue;
-                    }
-
-                    final char c2 = text.charAt(i + 2);
-
-                    if (c2 == REFERENCE_HEXA_PREFIX3 && (i + 3) < max) {
-                        // This is a hexadecimal reference
-
-                        int f = i + 3;
-                        while (f < max) {
+                        int f = i + 2;
+                        while (f < (i + 4)) {
                             final char cf = text.charAt(f);
                             if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
                                 break;
@@ -647,87 +699,69 @@ final class JavaScriptEscapeUtil {
                             f++;
                         }
 
-                        if ((f - (i + 3)) <= 0) {
-                            // We weren't able to consume any hexa chars
-                            continue;
+                        if ((f - (i + 2)) <= 0) {
+                            // We weren't able to consume any hexa chars, just consider it an escaped 'x'
+                            codepoint = (int) ESCAPE_XHEXA_PREFIX2;
+                        } else {
+                            codepoint = parseIntFromReference(text, i + 2, f, 16);
                         }
 
-                        if ((f >= max) || text.charAt(f) != REFERENCE_SUFFIX) {
-                            continue;
-                        }
-
-                        f++; // Count the REFERENCE_SUFFIX (semi-colon)
-
-                        codepoint = parseIntFromReference(text, i + 3, f - 1, 16);
+                        // Fast-forward to the first char after the parsed codepoint
                         referenceOffset = f - 1;
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else if (c2 >= '0' && c2 <= '9') {
-                        // This is a decimal reference
+                    } else if (c1 == ESCAPE_UHEXA_PREFIX2 && (i + 6) <= max) {
+                        // This can be a uhexa escape, we need exactly four more characters (thus the +6)
 
                         int f = i + 2;
-                        while (f < max) {
+                        while (f < (i + 6)) {
                             final char cf = text.charAt(f);
-                            if (!(cf >= '0' && cf <= '9')) {
+                            if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
                                 break;
                             }
                             f++;
                         }
 
                         if ((f - (i + 2)) <= 0) {
-                            // We weren't able to consume any decimal chars
-                            continue;
+                            // We weren't able to consume any hexa chars, just consider it an escaped 'u'
+                            codepoint = (int) ESCAPE_UHEXA_PREFIX2;
+                        } else {
+                            codepoint = parseIntFromReference(text, i + 2, f, 16);
                         }
 
-                        if ((f >= max) || text.charAt(f) != REFERENCE_SUFFIX) {
-                            continue;
-                        }
-
-                        f++; // Count the REFERENCE_SUFFIX (semi-colon)
-
-                        codepoint = parseIntFromReference(text, i + 2, f - 1, 10);
+                        // Fast-forward to the first char after the parsed codepoint
                         referenceOffset = f - 1;
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else {
-                        // This is not a valid reference, just discard
-                        continue;
-                    }
+                    } else if (c1 >= '0' && c1 <= '7') {
+                        // This can be a octal escape, we need at least 1 more char, and up to 3 more.
 
-
-                } else {
-
-                    // This is a named reference, must be comprised only of ALPHABETIC chars
-
-                    int f = i + 1;
-                    while (f < max) {
-                        final char cf = text.charAt(f);
-                        if (!((cf >= 'a' && cf <= 'z') || (cf >= 'A' && cf <= 'Z') || (cf >= '0' && cf <= '9'))) {
-                            break;
+                        int f = i + 2;
+                        while (f < (i + 4) && f < max) { // We need only a max of two more chars
+                            final char cf = text.charAt(f);
+                            if (!(cf >= '0' && cf <= '7')) {
+                                break;
+                            }
+                            f++;
                         }
-                        f++;
-                    }
 
-                    if ((f - (i + 1)) <= 0) {
-                        // We weren't able to consume any alphanumeric
-                        continue;
-                    }
+                        codepoint = parseIntFromReference(text, i + 1, f, 8);
+                        if (codepoint > 0xFF) {
+                            // Maximum octal escape char is FF. Ignore the last digit
+                            codepoint = parseIntFromReference(text, i + 1, f - 1, 8);
+                            referenceOffset = f - 2;
+                        } else {
+                            referenceOffset = f - 1;
+                        }
 
-                    if ((f < max) && text.charAt(f) == REFERENCE_SUFFIX) {
-                        f++;
-                    }
+                        // Don't continue here, just let the unescape code below do its job
 
-                    final int ncrPosition = XmlEscapeSymbols.binarySearch(symbols.SORTED_CERS, text, i, f);
-                    if (ncrPosition >= 0) {
-                        codepoint = symbols.SORTED_CODEPOINTS_BY_CER[ncrPosition];
                     } else {
-                        // Not found! Just ignore our efforts to find a match.
-                        continue;
+                        // We weren't able to consume any valid escape chars, just consider it a normal char.
+                        codepoint = (int) c1;
                     }
-
-                    referenceOffset = f - 1;
 
                 }
 
@@ -802,9 +836,162 @@ final class JavaScriptEscapeUtil {
             return;
         }
 
+        final int max = (offset + len);
 
-        // TODO Copy from the String version
+        int readOffset = offset;
+        int referenceOffset = offset;
 
+        for (int i = offset; i < max; i++) {
+
+            final char c = text[i];
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if (c != ESCAPE_PREFIX || (i + 1) >= max) {
+                continue;
+            }
+
+            int codepoint = -1;
+
+            if (c == ESCAPE_PREFIX) {
+
+                final char c1 = text[i + 1];
+
+                switch (c1) {
+                    case '0': if (!isOctalEscape(text,i + 1,max)) { codepoint = 0x00; referenceOffset = i + 1; }; break;
+                    case 'b': codepoint = 0x08; referenceOffset = i + 1; break;
+                    case 't': codepoint = 0x09; referenceOffset = i + 1; break;
+                    case 'n': codepoint = 0x0A; referenceOffset = i + 1; break;
+                    case 'f': codepoint = 0x0C; referenceOffset = i + 1; break;
+                    case 'r': codepoint = 0x0D; referenceOffset = i + 1; break;
+                    case '"': codepoint = 0x22; referenceOffset = i + 1; break;
+                    case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
+                    case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
+                }
+
+                if (codepoint == -1) {
+
+                    if (c1 == ESCAPE_XHEXA_PREFIX2 && (i + 4) <= max) {
+                        // This can be a xhexa escape, we need exactly two more characters (thus the +4)
+
+                        int f = i + 2;
+                        while (f < (i + 4)) {
+                            final char cf = text[f];
+                            if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
+                                break;
+                            }
+                            f++;
+                        }
+
+                        if ((f - (i + 2)) <= 0) {
+                            // We weren't able to consume any hexa chars, just consider it an escaped 'x'
+                            codepoint = (int) ESCAPE_XHEXA_PREFIX2;
+                        } else {
+                            codepoint = parseIntFromReference(text, i + 2, f, 16);
+                        }
+
+                        // Fast-forward to the first char after the parsed codepoint
+                        referenceOffset = f - 1;
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else if (c1 == ESCAPE_UHEXA_PREFIX2 && (i + 6) <= max) {
+                        // This can be a uhexa escape, we need exactly four more characters (thus the +6)
+
+                        int f = i + 2;
+                        while (f < (i + 6)) {
+                            final char cf = text[f];
+                            if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
+                                break;
+                            }
+                            f++;
+                        }
+
+                        if ((f - (i + 2)) <= 0) {
+                            // We weren't able to consume any hexa chars, just consider it an escaped 'u'
+                            codepoint = (int) ESCAPE_UHEXA_PREFIX2;
+                        } else {
+                            codepoint = parseIntFromReference(text, i + 2, f, 16);
+                        }
+
+                        // Fast-forward to the first char after the parsed codepoint
+                        referenceOffset = f - 1;
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else if (c1 >= '0' && c1 <= '7') {
+                        // This can be a octal escape, we need at least 1 more char, and up to 3 more.
+
+                        int f = i + 2;
+                        while (f < (i + 4) && f < max) { // We need only a max of two more chars
+                            final char cf = text[f];
+                            if (!(cf >= '0' && cf <= '7')) {
+                                break;
+                            }
+                            f++;
+                        }
+
+                        codepoint = parseIntFromReference(text, i + 1, f, 8);
+                        if (codepoint > 0xFF) {
+                            // Maximum octal escape char is FF. Ignore the last digit
+                            codepoint = parseIntFromReference(text, i + 1, f - 1, 8);
+                            referenceOffset = f - 2;
+                        } else {
+                            referenceOffset = f - 1;
+                        }
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else {
+                        // We weren't able to consume any valid escape chars, just consider it a normal char.
+                        codepoint = (int) c1;
+                    }
+
+                }
+
+            }
+
+
+            /*
+             * At this point we know for sure we will need some kind of unescape, so we
+             * write all the contents pending up to this point.
+             */
+
+            if (i - readOffset > 0) {
+                writer.write(text, readOffset, (i - readOffset));
+            }
+
+            i = referenceOffset;
+            readOffset = i + 1;
+
+            /*
+             * --------------------------
+             *
+             * Peform the real unescape
+             *
+             * --------------------------
+             */
+
+            if (codepoint > '\uFFFF') {
+                writer.write(Character.toChars(codepoint));
+            } else {
+                writer.write((char)codepoint);
+            }
+
+        }
+
+
+        /*
+         * -----------------------------------------------------------------------------------------------
+         * Final cleaning: writer the remaining escaped text and return.
+         * -----------------------------------------------------------------------------------------------
+         */
+
+        if (max - readOffset > 0) {
+            writer.write(text, readOffset, (max - readOffset));
+        }
 
     }
 
