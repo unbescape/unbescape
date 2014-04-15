@@ -22,6 +22,8 @@ package org.unbescape.javascript;
 import java.io.IOException;
 import java.io.Writer;
 
+import netscape.javascript.JSException;
+
 /**
  *
  *
@@ -33,9 +35,22 @@ import java.io.Writer;
 public final class JavaScriptEscape {
 
 
+    public static String escapeJavaScript(final String text) {
+        return escapeJavaScript(text,
+                                JavaScriptEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_XHEXA_AND_UHEXA,
+                                JavaScriptEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+    }
+
+
+    public static String escapeJavaScriptAscii(final String text) {
+        return escapeJavaScript(text,
+                                JavaScriptEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_XHEXA_AND_UHEXA,
+                                JavaScriptEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    }
+
 
     public static String escapeJavaScript(final String text,
-                                        final JavaScriptEscapeType type, final JavaScriptEscapeLevel level) {
+                                          final JavaScriptEscapeType type, final JavaScriptEscapeLevel level) {
 
         if (type == null) {
             throw new IllegalArgumentException("The 'type' argument cannot be null");
@@ -49,6 +64,23 @@ public final class JavaScriptEscape {
 
     }
 
+
+
+
+    public static void escapeJavaScript(final char[] text, final int offset, final int len, final Writer writer)
+                                        throws IOException {
+        escapeJavaScript(text, offset, len, writer,
+                         JavaScriptEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_XHEXA_AND_UHEXA,
+                         JavaScriptEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+    }
+
+
+    public static void escapeJavaScriptAscii(final char[] text, final int offset, final int len, final Writer writer)
+                                             throws IOException {
+        escapeJavaScript(text, offset, len, writer,
+                         JavaScriptEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_XHEXA_AND_UHEXA,
+                         JavaScriptEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    }
 
 
     public static void escapeJavaScript(final char[] text, final int offset, final int len, final Writer writer,
