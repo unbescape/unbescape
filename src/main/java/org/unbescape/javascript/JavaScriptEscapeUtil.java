@@ -270,8 +270,11 @@ final class JavaScriptEscapeUtil {
 
             /*
              * Shortcut: we might not want to escape non-ASCII chars at all either.
+             * We also check we are not dealing with U+2028 or U+2029, which the JavaScript spec considers
+             * LineTerminators and therefore should be escaped always.
              */
-            if (codepoint > (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[ESCAPE_LEVELS_LEN - 1]) {
+            if (codepoint > (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[ESCAPE_LEVELS_LEN - 1] &&
+                    codepoint != '\u2028' && codepoint != '\u2029') {
 
                 if (Character.charCount(codepoint) > 1) {
                     // This is to compensate that we are actually escaping two char[] positions with a single codepoint.
@@ -430,8 +433,11 @@ final class JavaScriptEscapeUtil {
 
             /*
              * Shortcut: we might not want to escape non-ASCII chars at all either.
+             * We also check we are not dealing with U+2028 or U+2029, which the JavaScript spec considers
+             * LineTerminators and therefore should be escaped always.
              */
-            if (codepoint > (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[ESCAPE_LEVELS_LEN - 1]) {
+            if (codepoint > (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[ESCAPE_LEVELS_LEN - 1] &&
+                    codepoint != '\u2028' && codepoint != '\u2029') {
 
                 if (Character.charCount(codepoint) > 1) {
                     // This is to compensate that we are actually escaping two char[] positions with a single codepoint.
@@ -703,11 +709,13 @@ final class JavaScriptEscapeUtil {
                         }
 
                         if ((f - (i + 2)) <= 0) {
-                            // We weren't able to consume any hexa chars, just consider it an escaped 'x'
-                            codepoint = (int) ESCAPE_XHEXA_PREFIX2;
-                        } else {
-                            codepoint = parseIntFromReference(text, i + 2, f, 16);
+                            // We weren't able to consume any hexa chars, leave it as slash+'x', which is invalid,
+                            // and let the corresponding JavaScript engine fail.
+                            i++;
+                            continue;
                         }
+
+                        codepoint = parseIntFromReference(text, i + 2, f, 16);
 
                         // Fast-forward to the first char after the parsed codepoint
                         referenceOffset = f - 1;
@@ -727,11 +735,13 @@ final class JavaScriptEscapeUtil {
                         }
 
                         if ((f - (i + 2)) <= 0) {
-                            // We weren't able to consume any hexa chars, just consider it an escaped 'u'
-                            codepoint = (int) ESCAPE_UHEXA_PREFIX2;
-                        } else {
-                            codepoint = parseIntFromReference(text, i + 2, f, 16);
+                            // We weren't able to consume any hexa chars, leave it as slash+'u', which is invalid,
+                            // and let the corresponding JavaScript engine fail.
+                            i++;
+                            continue;
                         }
+
+                        codepoint = parseIntFromReference(text, i + 2, f, 16);
 
                         // Fast-forward to the first char after the parsed codepoint
                         referenceOffset = f - 1;
@@ -751,6 +761,7 @@ final class JavaScriptEscapeUtil {
                         }
 
                         codepoint = parseIntFromReference(text, i + 1, f, 8);
+
                         if (codepoint > 0xFF) {
                             // Maximum octal escape char is FF. Ignore the last digit
                             codepoint = parseIntFromReference(text, i + 1, f - 1, 8);
@@ -761,10 +772,23 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
+                    } else if (c1 == '8' || c1 == '9' || c1 == '\n' || c1 == '\r' || c1 == '\u2028' || c1 == '\u2029') {
+
+                        // '8' and '9' are not valid octal escape sequences, and the other four characters
+                        // are LineTerminators, which are not allowed as escape sequences. So we leave it as is
+                        // and expect the corresponding JavaScript engine to fail (except in the case of slash + '\n',
+                        // which is considered a LineContinuator.
+                        i++;
+                        continue;
+
                     } else {
-                        // We weren't able to consume any valid escape chars, just consider it a normal char.
+
+                        // We weren't able to consume any valid escape chars, just consider it a normal char,
+                        // which is allowed by the JavaScript specification (NonEscapeCharacter)
+
                         codepoint = (int) c1;
                         referenceOffset = i + 1;
+
                     }
 
                 }
@@ -891,11 +915,13 @@ final class JavaScriptEscapeUtil {
                         }
 
                         if ((f - (i + 2)) <= 0) {
-                            // We weren't able to consume any hexa chars, just consider it an escaped 'x'
-                            codepoint = (int) ESCAPE_XHEXA_PREFIX2;
-                        } else {
-                            codepoint = parseIntFromReference(text, i + 2, f, 16);
+                            // We weren't able to consume any hexa chars, leave it as slash+'x', which is invalid,
+                            // and let the corresponding JavaScript engine fail.
+                            i++;
+                            continue;
                         }
+
+                        codepoint = parseIntFromReference(text, i + 2, f, 16);
 
                         // Fast-forward to the first char after the parsed codepoint
                         referenceOffset = f - 1;
@@ -915,11 +941,13 @@ final class JavaScriptEscapeUtil {
                         }
 
                         if ((f - (i + 2)) <= 0) {
-                            // We weren't able to consume any hexa chars, just consider it an escaped 'u'
-                            codepoint = (int) ESCAPE_UHEXA_PREFIX2;
-                        } else {
-                            codepoint = parseIntFromReference(text, i + 2, f, 16);
+                            // We weren't able to consume any hexa chars, leave it as slash+'u', which is invalid,
+                            // and let the corresponding JavaScript engine fail.
+                            i++;
+                            continue;
                         }
+
+                        codepoint = parseIntFromReference(text, i + 2, f, 16);
 
                         // Fast-forward to the first char after the parsed codepoint
                         referenceOffset = f - 1;
@@ -949,10 +977,23 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
+                    } else if (c1 == '8' || c1 == '9' || c1 == '\n' || c1 == '\r' || c1 == '\u2028' || c1 == '\u2029') {
+
+                        // '8' and '9' are not valid octal escape sequences, and the other four characters
+                        // are LineTerminators, which are not allowed as escape sequences. So we leave it as is
+                        // and expect the corresponding JavaScript engine to fail (except in the case of slash + '\n',
+                        // which is considered a LineContinuator.
+                        i++;
+                        continue;
+
                     } else {
-                        // We weren't able to consume any valid escape chars, just consider it a normal char.
+
+                        // We weren't able to consume any valid escape chars, just consider it a normal char,
+                        // which is allowed by the JavaScript specification (NonEscapeCharacter)
+
                         codepoint = (int) c1;
                         referenceOffset = i + 1;
+
                     }
 
                 }
