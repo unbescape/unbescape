@@ -30,7 +30,7 @@ package org.unbescape.javascript;
  *         will still need to correctly manage your input/output character encoding settings. Such
  *         <em>basic set</em> consists of:
  *         <ul>
- *           <li>The nine <em>Single Escape Characters</em>:
+ *           <li>The <em>Single Escape Characters</em>:
  *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>),
  *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
  *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
