@@ -63,7 +63,7 @@ final class JavaScriptEscapeUtil {
      *        Characters <= U+FFFF: /u????
      *        Characters > U+FFFF : /u????/u???? (surrogate character pair)
      *                              /u{?*} [NOT USED - Possible syntax for ECMAScript 6]
-     *   - OCTAL ESCAPE: /377 [NOT USED IN ESCAPE- Deprecated]
+     *   - OCTAL ESCAPE: /377 [NOT USED IN ESCAPE - Deprecated in ECMAScript v5]
      *   - GENERAL ESCAPE: /* -> * ('/a' -> 'a')
      *                     (except the [/,/n] sequence, which is not an escape sequence but a line continuation)
      *
