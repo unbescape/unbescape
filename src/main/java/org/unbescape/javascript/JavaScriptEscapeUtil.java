@@ -344,6 +344,7 @@ final class JavaScriptEscapeUtil {
                 strBuilder.append(toUHexa(codepointChars[0]));
                 strBuilder.append(ESCAPE_UHEXA_PREFIX);
                 strBuilder.append(toUHexa(codepointChars[1]));
+                continue;
             }
 
             strBuilder.append(ESCAPE_UHEXA_PREFIX);
@@ -498,6 +499,7 @@ final class JavaScriptEscapeUtil {
                 writer.write(toUHexa(codepointChars[0]));
                 writer.write(ESCAPE_UHEXA_PREFIX);
                 writer.write(toUHexa(codepointChars[1]));
+                continue;
             }
 
             writer.write(ESCAPE_UHEXA_PREFIX);
