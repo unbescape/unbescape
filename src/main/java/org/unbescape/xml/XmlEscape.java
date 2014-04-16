@@ -171,7 +171,7 @@ public final class XmlEscape {
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeXml10(final String text) {
+    public static String escapeXml10Minimal(final String text) {
         return escapeXml(text, XmlEscapeSymbols.XML10_SYMBOLS,
                 XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
                 XmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
@@ -208,7 +208,7 @@ public final class XmlEscape {
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeXml11(final String text) {
+    public static String escapeXml11Minimal(final String text) {
         return escapeXml(text, XmlEscapeSymbols.XML11_SYMBOLS,
                 XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
                 XmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
@@ -253,7 +253,7 @@ public final class XmlEscape {
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeXml10Ascii(final String text) {
+    public static String escapeXml10(final String text) {
         return escapeXml(text, XmlEscapeSymbols.XML10_SYMBOLS,
                 XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
                 XmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
@@ -298,7 +298,7 @@ public final class XmlEscape {
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeXml11Ascii(final String text) {
+    public static String escapeXml11(final String text) {
         return escapeXml(text, XmlEscapeSymbols.XML11_SYMBOLS,
                 XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
                 XmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
@@ -419,8 +419,8 @@ public final class XmlEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static void escapeXml10(final char[] text, final int offset, final int len, final Writer writer)
-                                   throws IOException {
+    public static void escapeXml10Minimal(final char[] text, final int offset, final int len, final Writer writer)
+                                          throws IOException {
         escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML10_SYMBOLS,
                 XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
                 XmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
@@ -458,8 +458,8 @@ public final class XmlEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static void escapeXml11(final char[] text, final int offset, final int len, final Writer writer)
-                                   throws IOException {
+    public static void escapeXml11Minimal(final char[] text, final int offset, final int len, final Writer writer)
+                                          throws IOException {
         escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML11_SYMBOLS,
                 XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
                 XmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
@@ -504,8 +504,8 @@ public final class XmlEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static void escapeXml10Ascii(final char[] text, final int offset, final int len, final Writer writer)
-                                        throws IOException {
+    public static void escapeXml10(final char[] text, final int offset, final int len, final Writer writer)
+                                   throws IOException {
         escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML10_SYMBOLS,
                 XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
                 XmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
@@ -550,8 +550,8 @@ public final class XmlEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static void escapeXml11Ascii(final char[] text, final int offset, final int len, final Writer writer)
-                                        throws IOException {
+    public static void escapeXml11(final char[] text, final int offset, final int len, final Writer writer)
+                                   throws IOException {
         escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML11_SYMBOLS,
                 XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
                 XmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
