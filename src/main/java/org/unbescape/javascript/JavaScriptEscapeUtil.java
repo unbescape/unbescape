@@ -763,6 +763,7 @@ final class JavaScriptEscapeUtil {
                     } else {
                         // We weren't able to consume any valid escape chars, just consider it a normal char.
                         codepoint = (int) c1;
+                        referenceOffset = i + 1;
                     }
 
                 }
@@ -949,6 +950,7 @@ final class JavaScriptEscapeUtil {
                     } else {
                         // We weren't able to consume any valid escape chars, just consider it a normal char.
                         codepoint = (int) c1;
+                        referenceOffset = i + 1;
                     }
 
                 }
