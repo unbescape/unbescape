@@ -680,6 +680,7 @@ final class JavaScriptEscapeUtil {
                     case 'b': codepoint = 0x08; referenceOffset = i + 1; break;
                     case 't': codepoint = 0x09; referenceOffset = i + 1; break;
                     case 'n': codepoint = 0x0A; referenceOffset = i + 1; break;
+                    case 'v': codepoint = 0x0B; referenceOffset = i + 1; break;
                     case 'f': codepoint = 0x0C; referenceOffset = i + 1; break;
                     case 'r': codepoint = 0x0D; referenceOffset = i + 1; break;
                     case '"': codepoint = 0x22; referenceOffset = i + 1; break;
@@ -867,6 +868,7 @@ final class JavaScriptEscapeUtil {
                     case 'b': codepoint = 0x08; referenceOffset = i + 1; break;
                     case 't': codepoint = 0x09; referenceOffset = i + 1; break;
                     case 'n': codepoint = 0x0A; referenceOffset = i + 1; break;
+                    case 'v': codepoint = 0x0B; referenceOffset = i + 1; break;
                     case 'f': codepoint = 0x0C; referenceOffset = i + 1; break;
                     case 'r': codepoint = 0x0D; referenceOffset = i + 1; break;
                     case '"': codepoint = 0x22; referenceOffset = i + 1; break;
