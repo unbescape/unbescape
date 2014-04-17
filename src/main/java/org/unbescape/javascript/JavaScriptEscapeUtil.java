@@ -711,6 +711,7 @@ final class JavaScriptEscapeUtil {
                     case '"': codepoint = 0x22; referenceOffset = i + 1; break;
                     case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
                     case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
+                    case '/': codepoint = 0x2F; referenceOffset = i + 1; break;
                 }
 
                 if (codepoint == -1) {
@@ -917,6 +918,7 @@ final class JavaScriptEscapeUtil {
                     case '"': codepoint = 0x22; referenceOffset = i + 1; break;
                     case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
                     case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
+                    case '/': codepoint = 0x2F; referenceOffset = i + 1; break;
                 }
 
                 if (codepoint == -1) {
