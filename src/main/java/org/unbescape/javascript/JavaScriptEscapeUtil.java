@@ -45,19 +45,20 @@ final class JavaScriptEscapeUtil {
      *        http://mathiasbynens.be/notes/javascript-escapes
      *
      *   (Note that, in the following examples, and in order to avoid escape problems during the compilation
-     *    of this class, the backslash symbol is replaced by the forward slash '/')
+     *    of this class, the backslash symbol is replaced by '%')
      *
      *   - SINGLE ESCAPE CHARACTERS (SECs):
-     *        U+0000 -> /0
-     *        U+0008 -> /b
-     *        U+0009 -> /t
-     *        U+000A -> /n
-     *        U+000B -> /v  [NOT USED IN ESCAPE - Not supported by Internet Explorer < 9]
-     *        U+000C -> /f
-     *        U+000D -> /r
-     *        U+0022 -> /"
-     *        U+0027 -> /'
-     *        U+005C -> //
+     *        U+0000 -> %0
+     *        U+0008 -> %b
+     *        U+0009 -> %t
+     *        U+000A -> %n
+     *        U+000B -> %v  [NOT USED IN ESCAPE - Not supported by Internet Explorer < 9]
+     *        U+000C -> %f
+     *        U+000D -> %r
+     *        U+0022 -> %"
+     *        U+0027 -> %'
+     *        U+005C -> %%
+     *        U+002F -> %/  [ONLY USED WHEN / APPEARS IN </, IN ORDER TO AVOID ISSUES INSIDE <script> TAGS]
      *   - HEXADECIMAL ESCAPE [XHEXA] (only for characters <= U+00FF): /x??
      *   - UNICODE ESCAPE [UHEXA] (also hexadecimal)
      *        Characters <= U+FFFF: /u????
@@ -120,6 +121,8 @@ final class JavaScriptEscapeUtil {
         SEC_CHARS[0x22] = '"';
         SEC_CHARS[0x27] = '\'';
         SEC_CHARS[0x5C] = '\\';
+        // slash (solidus) character: will only be escaped if in '</'
+        SEC_CHARS[0x2F] = '/';
 
 
 
@@ -172,6 +175,8 @@ final class JavaScriptEscapeUtil {
         ESCAPE_LEVELS[0x22] = 1;
         ESCAPE_LEVELS[0x27] = 1;
         ESCAPE_LEVELS[0x5C] = 1;
+        // slash (solidus) character: will only be escaped if in '</', but we signal it as level 1 anyway
+        ESCAPE_LEVELS[0x2F] = 1;
 
         /*
          * JavaScript defines two ranges of non-displayable, control characters (some of which are already part of the
@@ -267,6 +272,13 @@ final class JavaScriptEscapeUtil {
                 continue;
             }
 
+            /*
+             * Check whether the character is a slash (solidus). In such case, only escape if it
+             * appears after a '<' ('</') or level >= 3 (non alphanumeric)
+             */
+            if (codepoint == '/' && level < 3 && (i == 0 || text.charAt(i - 1) != '<')) {
+                continue;
+            }
 
             /*
              * Shortcut: we might not want to escape non-ASCII chars at all either.
@@ -430,6 +442,13 @@ final class JavaScriptEscapeUtil {
                 continue;
             }
 
+            /*
+             * Check whether the character is a slash (solidus). In such case, only escape if it
+             * appears after a '<' ('</') or level >= 3 (non alphanumeric)
+             */
+            if (codepoint == '/' && level < 3 && (i == 0 || text[i - 1] != '<')) {
+                continue;
+            }
 
             /*
              * Shortcut: we might not want to escape non-ASCII chars at all either.

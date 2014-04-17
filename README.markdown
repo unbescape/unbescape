@@ -62,6 +62,7 @@ Features
       *  Support for the JavaScript basic escape set: `\0`, `\b`, `\t`, `\n`, `\v`, `\f`, `\r`, `\"`, `\'`, `\\`.
          Note that `\v` (`U+000B`) will not be used in escape operations (only unescape) because it is
          not supported by Microsoft Internet Explorer versions < 9.
+      *  Automatic escape of `/` (as `\/` if possible) when it appears after `<`, as in `</something>`.
       *  Support for escaping non-displayable, control characters: `U+0001` to `U+001F` and `U+007F` to `U+009F`.
       *  Support for X-based hexadecimal escapes (a.k.a. _hexadecimal escapes_) both in escape
          and unescape operations: `\xE1`.

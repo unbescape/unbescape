@@ -38,9 +38,13 @@ package org.unbescape.javascript;
  *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
  *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
  *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
- *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>) and
- *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
- *               Note that <kbd>&#92;v</kbd> (<kbd>U+000B</kbd>) is actually included as a Single Escape
+ *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>),
+ *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>) and
+ *               <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>).
+ *               Note that <kbd>&#92;&#47;</kbd> is optional, and will only be used when the <kbd>&#47;</kbd>
+ *               symbol appears after <kbd>&lt;</kbd>, as in <kbd>&lt;&#47;</kbd>. This is to avoid accidentally
+ *               closing <kbd>&lt;script&gt;</kbd> tags in HTML. Also, note that <kbd>&#92;v</kbd>
+ *               (<kbd>U+000B</kbd>) is actually included as a Single Escape
  *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
  *               is not supported by Microsoft Internet Explorer versions < 9.
  *           </li>
