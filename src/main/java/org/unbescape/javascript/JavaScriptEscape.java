@@ -39,13 +39,13 @@ import java.io.Writer;
  *       enum.</li>
  *   <li><em>Type</em>, which defines whether escaping should be performed by means of SECs
  *       (Single Escape Characters like <kbd>&#92;n</kbd>) or additionally by means of x-based or u-based
- *       hexadecimal references (<kbd>&#92;xE1</kbd> or <kbd>&#92;u00E1</kbd>).
+ *       hexadecimal escapes (<kbd>&#92;xE1</kbd> or <kbd>&#92;u00E1</kbd>).
  *       Its values are defined by the {@link org.unbescape.javascript.JavaScriptEscapeType} enum.</li>
  * </ul>
  * <p>
  *   <strong>Unescape</strong> operations need no configuration parameters. Unescape operations
  *   will always perform <em>complete</em> unescape of SECs (<kbd>&#92;n</kbd>), x-based (<kbd>&#92;xE1</kbd>)
- *   and u-based (<kbd>&#92;u00E1</kbd>) hexadecimal references, and even octal references (<kbd>\057</kbd>, which
+ *   and u-based (<kbd>&#92;u00E1</kbd>) hexadecimal escapes, and even octal escapes (<kbd>\057</kbd>, which
  *   are deprecated since ECMAScript v5 and therefore not used for escaping).
  * </p>
  *
