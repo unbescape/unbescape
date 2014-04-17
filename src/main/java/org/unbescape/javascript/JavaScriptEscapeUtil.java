@@ -716,11 +716,11 @@ final class JavaScriptEscapeUtil {
 
                 if (codepoint == -1) {
 
-                    if (c1 == ESCAPE_XHEXA_PREFIX2 && (i + 4) <= max) {
-                        // This can be a xhexa escape, we need exactly two more characters (thus the +4)
+                    if (c1 == ESCAPE_XHEXA_PREFIX2) {
+                        // This can be a xhexa escape, we need exactly two more characters
 
                         int f = i + 2;
-                        while (f < (i + 4)) {
+                        while (f < (i + 4) && f < max) {
                             final char cf = text.charAt(f);
                             if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
                                 break;
@@ -728,9 +728,9 @@ final class JavaScriptEscapeUtil {
                             f++;
                         }
 
-                        if ((f - (i + 2)) <= 0) {
-                            // We weren't able to consume any hexa chars, leave it as slash+'x', which is invalid,
-                            // and let the corresponding JavaScript engine fail.
+                        if ((f - (i + 2)) < 2) {
+                            // We weren't able to consume the required two hexa chars, leave it as slash+'x', which
+                            // is invalid, and let the corresponding JavaScript engine fail.
                             i++;
                             continue;
                         }
@@ -742,11 +742,11 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else if (c1 == ESCAPE_UHEXA_PREFIX2 && (i + 6) <= max) {
-                        // This can be a uhexa escape, we need exactly four more characters (thus the +6)
+                    } else if (c1 == ESCAPE_UHEXA_PREFIX2) {
+                        // This can be a uhexa escape, we need exactly four more characters
 
                         int f = i + 2;
-                        while (f < (i + 6)) {
+                        while (f < (i + 6) && f < max) {
                             final char cf = text.charAt(f);
                             if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
                                 break;
@@ -754,9 +754,9 @@ final class JavaScriptEscapeUtil {
                             f++;
                         }
 
-                        if ((f - (i + 2)) <= 0) {
-                            // We weren't able to consume any hexa chars, leave it as slash+'u', which is invalid,
-                            // and let the corresponding JavaScript engine fail.
+                        if ((f - (i + 2)) < 4) {
+                            // We weren't able to consume the required four hexa chars, leave it as slash+'u', which
+                            // is invalid, and let the corresponding JavaScript engine fail.
                             i++;
                             continue;
                         }
@@ -923,11 +923,11 @@ final class JavaScriptEscapeUtil {
 
                 if (codepoint == -1) {
 
-                    if (c1 == ESCAPE_XHEXA_PREFIX2 && (i + 4) <= max) {
-                        // This can be a xhexa escape, we need exactly two more characters (thus the +4)
+                    if (c1 == ESCAPE_XHEXA_PREFIX2) {
+                        // This can be a xhexa escape, we need exactly two more characters
 
                         int f = i + 2;
-                        while (f < (i + 4)) {
+                        while (f < (i + 4) && f < max) {
                             final char cf = text[f];
                             if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
                                 break;
@@ -935,9 +935,9 @@ final class JavaScriptEscapeUtil {
                             f++;
                         }
 
-                        if ((f - (i + 2)) <= 0) {
-                            // We weren't able to consume any hexa chars, leave it as slash+'x', which is invalid,
-                            // and let the corresponding JavaScript engine fail.
+                        if ((f - (i + 2)) < 2) {
+                            // We weren't able to consume the required two hexa chars, leave it as slash+'x', which
+                            // is invalid, and let the corresponding JavaScript engine fail.
                             i++;
                             continue;
                         }
@@ -949,11 +949,11 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else if (c1 == ESCAPE_UHEXA_PREFIX2 && (i + 6) <= max) {
-                        // This can be a uhexa escape, we need exactly four more characters (thus the +6)
+                    } else if (c1 == ESCAPE_UHEXA_PREFIX2) {
+                        // This can be a uhexa escape, we need exactly four more characters
 
                         int f = i + 2;
-                        while (f < (i + 6)) {
+                        while (f < (i + 6) && f < max) {
                             final char cf = text[f];
                             if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
                                 break;
@@ -961,9 +961,9 @@ final class JavaScriptEscapeUtil {
                             f++;
                         }
 
-                        if ((f - (i + 2)) <= 0) {
-                            // We weren't able to consume any hexa chars, leave it as slash+'u', which is invalid,
-                            // and let the corresponding JavaScript engine fail.
+                        if ((f - (i + 2)) < 4) {
+                            // We weren't able to consume the required four hexa chars, leave it as slash+'u', which
+                            // is invalid, and let the corresponding JavaScript engine fail.
                             i++;
                             continue;
                         }
