@@ -124,3 +124,27 @@ And also those that allow a more fine-grained configuration of the escape operat
              XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_DECIMAL,
              XmlEscapeLevel.LEVEL_3_ALL_NON_ALPHANUMERIC);
 ```
+
+
+
+JavaScript Escape/Unescape
+--------------------------
+
+JavaScript escape and unescape operations are performed by means of the `org.unbescape.javascript.JavaScriptEscape` class. This class defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
+
+There are simple, preconfigured methods:
+
+```java
+    final String escaped = JavaScriptEscape.escapeJavaScript(text);
+    final String unescaped = JavaScriptEscape.unescapeJavaScript(escaped);
+```
+
+And also those that allow a more fine-grained configuration of the escape operation:
+
+```java
+    final String result =
+        JavaScriptEscape.escapeJavaScript(
+             text,
+             JavaScriptEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_XHEXA_AND_UHEXA,
+             JavaScriptEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+```
