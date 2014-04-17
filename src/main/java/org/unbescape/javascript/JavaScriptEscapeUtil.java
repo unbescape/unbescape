@@ -797,7 +797,7 @@ final class JavaScriptEscapeUtil {
                         // '8' and '9' are not valid octal escape sequences, and the other four characters
                         // are LineTerminators, which are not allowed as escape sequences. So we leave it as is
                         // and expect the corresponding JavaScript engine to fail (except in the case of slash + '\n',
-                        // which is considered a LineContinuator.
+                        // which is considered a LineContinuator).
                         i++;
                         continue;
 
@@ -1003,7 +1003,7 @@ final class JavaScriptEscapeUtil {
                         // '8' and '9' are not valid octal escape sequences, and the other four characters
                         // are LineTerminators, which are not allowed as escape sequences. So we leave it as is
                         // and expect the corresponding JavaScript engine to fail (except in the case of slash + '\n',
-                        // which is considered a LineContinuator.
+                        // which is considered a LineContinuator).
                         i++;
                         continue;
 
