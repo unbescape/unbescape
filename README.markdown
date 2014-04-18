@@ -14,7 +14,7 @@ This project is still under active development. Some features are already availa
 
 Current versions: 
 
-  * **Version 0.1**
+  * **Version 0.2**
 
 
 License
