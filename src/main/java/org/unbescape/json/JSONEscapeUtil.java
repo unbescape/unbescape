@@ -58,9 +58,9 @@ final class JSONEscapeUtil {
      *        U+005C -> %%
      *        U+002F -> %/  [ONLY USED WHEN / APPEARS IN </, IN ORDER TO AVOID ISSUES INSIDE <script> TAGS]
      *   - UNICODE ESCAPE [UHEXA]
-     *        Characters <= U+FFFF: /u????
-     *        Characters > U+FFFF : /u????/u???? (surrogate character pair)
-     *                              /u{?*} [NOT USED - Possible syntax for ECMAScript 6]
+     *        Characters <= U+FFFF: %u????
+     *        Characters > U+FFFF : %u????%u???? (surrogate character pair)
+     *                              %u{?*} [NOT USED - Possible syntax for ECMAScript 6]
      *
      *
      *   ------------------------
