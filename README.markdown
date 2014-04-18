@@ -4,7 +4,7 @@ Unbescape: escaping in Java done right
 
 ------------------------------------------------------------------------------
 
-_Unbescape_ is a Java library aimed at performing fully-featured and high-performance escape and unescape operations for **HTML** (HTML5 and HTML 4), **XML**, **CSS**, **JavaScript**, **JSON** and **Java Literals**.
+_Unbescape_ is a Java library aimed at performing fully-featured and high-performance escape and unescape operations for **HTML** (HTML5 and HTML 4), **XML**, **JavaScript**, **JSON**, **CSS** and **Java Literals**.
 
 
 Status
@@ -72,7 +72,13 @@ Features
          in escape operations (octal escapes were deprecated in version 5 of the ECMAScript
          specification).
       *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
-  *   **JSON Escape/Unescape** _[not yet available]_
+  *   **JSON Escape/Unescape**
+      *  Support for the JSON basic escape set: `\b`, `\t`, `\n`, `\f`, `\r`, `\"`, `\\`.
+      *  Automatic escape of `/` (as `\/` if possible) when it appears after `<`, as in `</something>`.
+      *  Support for escaping non-displayable, control characters: `U+0000` to `U+001F` and `U+007F` to `U+009F`.
+      *  Support for U-based hexadecimal escapes (a.k.a. _unicode escapes_) both in escape
+         and unescape operations: `\u00E1`.
+      *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
   *   **CSS Escape/Unescape** _[not yet available]_
   *   **Java Literal Escape/Unescape** _[not yet available]_
 
@@ -148,4 +154,28 @@ And also those that allow a more fine-grained configuration of the escape operat
              text,
              JavaScriptEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_XHEXA_AND_UHEXA,
              JavaScriptEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+```
+
+
+
+JSON Escape/Unescape
+--------------------
+
+JSON escape and unescape operations are performed by means of the `org.unbescape.json.JSONEscape` class. This class defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
+
+There are simple, preconfigured methods:
+
+```java
+    final String escaped = JSONEscape.escapeJSON(text);
+    final String unescaped = JSONEscape.unescapeJSON(escaped);
+```
+
+And also those that allow a more fine-grained configuration of the escape operation:
+
+```java
+    final String result =
+        JSONEscape.escapeJSON(
+             text,
+             JSONEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO__UHEXA,
+             JSONEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
 ```
