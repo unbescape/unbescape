@@ -42,11 +42,8 @@ Features
 
   *   **High performance** and **low memory footprint**
       *   No unneeded `String` or `char[]` objects are created, and specific optimizations are applied in order to provide maximum performance (e.g. if a `String` has the same content after escaping/unescaping, exactly the same `String` object is returned, no copy is made).
-      *  See (and execute) the [`HtmlBenchmark`](https://github.com/unbescape/unbescape-tests/blob/20140418/src/test/java/org/unbescape/html/HtmlBenchmark.java),
-                               [`XmlBenchmark`](https://github.com/unbescape/unbescape-tests/blob/20140418/src/test/java/org/unbescape/xml/XmlBenchmark.java),
-                               [`JavaScriptBenchmark`](https://github.com/unbescape/unbescape-tests/blob/20140418/src/test/java/org/unbescape/javascript/JavaScriptBenchmark.java) and
-                               [`JSONBenchmark`](https://github.com/unbescape/unbescape-tests/blob/20140418/src/test/java/org/unbescape/json/JSONBenchmark.java)
-         classes in the [`unbescape-tests`](https://github.com/unbescape/unbescape-tests) repository for specific figures.
+      *  See (and execute) the [`benchmark.sh`](https://github.com/unbescape/unbescape-tests/blob/20140418/benchmark.sh) script in the
+         [`unbescape-tests`](https://github.com/unbescape/unbescape-tests) repository for specific figures.
   *   **HTML Escape/Unescape** _[already available]_
       *  Whole **HTML5** NCR (Named Character Reference) set supported, if required:    `&rsqb;`,`&NewLine;`, etc. (HTML 4 set available too).
       *  Mixed named and numerical (decimal or hexa) character references supported.
