@@ -261,7 +261,7 @@ final class JSONEscapeUtil {
              * Check whether the character is a slash (solidus). In such case, only escape if it
              * appears after a '<' ('</') or level >= 3 (non alphanumeric)
              */
-            if (codepoint == '/' && level < 3 && (i == 0 || text.charAt(i - 1) != '<')) {
+            if (codepoint == '/' && level < 3 && (i == offset || text.charAt(i - 1) != '<')) {
                 continue;
             }
 
@@ -420,7 +420,7 @@ final class JSONEscapeUtil {
              * Check whether the character is a slash (solidus). In such case, only escape if it
              * appears after a '<' ('</') or level >= 3 (non alphanumeric)
              */
-            if (codepoint == '/' && level < 3 && (i == 0 || text[i - 1] != '<')) {
+            if (codepoint == '/' && level < 3 && (i == offset || text[i - 1] != '<')) {
                 continue;
             }
 
