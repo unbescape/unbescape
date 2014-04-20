@@ -727,42 +727,42 @@ final class CSSIdentifierEscapeUtil {
                 final char c1 = text.charAt(i + 1);
 
                 switch (c1) {
-                    case ' ': codepoint = 0x20; referenceOffset = i + 1; break;
-                    case '!': codepoint = 0x21; referenceOffset = i + 1; break;
-                    case '"': codepoint = 0x22; referenceOffset = i + 1; break;
-                    case '#': codepoint = 0x23; referenceOffset = i + 1; break;
-                    case '$': codepoint = 0x24; referenceOffset = i + 1; break;
-                    case '%': codepoint = 0x25; referenceOffset = i + 1; break;
-                    case '&': codepoint = 0x26; referenceOffset = i + 1; break;
-                    case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
-                    case '(': codepoint = 0x28; referenceOffset = i + 1; break;
-                    case ')': codepoint = 0x29; referenceOffset = i + 1; break;
-                    case '*': codepoint = 0x2A; referenceOffset = i + 1; break;
-                    case '+': codepoint = 0x2B; referenceOffset = i + 1; break;
-                    case ',': codepoint = 0x2C; referenceOffset = i + 1; break;
+                    case ' ':
+                    case '!':
+                    case '"':
+                    case '#':
+                    case '$':
+                    case '%':
+                    case '&':
+                    case '\'':
+                    case '(':
+                    case ')':
+                    case '*':
+                    case '+':
+                    case ',':
                     // hyphen: will only be escaped when identifer starts with '--' or '-{digit}'
-                    case '-': codepoint = 0x2D; referenceOffset = i + 1; break;
-                    case '.': codepoint = 0x2E; referenceOffset = i + 1; break;
-                    case '/': codepoint = 0x2F; referenceOffset = i + 1; break;
+                    case '-':
+                    case '.':
+                    case '/':
                     // colon: will not be used for escaping: not recognized by IE < 8
-                    case ':': codepoint = 0x3A; referenceOffset = i + 1; break;
-                    case ';': codepoint = 0x3B; referenceOffset = i + 1; break;
-                    case '<': codepoint = 0x3C; referenceOffset = i + 1; break;
-                    case '=': codepoint = 0x3D; referenceOffset = i + 1; break;
-                    case '>': codepoint = 0x3E; referenceOffset = i + 1; break;
-                    case '?': codepoint = 0x3F; referenceOffset = i + 1; break;
-                    case '@': codepoint = 0x40; referenceOffset = i + 1; break;
-                    case '[': codepoint = 0x5B; referenceOffset = i + 1; break;
-                    case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
-                    case ']': codepoint = 0x5D; referenceOffset = i + 1; break;
-                    case '^': codepoint = 0x5E; referenceOffset = i + 1; break;
+                    case ':':
+                    case ';':
+                    case '<':
+                    case '=':
+                    case '>':
+                    case '?':
+                    case '@':
+                    case '[':
+                    case '\\':
+                    case ']':
+                    case '^':
                     // underscore: will only be escaped at the beginning of an identifier (in order to avoid issues in IE6)
-                    case '_': codepoint = 0x5F; referenceOffset = i + 1; break;
-                    case '`': codepoint = 0x60; referenceOffset = i + 1; break;
-                    case '{': codepoint = 0x7B; referenceOffset = i + 1; break;
-                    case '|': codepoint = 0x7C; referenceOffset = i + 1; break;
-                    case '}': codepoint = 0x7D; referenceOffset = i + 1; break;
-                    case '~': codepoint = 0x7E; referenceOffset = i + 1; break;
+                    case '_':
+                    case '`':
+                    case '{':
+                    case '|':
+                    case '}':
+                    case '~': codepoint = (int)c1; referenceOffset = i + 1; break;
                 }
 
                 if (codepoint == -1) {
@@ -906,42 +906,42 @@ final class CSSIdentifierEscapeUtil {
                 final char c1 = text[i + 1];
 
                 switch (c1) {
-                    case ' ': codepoint = 0x20; referenceOffset = i + 1; break;
-                    case '!': codepoint = 0x21; referenceOffset = i + 1; break;
-                    case '"': codepoint = 0x22; referenceOffset = i + 1; break;
-                    case '#': codepoint = 0x23; referenceOffset = i + 1; break;
-                    case '$': codepoint = 0x24; referenceOffset = i + 1; break;
-                    case '%': codepoint = 0x25; referenceOffset = i + 1; break;
-                    case '&': codepoint = 0x26; referenceOffset = i + 1; break;
-                    case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
-                    case '(': codepoint = 0x28; referenceOffset = i + 1; break;
-                    case ')': codepoint = 0x29; referenceOffset = i + 1; break;
-                    case '*': codepoint = 0x2A; referenceOffset = i + 1; break;
-                    case '+': codepoint = 0x2B; referenceOffset = i + 1; break;
-                    case ',': codepoint = 0x2C; referenceOffset = i + 1; break;
+                    case ' ':
+                    case '!':
+                    case '"':
+                    case '#':
+                    case '$':
+                    case '%':
+                    case '&':
+                    case '\'':
+                    case '(':
+                    case ')':
+                    case '*':
+                    case '+':
+                    case ',':
                     // hyphen: will only be escaped when identifer starts with '--' or '-{digit}'
-                    case '-': codepoint = 0x2D; referenceOffset = i + 1; break;
-                    case '.': codepoint = 0x2E; referenceOffset = i + 1; break;
-                    case '/': codepoint = 0x2F; referenceOffset = i + 1; break;
+                    case '-':
+                    case '.':
+                    case '/':
                     // colon: will not be used for escaping: not recognized by IE < 8
-                    case ':': codepoint = 0x3A; referenceOffset = i + 1; break;
-                    case ';': codepoint = 0x3B; referenceOffset = i + 1; break;
-                    case '<': codepoint = 0x3C; referenceOffset = i + 1; break;
-                    case '=': codepoint = 0x3D; referenceOffset = i + 1; break;
-                    case '>': codepoint = 0x3E; referenceOffset = i + 1; break;
-                    case '?': codepoint = 0x3F; referenceOffset = i + 1; break;
-                    case '@': codepoint = 0x40; referenceOffset = i + 1; break;
-                    case '[': codepoint = 0x5B; referenceOffset = i + 1; break;
-                    case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
-                    case ']': codepoint = 0x5D; referenceOffset = i + 1; break;
-                    case '^': codepoint = 0x5E; referenceOffset = i + 1; break;
+                    case ':':
+                    case ';':
+                    case '<':
+                    case '=':
+                    case '>':
+                    case '?':
+                    case '@':
+                    case '[':
+                    case '\\':
+                    case ']':
+                    case '^':
                     // underscore: will only be escaped at the beginning of an identifier (in order to avoid issues in IE6)
-                    case '_': codepoint = 0x5F; referenceOffset = i + 1; break;
-                    case '`': codepoint = 0x60; referenceOffset = i + 1; break;
-                    case '{': codepoint = 0x7B; referenceOffset = i + 1; break;
-                    case '|': codepoint = 0x7C; referenceOffset = i + 1; break;
-                    case '}': codepoint = 0x7D; referenceOffset = i + 1; break;
-                    case '~': codepoint = 0x7E; referenceOffset = i + 1; break;
+                    case '_':
+                    case '`':
+                    case '{':
+                    case '|':
+                    case '}':
+                    case '~': codepoint = (int)c1; referenceOffset = i + 1; break;
                 }
 
                 if (codepoint == -1) {
