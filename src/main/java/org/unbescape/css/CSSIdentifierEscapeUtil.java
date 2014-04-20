@@ -159,7 +159,7 @@ final class CSSIdentifierEscapeUtil {
         BACKSLASH_CHARS[0x3F] = '?';
         BACKSLASH_CHARS[0x40] = '@';
         BACKSLASH_CHARS[0x5B] = '[';
-        BACKSLASH_CHARS[0x5C] = '%';
+        BACKSLASH_CHARS[0x5C] = '\\';
         BACKSLASH_CHARS[0x5D] = ']';
         BACKSLASH_CHARS[0x5E] = '^';
         // underscore: will only be escaped at the beginning of an identifier (in order to avoid issues in IE6)
@@ -696,141 +696,176 @@ final class CSSIdentifierEscapeUtil {
      */
     static String unescape(final String text) {
 
-//        if (text == null) {
-//            return null;
-//        }
-//
-//        StringBuilder strBuilder = null;
-//
-//        final int offset = 0;
-//        final int max = text.length();
-//
-//        int readOffset = offset;
-//        int referenceOffset = offset;
-//
-//        for (int i = offset; i < max; i++) {
-//
-//            final char c = text.charAt(i);
-//
-//            /*
-//             * Check the need for an unescape operation at this point
-//             */
-//
-//            if (c != ESCAPE_PREFIX || (i + 1) >= max) {
-//                continue;
-//            }
-//
-//            int codepoint = -1;
-//
-//            if (c == ESCAPE_PREFIX) {
-//
-//                final char c1 = text.charAt(i + 1);
-//
-//                switch (c1) {
-//                    case 'b': codepoint = 0x08; referenceOffset = i + 1; break;
-//                    case 't': codepoint = 0x09; referenceOffset = i + 1; break;
-//                    case 'n': codepoint = 0x0A; referenceOffset = i + 1; break;
-//                    case 'f': codepoint = 0x0C; referenceOffset = i + 1; break;
-//                    case 'r': codepoint = 0x0D; referenceOffset = i + 1; break;
-//                    case '"': codepoint = 0x22; referenceOffset = i + 1; break;
-//                    case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
-//                    case '/': codepoint = 0x2F; referenceOffset = i + 1; break;
-//                }
-//
-//                if (codepoint == -1) {
-//
-//                    if (c1 == ESCAPE_UHEXA_PREFIX2) {
-//                        // This can be a uhexa escape, we need exactly four more characters
-//
-//                        int f = i + 2;
-//                        while (f < (i + 6) && f < max) {
-//                            final char cf = text.charAt(f);
-//                            if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
-//                                break;
-//                            }
-//                            f++;
-//                        }
-//
-//                        if ((f - (i + 2)) < 4) {
-//                            // We weren't able to consume the required four hexa chars, leave it as slash+'u', which
-//                            // is invalid, and let the corresponding JSON parser fail.
-//                            i++;
-//                            continue;
-//                        }
-//
-//                        codepoint = parseIntFromReference(text, i + 2, f, 16);
-//
-//                        // Fast-forward to the first char after the parsed codepoint
-//                        referenceOffset = f - 1;
-//
-//                        // Don't continue here, just let the unescape code below do its job
-//
-//                    } else {
-//
-//                        // Other escape sequences are not allowed by JSON. So we leave it as is
-//                        // and expect the corresponding JSON parser to fail.
-//                        i++;
-//                        continue;
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//
-//            /*
-//             * At this point we know for sure we will need some kind of unescape, so we
-//             * can increase the offset and initialize the string builder if needed, along with
-//             * copying to it all the contents pending up to this point.
-//             */
-//
-//            if (strBuilder == null) {
-//                strBuilder = new StringBuilder(max + 5);
-//            }
-//
-//            if (i - readOffset > 0) {
-//                strBuilder.append(text, readOffset, i);
-//            }
-//
-//            i = referenceOffset;
-//            readOffset = i + 1;
-//
-//            /*
-//             * --------------------------
-//             *
-//             * Peform the real unescape
-//             *
-//             * --------------------------
-//             */
-//
-//            if (codepoint > '\uFFFF') {
-//                strBuilder.append(Character.toChars(codepoint));
-//            } else {
-//                strBuilder.append((char)codepoint);
-//            }
-//
-//        }
-//
-//
-//        /*
-//         * -----------------------------------------------------------------------------------------------
-//         * Final cleaning: return the original String object if no unescape was actually needed. Otherwise
-//         *                 append the remaining escaped text to the string builder and return.
-//         * -----------------------------------------------------------------------------------------------
-//         */
-//
-//        if (strBuilder == null) {
-//            return text;
-//        }
-//
-//        if (max - readOffset > 0) {
-//            strBuilder.append(text, readOffset, max);
-//        }
-//
-//        return strBuilder.toString();
+        if (text == null) {
+            return null;
+        }
 
-        return null;
+        StringBuilder strBuilder = null;
+
+        final int offset = 0;
+        final int max = text.length();
+
+        int readOffset = offset;
+        int referenceOffset = offset;
+
+        for (int i = offset; i < max; i++) {
+
+            final char c = text.charAt(i);
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if (c != ESCAPE_PREFIX || (i + 1) >= max) {
+                continue;
+            }
+
+            int codepoint = -1;
+
+            if (c == ESCAPE_PREFIX) {
+
+                final char c1 = text.charAt(i + 1);
+
+                switch (c1) {
+                    case ' ': codepoint = 0x20; referenceOffset = i + 1; break;
+                    case '!': codepoint = 0x21; referenceOffset = i + 1; break;
+                    case '"': codepoint = 0x22; referenceOffset = i + 1; break;
+                    case '#': codepoint = 0x23; referenceOffset = i + 1; break;
+                    case '$': codepoint = 0x24; referenceOffset = i + 1; break;
+                    case '%': codepoint = 0x25; referenceOffset = i + 1; break;
+                    case '&': codepoint = 0x26; referenceOffset = i + 1; break;
+                    case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
+                    case '(': codepoint = 0x28; referenceOffset = i + 1; break;
+                    case ')': codepoint = 0x29; referenceOffset = i + 1; break;
+                    case '*': codepoint = 0x2A; referenceOffset = i + 1; break;
+                    case '+': codepoint = 0x2B; referenceOffset = i + 1; break;
+                    case ',': codepoint = 0x2C; referenceOffset = i + 1; break;
+                    // hyphen: will only be escaped when identifer starts with '--' or '-{digit}'
+                    case '-': codepoint = 0x2D; referenceOffset = i + 1; break;
+                    case '.': codepoint = 0x2E; referenceOffset = i + 1; break;
+                    case '/': codepoint = 0x2F; referenceOffset = i + 1; break;
+                    // colon: will not be used for escaping: not recognized by IE < 8
+                    case ':': codepoint = 0x3A; referenceOffset = i + 1; break;
+                    case ';': codepoint = 0x3B; referenceOffset = i + 1; break;
+                    case '<': codepoint = 0x3C; referenceOffset = i + 1; break;
+                    case '=': codepoint = 0x3D; referenceOffset = i + 1; break;
+                    case '>': codepoint = 0x3E; referenceOffset = i + 1; break;
+                    case '?': codepoint = 0x3F; referenceOffset = i + 1; break;
+                    case '@': codepoint = 0x40; referenceOffset = i + 1; break;
+                    case '[': codepoint = 0x5B; referenceOffset = i + 1; break;
+                    case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
+                    case ']': codepoint = 0x5D; referenceOffset = i + 1; break;
+                    case '^': codepoint = 0x5E; referenceOffset = i + 1; break;
+                    // underscore: will only be escaped at the beginning of an identifier (in order to avoid issues in IE6)
+                    case '_': codepoint = 0x5F; referenceOffset = i + 1; break;
+                    case '`': codepoint = 0x60; referenceOffset = i + 1; break;
+                    case '{': codepoint = 0x7B; referenceOffset = i + 1; break;
+                    case '|': codepoint = 0x7C; referenceOffset = i + 1; break;
+                    case '}': codepoint = 0x7D; referenceOffset = i + 1; break;
+                    case '~': codepoint = 0x7E; referenceOffset = i + 1; break;
+                }
+
+                if (codepoint == -1) {
+
+                    if ((c1 >= '0' && c1 <= '9') || (c1 >= 'A' && c1 <= 'F') || (c1 >= 'a' && c1 <= 'f')) {
+                        // This is a hexa escape
+
+                        int f = i + 2;
+                        while (f < (i + 7) && f < max) {
+                            final char cf = text.charAt(f);
+                            if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
+                                break;
+                            }
+                            f++;
+                        }
+
+                        codepoint = parseIntFromReference(text, i + 1, f, 16);
+
+                        // Fast-forward to the first char after the parsed codepoint
+                        referenceOffset = f - 1;
+
+                        // If the escape is not six digit long and there is a whitespace after the escape,
+                        // just ignore it.
+                        if ((f - i < 7) && f < max && text.charAt(f) == ' ') {
+                            referenceOffset++;
+                        }
+
+                        // Don't continue here, just let the unescape code below do its job
+
+
+                    } else if (c1 == '\n' || c1 == '\r' || c1 == '\f') {
+
+                        // The only characters that cannot be escaped by means of a backslash are line feed,
+                        // carriage return and form feed (besides hexadecimal digits).
+                        i++;
+                        continue;
+
+                    } else {
+
+                        // We weren't able to consume any valid escape chars, just consider it a normal char,
+                        // which is allowed by the CSS identifier syntax.
+
+                        codepoint = (int) c1;
+                        referenceOffset = i + 1;
+
+                    }
+
+                }
+
+            }
+
+
+            /*
+             * At this point we know for sure we will need some kind of unescape, so we
+             * can increase the offset and initialize the string builder if needed, along with
+             * copying to it all the contents pending up to this point.
+             */
+
+            if (strBuilder == null) {
+                strBuilder = new StringBuilder(max + 5);
+            }
+
+            if (i - readOffset > 0) {
+                strBuilder.append(text, readOffset, i);
+            }
+
+            i = referenceOffset;
+            readOffset = i + 1;
+
+            /*
+             * --------------------------
+             *
+             * Peform the real unescape
+             *
+             * --------------------------
+             */
+
+            if (codepoint > '\uFFFF') {
+                strBuilder.append(Character.toChars(codepoint));
+            } else {
+                strBuilder.append((char)codepoint);
+            }
+
+        }
+
+
+        /*
+         * -----------------------------------------------------------------------------------------------
+         * Final cleaning: return the original String object if no unescape was actually needed. Otherwise
+         *                 append the remaining escaped text to the string builder and return.
+         * -----------------------------------------------------------------------------------------------
+         */
+
+        if (strBuilder == null) {
+            return text;
+        }
+
+        if (max - readOffset > 0) {
+            strBuilder.append(text, readOffset, max);
+        }
+
+        return strBuilder.toString();
+
     }
 
 
@@ -848,7 +883,156 @@ final class CSSIdentifierEscapeUtil {
             return;
         }
 
-        // TODO Copy from String version
+        final int max = (offset + len);
+
+        int readOffset = offset;
+        int referenceOffset = offset;
+
+        for (int i = offset; i < max; i++) {
+
+            final char c = text[i];
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if (c != ESCAPE_PREFIX || (i + 1) >= max) {
+                continue;
+            }
+
+            int codepoint = -1;
+
+            if (c == ESCAPE_PREFIX) {
+
+                final char c1 = text[i + 1];
+
+                switch (c1) {
+                    case ' ': codepoint = 0x20; referenceOffset = i + 1; break;
+                    case '!': codepoint = 0x21; referenceOffset = i + 1; break;
+                    case '"': codepoint = 0x22; referenceOffset = i + 1; break;
+                    case '#': codepoint = 0x23; referenceOffset = i + 1; break;
+                    case '$': codepoint = 0x24; referenceOffset = i + 1; break;
+                    case '%': codepoint = 0x25; referenceOffset = i + 1; break;
+                    case '&': codepoint = 0x26; referenceOffset = i + 1; break;
+                    case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
+                    case '(': codepoint = 0x28; referenceOffset = i + 1; break;
+                    case ')': codepoint = 0x29; referenceOffset = i + 1; break;
+                    case '*': codepoint = 0x2A; referenceOffset = i + 1; break;
+                    case '+': codepoint = 0x2B; referenceOffset = i + 1; break;
+                    case ',': codepoint = 0x2C; referenceOffset = i + 1; break;
+                    // hyphen: will only be escaped when identifer starts with '--' or '-{digit}'
+                    case '-': codepoint = 0x2D; referenceOffset = i + 1; break;
+                    case '.': codepoint = 0x2E; referenceOffset = i + 1; break;
+                    case '/': codepoint = 0x2F; referenceOffset = i + 1; break;
+                    // colon: will not be used for escaping: not recognized by IE < 8
+                    case ':': codepoint = 0x3A; referenceOffset = i + 1; break;
+                    case ';': codepoint = 0x3B; referenceOffset = i + 1; break;
+                    case '<': codepoint = 0x3C; referenceOffset = i + 1; break;
+                    case '=': codepoint = 0x3D; referenceOffset = i + 1; break;
+                    case '>': codepoint = 0x3E; referenceOffset = i + 1; break;
+                    case '?': codepoint = 0x3F; referenceOffset = i + 1; break;
+                    case '@': codepoint = 0x40; referenceOffset = i + 1; break;
+                    case '[': codepoint = 0x5B; referenceOffset = i + 1; break;
+                    case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
+                    case ']': codepoint = 0x5D; referenceOffset = i + 1; break;
+                    case '^': codepoint = 0x5E; referenceOffset = i + 1; break;
+                    // underscore: will only be escaped at the beginning of an identifier (in order to avoid issues in IE6)
+                    case '_': codepoint = 0x5F; referenceOffset = i + 1; break;
+                    case '`': codepoint = 0x60; referenceOffset = i + 1; break;
+                    case '{': codepoint = 0x7B; referenceOffset = i + 1; break;
+                    case '|': codepoint = 0x7C; referenceOffset = i + 1; break;
+                    case '}': codepoint = 0x7D; referenceOffset = i + 1; break;
+                    case '~': codepoint = 0x7E; referenceOffset = i + 1; break;
+                }
+
+                if (codepoint == -1) {
+
+                    if ((c1 >= '0' && c1 <= '9') || (c1 >= 'A' && c1 <= 'F') || (c1 >= 'a' && c1 <= 'f')) {
+                        // This is a hexa escape
+
+                        int f = i + 2;
+                        while (f < (i + 7) && f < max) {
+                            final char cf = text[f];
+                            if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
+                                break;
+                            }
+                            f++;
+                        }
+
+                        codepoint = parseIntFromReference(text, i + 1, f, 16);
+
+                        // Fast-forward to the first char after the parsed codepoint
+                        referenceOffset = f - 1;
+
+                        // If the escape is not six digit long and there is a whitespace after the escape,
+                        // just ignore it.
+                        if ((f - i < 7) && f < max && text[f] == ' ') {
+                            referenceOffset++;
+                        }
+
+                        // Don't continue here, just let the unescape code below do its job
+
+
+                    } else if (c1 == '\n' || c1 == '\r' || c1 == '\f') {
+
+                        // The only characters that cannot be escaped by means of a backslash are line feed,
+                        // carriage return and form feed (besides hexadecimal digits).
+                        i++;
+                        continue;
+
+                    } else {
+
+                        // We weren't able to consume any valid escape chars, just consider it a normal char,
+                        // which is allowed by the CSS identifier syntax.
+
+                        codepoint = (int) c1;
+                        referenceOffset = i + 1;
+
+                    }
+
+                }
+
+            }
+
+
+            /*
+             * At this point we know for sure we will need some kind of unescape, so we
+             * can write all the contents pending up to this point.
+             */
+
+            if (i - readOffset > 0) {
+                writer.write(text, readOffset, (i - readOffset));
+            }
+
+            i = referenceOffset;
+            readOffset = i + 1;
+
+            /*
+             * --------------------------
+             *
+             * Peform the real unescape
+             *
+             * --------------------------
+             */
+
+            if (codepoint > '\uFFFF') {
+                writer.write(Character.toChars(codepoint));
+            } else {
+                writer.write((char)codepoint);
+            }
+
+        }
+
+
+        /*
+         * -----------------------------------------------------------------------------------------------
+         * Final cleaning: append the remaining escaped text to the string builder and return.
+         * -----------------------------------------------------------------------------------------------
+         */
+
+        if (max - readOffset > 0) {
+            writer.write(text, readOffset, (max - readOffset));
+        }
 
     }
 
