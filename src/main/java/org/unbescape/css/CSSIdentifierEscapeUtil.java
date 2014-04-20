@@ -784,9 +784,8 @@ final class CSSIdentifierEscapeUtil {
                         // Fast-forward to the first char after the parsed codepoint
                         referenceOffset = f - 1;
 
-                        // If the escape is not six digit long and there is a whitespace after the escape,
-                        // just ignore it.
-                        if ((f - i < 7) && f < max && text.charAt(f) == ' ') {
+                        // If there is a whitespace after the escape, just ignore it.
+                        if (f < max && text.charAt(f) == ' ') {
                             referenceOffset++;
                         }
 
@@ -964,9 +963,8 @@ final class CSSIdentifierEscapeUtil {
                         // Fast-forward to the first char after the parsed codepoint
                         referenceOffset = f - 1;
 
-                        // If the escape is not six digit long and there is a whitespace after the escape,
-                        // just ignore it.
-                        if ((f - i < 7) && f < max && text[f] == ' ') {
+                        // If there is a whitespace after the escape, just ignore it.
+                        if (f < max && text[f] == ' ') {
                             referenceOffset++;
                         }
 
