@@ -84,11 +84,12 @@ final class CSSUnescapeUtil {
      *
      *   - UNICODE ESCAPE [HEXA]
      *        Compact representation: %??* (variable-length. Optionally followed by a whitespace U+0020 - required
-     *                                      if after escape comes a hexadecimal char (0-9a-f))
-     *        6-digit representation: %?????? (fixed-length. Not followed by whitespace)
+     *                                      if after escape comes a hexadecimal char (0-9a-f) or a whitespace U+0020)
+     *        6-digit representation: %?????? (fixed-length. Not required to be followed by whitespace, unless after
+     *                                        escape comes a whitespace U+0020)
      *
      *        Characters > U+FFFF :
-      *             - Standard:      %?????? or %??* (but not supported by older WebKit browsers)
+     *              - Standard:      %?????? or %??* (but not supported by older WebKit browsers)
      *              - Non-standard:  %u????%u???? (surrogate character pair, only in older WebKit browsers)
      *
      *

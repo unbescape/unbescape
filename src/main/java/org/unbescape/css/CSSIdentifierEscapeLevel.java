@@ -66,8 +66,7 @@ package org.unbescape.css;
  *               (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
  *               problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
  *               (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
- *               used for escaping as Internet
- *               Explorer &lt; 8 does not recognize it.
+ *               used for escaping as Internet Explorer &lt; 8 does not recognize it.
  *           </li>
  *           <li>
  *               Two ranges of non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
