@@ -52,7 +52,7 @@ package org.unbescape.css;
  *
  * <p>
  *   For further information, see the <em>Glossary</em> and the <em>References</em> sections at the
- *   documentation for the {@link org.unbescape.css.CSSEscape} class.
+ *   documentation for the {@link CssEscape} class.
  * </p>
  *
  * @author Daniel Fern&aacute;ndez
@@ -60,7 +60,7 @@ package org.unbescape.css;
  * @since 1.0
  *
  */
-public enum CSSStringEscapeLevel {
+public enum CssStringEscapeLevel {
 
     /**
      * Level 1 escape: escape only the basic escape set: Backslash Escape plus non-displayable control chars.</kbd>
@@ -97,7 +97,7 @@ public enum CSSStringEscapeLevel {
      * @param level the level
      * @return the escape level enum constant, or <kbd>IllegalArgumentException</kbd> if level does not exist.
      */
-    public static CSSStringEscapeLevel forLevel(final int level) {
+    public static CssStringEscapeLevel forLevel(final int level) {
         switch (level) {
             case 1: return LEVEL_1_BASIC_ESCAPE_SET;
             case 2: return LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET;
@@ -109,7 +109,7 @@ public enum CSSStringEscapeLevel {
     }
 
 
-    CSSStringEscapeLevel(final int escapeLevel) {
+    CssStringEscapeLevel(final int escapeLevel) {
         this.escapeLevel = escapeLevel;
     }
 

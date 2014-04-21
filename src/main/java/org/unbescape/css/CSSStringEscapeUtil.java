@@ -33,7 +33,7 @@ import java.util.Arrays;
  * @since 1.0
  *
  */
-final class CSSStringEscapeUtil {
+final class CssStringEscapeUtil {
 
 
 
@@ -200,7 +200,7 @@ final class CSSStringEscapeUtil {
 
 
 
-    private CSSStringEscapeUtil() {
+    private CssStringEscapeUtil() {
         super();
     }
 
@@ -263,7 +263,7 @@ final class CSSStringEscapeUtil {
     /*
      * Perform an escape operation, based on String, according to the specified level and type.
      */
-    static String escape(final String text, final CSSStringEscapeType escapeType, final CSSStringEscapeLevel escapeLevel) {
+    static String escape(final String text, final CssStringEscapeType escapeType, final CssStringEscapeLevel escapeLevel) {
 
         if (text == null) {
             return null;
@@ -418,7 +418,7 @@ final class CSSStringEscapeUtil {
      * Perform an escape operation, based on char[], according to the specified level and type.
      */
     static void escape(final char[] text, final int offset, final int len, final Writer writer,
-                       final CSSStringEscapeType escapeType, final CSSStringEscapeLevel escapeLevel)
+                       final CssStringEscapeType escapeType, final CssStringEscapeLevel escapeLevel)
                        throws IOException {
 
         if (text == null || text.length == 0) {

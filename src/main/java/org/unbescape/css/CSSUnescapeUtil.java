@@ -32,7 +32,7 @@ import java.io.Writer;
  * @since 1.0
  *
  */
-final class CSSUnescapeUtil {
+final class CssUnescapeUtil {
 
 
 
@@ -111,7 +111,7 @@ final class CSSUnescapeUtil {
 
 
 
-    private CSSUnescapeUtil() {
+    private CssUnescapeUtil() {
         super();
     }
 

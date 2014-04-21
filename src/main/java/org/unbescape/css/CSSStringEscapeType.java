@@ -27,12 +27,12 @@ package org.unbescape.css;
  * <ul>
  *     <li><kbd><strong>BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA</strong></kbd>: Use
  *         backslash escapes whenever possible (depending on the specified
- *         {@link CSSStringEscapeLevel}). For escaped characters that do
+ *         {@link CssStringEscapeLevel}). For escaped characters that do
  *         not have an associated backslash escape, default to using
  *         <kbd>&#92;FF*</kbd> variable-length hexadecimal escapes.</li>
  *     <li><kbd><strong>BACKSLASH_ESCAPES_DEFAULT_TO_SIX_DIGIT_HEXA</strong></kbd>: Use
  *         backslash escapes whenever possible (depending on the specified
- *         {@link CSSStringEscapeLevel}). For escaped characters that do
+ *         {@link CssStringEscapeLevel}). For escaped characters that do
  *         not have an associated backslash escape, default to using
  *         <kbd>&#92;FFFFFF</kbd> 6-digit hexadecimal escapes.</li>
  *     <li><kbd><strong>COMPACT_HEXA</strong></kbd>: Replace escaped characters with
@@ -43,7 +43,7 @@ package org.unbescape.css;
  *
  * <p>
  *   For further information, see the <em>Glossary</em> and the <em>References</em> sections at the
- *   documentation for the {@link org.unbescape.css.CSSEscape} class.
+ *   documentation for the {@link CssEscape} class.
  * </p>
  *
  * @author Daniel Fern&aacute;ndez
@@ -51,7 +51,7 @@ package org.unbescape.css;
  * @since 1.0
  *
  */
-public enum CSSStringEscapeType {
+public enum CssStringEscapeType {
 
     /**
      * Use backslash escapes if possible, default to &#92;FF* variable-length hexadecimal escapes.
@@ -77,7 +77,7 @@ public enum CSSStringEscapeType {
     private final boolean useBackslashEscapes;
     private final boolean useCompactHexa;
 
-    CSSStringEscapeType(final boolean useBackslashEscapes, final boolean useCompactHexa) {
+    CssStringEscapeType(final boolean useBackslashEscapes, final boolean useCompactHexa) {
         this.useBackslashEscapes = useBackslashEscapes;
         this.useCompactHexa = useCompactHexa;
     }

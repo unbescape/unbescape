@@ -40,12 +40,12 @@ import java.io.Writer;
  * <ul>
  *   <li><em>Level</em>, which defines how deep the escape operation must be (what
  *       chars are to be considered eligible for escaping, depending on the specific
- *       needs of the scenario). Its values are defined by the {@link org.unbescape.css.CSSIdentifierEscapeLevel}
- *       and {@link org.unbescape.css.CSSStringEscapeLevel} enums.</li>
+ *       needs of the scenario). Its values are defined by the {@link CssIdentifierEscapeLevel}
+ *       and {@link CssStringEscapeLevel} enums.</li>
  *   <li><em>Type</em>, which defines whether escaping should be performed by means of <em>backslash escapes</em>
  *       or by means of hexadecimal numerical escape sequences.
- *       Its values are defined by the {@link org.unbescape.css.CSSIdentifierEscapeType}
- *       and {@link org.unbescape.css.CSSStringEscapeType} enums.</li>
+ *       Its values are defined by the {@link CssIdentifierEscapeType}
+ *       and {@link CssStringEscapeType} enums.</li>
  * </ul>
  * <p>
  *   <strong>Unescape</strong> operations need no configuration parameters. Unescape operations
@@ -137,7 +137,7 @@ import java.io.Writer;
  * @since 1.0
  *
  */
-public final class CSSEscape {
+public final class CssEscape {
 
 
 
@@ -166,14 +166,14 @@ public final class CSSEscape {
      *   Hexadecimal Escapes.
      * </p>
      * <p>
-     *   This method calls {@link #escapeCSSString(String, CSSStringEscapeType, CSSStringEscapeLevel)}
+     *   This method calls {@link #escapeCssString(String, CssStringEscapeType, CssStringEscapeLevel)}
      *   with the following preconfigured values:
      * </p>
      * <ul>
      *   <li><kbd>type</kbd>:
-     *       {@link org.unbescape.css.CSSStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *       {@link CssStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.css.CSSStringEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
+     *       {@link CssStringEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -185,10 +185,10 @@ public final class CSSEscape {
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeCSSStringMinimal(final String text) {
-        return escapeCSSString(text,
-                CSSStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
-                CSSStringEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+    public static String escapeCssStringMinimal(final String text) {
+        return escapeCssString(text,
+                CssStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssStringEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
     }
 
 
@@ -222,14 +222,14 @@ public final class CSSEscape {
      * </p>
      * <p>
      *   This method calls
-     *   {@link #escapeCSSString(String, CSSStringEscapeType, CSSStringEscapeLevel)}
+     *   {@link #escapeCssString(String, CssStringEscapeType, CssStringEscapeLevel)}
      *   with the following preconfigured values:
      * </p>
      * <ul>
      *   <li><kbd>type</kbd>:
-     *       {@link org.unbescape.css.CSSStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *       {@link CssStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.css.CSSStringEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
+     *       {@link CssStringEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -241,10 +241,10 @@ public final class CSSEscape {
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeCSSString(final String text) {
-        return escapeCSSString(text,
-                CSSStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
-                CSSStringEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    public static String escapeCssString(final String text) {
+        return escapeCssString(text,
+                CssStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssStringEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
     }
 
 
@@ -254,11 +254,11 @@ public final class CSSEscape {
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
-     *   {@link org.unbescape.css.CSSStringEscapeType} and
-     *   {@link org.unbescape.css.CSSStringEscapeLevel} argument values.
+     *   {@link CssStringEscapeType} and
+     *   {@link CssStringEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <kbd>String</kbd>-based <kbd>escapeCSSString*(...)</kbd> methods call this one with preconfigured
+     *   All other <kbd>String</kbd>-based <kbd>escapeCssString*(...)</kbd> methods call this one with preconfigured
      *   <kbd>type</kbd> and <kbd>level</kbd> values.
      * </p>
      * <p>
@@ -267,15 +267,15 @@ public final class CSSEscape {
      *
      * @param text the <kbd>String</kbd> to be escaped.
      * @param type the type of escape operation to be performed, see
-     *             {@link org.unbescape.css.CSSStringEscapeType}.
-     * @param level the escape level to be applied, see {@link org.unbescape.css.CSSStringEscapeLevel}.
+     *             {@link CssStringEscapeType}.
+     * @param level the escape level to be applied, see {@link CssStringEscapeLevel}.
      * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
      *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeCSSString(final String text,
-                                    final CSSStringEscapeType type, final CSSStringEscapeLevel level) {
+    public static String escapeCssString(final String text,
+                                    final CssStringEscapeType type, final CssStringEscapeLevel level) {
 
         if (type == null) {
             throw new IllegalArgumentException("The 'type' argument cannot be null");
@@ -285,7 +285,7 @@ public final class CSSEscape {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
         }
 
-        return CSSStringEscapeUtil.escape(text, type, level);
+        return CssStringEscapeUtil.escape(text, type, level);
 
     }
 
@@ -317,14 +317,14 @@ public final class CSSEscape {
      * </p>
      * <p>
      *   This method calls
-     *   {@link #escapeCSSString(char[], int, int, java.io.Writer, CSSStringEscapeType, CSSStringEscapeLevel)}
+     *   {@link #escapeCssString(char[], int, int, java.io.Writer, CssStringEscapeType, CssStringEscapeLevel)}
      *   with the following preconfigured values:
      * </p>
      * <ul>
      *   <li><kbd>type</kbd>:
-     *       {@link org.unbescape.css.CSSStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *       {@link CssStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.css.CSSStringEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
+     *       {@link CssStringEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -336,11 +336,11 @@ public final class CSSEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static void escapeCSSStringMinimal(final char[] text, final int offset, final int len, final Writer writer)
+    public static void escapeCssStringMinimal(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
-        escapeCSSString(text, offset, len, writer,
-                CSSStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
-                CSSStringEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+        escapeCssString(text, offset, len, writer,
+                CssStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssStringEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
     }
 
 
@@ -374,14 +374,14 @@ public final class CSSEscape {
      * </p>
      * <p>
      *   This method calls
-     *   {@link #escapeCSSString(char[], int, int, java.io.Writer, CSSStringEscapeType, CSSStringEscapeLevel)}
+     *   {@link #escapeCssString(char[], int, int, java.io.Writer, CssStringEscapeType, CssStringEscapeLevel)}
      *   with the following preconfigured values:
      * </p>
      * <ul>
      *   <li><kbd>type</kbd>:
-     *       {@link org.unbescape.css.CSSStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *       {@link CssStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.css.CSSStringEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
+     *       {@link CssStringEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -393,11 +393,11 @@ public final class CSSEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static void escapeCSSString(final char[] text, final int offset, final int len, final Writer writer)
+    public static void escapeCssString(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
-        escapeCSSString(text, offset, len, writer,
-                CSSStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
-                CSSStringEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+        escapeCssString(text, offset, len, writer,
+                CssStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssStringEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
     }
 
 
@@ -407,11 +407,11 @@ public final class CSSEscape {
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
-     *   {@link org.unbescape.css.CSSStringEscapeType} and
-     *   {@link org.unbescape.css.CSSStringEscapeLevel} argument values.
+     *   {@link CssStringEscapeType} and
+     *   {@link CssStringEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <kbd>char[]</kbd>-based <kbd>escapeCSSString*(...)</kbd> methods call this one with preconfigured
+     *   All other <kbd>char[]</kbd>-based <kbd>escapeCssString*(...)</kbd> methods call this one with preconfigured
      *   <kbd>type</kbd> and <kbd>level</kbd> values.
      * </p>
      * <p>
@@ -424,11 +424,11 @@ public final class CSSEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      * @param type the type of escape operation to be performed, see
-     *             {@link org.unbescape.css.CSSStringEscapeType}.
-     * @param level the escape level to be applied, see {@link org.unbescape.css.CSSStringEscapeLevel}.
+     *             {@link CssStringEscapeType}.
+     * @param level the escape level to be applied, see {@link CssStringEscapeLevel}.
      */
-    public static void escapeCSSString(final char[] text, final int offset, final int len, final Writer writer,
-                                  final CSSStringEscapeType type, final CSSStringEscapeLevel level)
+    public static void escapeCssString(final char[] text, final int offset, final int len, final Writer writer,
+                                  final CssStringEscapeType type, final CssStringEscapeLevel level)
             throws IOException {
 
         if (writer == null) {
@@ -455,7 +455,7 @@ public final class CSSEscape {
                     "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
         }
 
-        CSSStringEscapeUtil.escape(text, offset, len, writer, type, level);
+        CssStringEscapeUtil.escape(text, offset, len, writer, type, level);
 
     }
 
@@ -525,14 +525,14 @@ public final class CSSEscape {
      *   Hexadecimal Escapes.
      * </p>
      * <p>
-     *   This method calls {@link #escapeCSSIdentifier(String, CSSIdentifierEscapeType, CSSIdentifierEscapeLevel)}
+     *   This method calls {@link #escapeCssIdentifier(String, CssIdentifierEscapeType, CssIdentifierEscapeLevel)}
      *   with the following preconfigured values:
      * </p>
      * <ul>
      *   <li><kbd>type</kbd>:
-     *       {@link org.unbescape.css.CSSIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *       {@link CssIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.css.CSSIdentifierEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
+     *       {@link CssIdentifierEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -544,10 +544,10 @@ public final class CSSEscape {
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeCSSIdentifierMinimal(final String text) {
-        return escapeCSSIdentifier(text,
-                CSSIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
-                CSSIdentifierEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+    public static String escapeCssIdentifierMinimal(final String text) {
+        return escapeCssIdentifier(text,
+                CssIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssIdentifierEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
     }
 
 
@@ -615,14 +615,14 @@ public final class CSSEscape {
      * </p>
      * <p>
      *   This method calls
-     *   {@link #escapeCSSIdentifier(String, CSSIdentifierEscapeType, CSSIdentifierEscapeLevel)}
+     *   {@link #escapeCssIdentifier(String, CssIdentifierEscapeType, CssIdentifierEscapeLevel)}
      *   with the following preconfigured values:
      * </p>
      * <ul>
      *   <li><kbd>type</kbd>:
-     *       {@link org.unbescape.css.CSSIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *       {@link CssIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.css.CSSIdentifierEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
+     *       {@link CssIdentifierEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -634,10 +634,10 @@ public final class CSSEscape {
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeCSSIdentifier(final String text) {
-        return escapeCSSIdentifier(text,
-                CSSIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
-                CSSIdentifierEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    public static String escapeCssIdentifier(final String text) {
+        return escapeCssIdentifier(text,
+                CssIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssIdentifierEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
     }
 
 
@@ -647,11 +647,11 @@ public final class CSSEscape {
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
-     *   {@link org.unbescape.css.CSSIdentifierEscapeType} and
-     *   {@link org.unbescape.css.CSSIdentifierEscapeLevel} argument values.
+     *   {@link CssIdentifierEscapeType} and
+     *   {@link CssIdentifierEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <kbd>String</kbd>-based <kbd>escapeCSSIdentifier*(...)</kbd> methods call this one with preconfigured
+     *   All other <kbd>String</kbd>-based <kbd>escapeCssIdentifier*(...)</kbd> methods call this one with preconfigured
      *   <kbd>type</kbd> and <kbd>level</kbd> values.
      * </p>
      * <p>
@@ -660,15 +660,15 @@ public final class CSSEscape {
      *
      * @param text the <kbd>String</kbd> to be escaped.
      * @param type the type of escape operation to be performed, see
-     *             {@link org.unbescape.css.CSSIdentifierEscapeType}.
-     * @param level the escape level to be applied, see {@link org.unbescape.css.CSSIdentifierEscapeLevel}.
+     *             {@link CssIdentifierEscapeType}.
+     * @param level the escape level to be applied, see {@link CssIdentifierEscapeLevel}.
      * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
      *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeCSSIdentifier(final String text,
-                                         final CSSIdentifierEscapeType type, final CSSIdentifierEscapeLevel level) {
+    public static String escapeCssIdentifier(final String text,
+                                         final CssIdentifierEscapeType type, final CssIdentifierEscapeLevel level) {
 
         if (type == null) {
             throw new IllegalArgumentException("The 'type' argument cannot be null");
@@ -678,7 +678,7 @@ public final class CSSEscape {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
         }
 
-        return CSSIdentifierEscapeUtil.escape(text, type, level);
+        return CssIdentifierEscapeUtil.escape(text, type, level);
 
     }
 
@@ -744,14 +744,14 @@ public final class CSSEscape {
      * </p>
      * <p>
      *   This method calls
-     *   {@link #escapeCSSIdentifier(char[], int, int, java.io.Writer, CSSIdentifierEscapeType, CSSIdentifierEscapeLevel)}
+     *   {@link #escapeCssIdentifier(char[], int, int, java.io.Writer, CssIdentifierEscapeType, CssIdentifierEscapeLevel)}
      *   with the following preconfigured values:
      * </p>
      * <ul>
      *   <li><kbd>type</kbd>:
-     *       {@link org.unbescape.css.CSSIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *       {@link CssIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.css.CSSIdentifierEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
+     *       {@link CssIdentifierEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -763,11 +763,11 @@ public final class CSSEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static void escapeCSSIdentifierMinimal(final char[] text, final int offset, final int len, final Writer writer)
+    public static void escapeCssIdentifierMinimal(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
-        escapeCSSIdentifier(text, offset, len, writer,
-                CSSIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
-                CSSIdentifierEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+        escapeCssIdentifier(text, offset, len, writer,
+                CssIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssIdentifierEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
     }
 
 
@@ -835,14 +835,14 @@ public final class CSSEscape {
      * </p>
      * <p>
      *   This method calls
-     *   {@link #escapeCSSIdentifier(char[], int, int, java.io.Writer, CSSIdentifierEscapeType, CSSIdentifierEscapeLevel)}
+     *   {@link #escapeCssIdentifier(char[], int, int, java.io.Writer, CssIdentifierEscapeType, CssIdentifierEscapeLevel)}
      *   with the following preconfigured values:
      * </p>
      * <ul>
      *   <li><kbd>type</kbd>:
-     *       {@link org.unbescape.css.CSSIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *       {@link CssIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.css.CSSIdentifierEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
+     *       {@link CssIdentifierEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -854,11 +854,11 @@ public final class CSSEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static void escapeCSSIdentifier(final char[] text, final int offset, final int len, final Writer writer)
+    public static void escapeCssIdentifier(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
-        escapeCSSIdentifier(text, offset, len, writer,
-                CSSIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
-                CSSIdentifierEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+        escapeCssIdentifier(text, offset, len, writer,
+                CssIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssIdentifierEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
     }
 
 
@@ -868,11 +868,11 @@ public final class CSSEscape {
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
-     *   {@link org.unbescape.css.CSSIdentifierEscapeType} and
-     *   {@link org.unbescape.css.CSSIdentifierEscapeLevel} argument values.
+     *   {@link CssIdentifierEscapeType} and
+     *   {@link CssIdentifierEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <kbd>char[]</kbd>-based <kbd>escapeCSSIdentifier*(...)</kbd> methods call this one with preconfigured
+     *   All other <kbd>char[]</kbd>-based <kbd>escapeCssIdentifier*(...)</kbd> methods call this one with preconfigured
      *   <kbd>type</kbd> and <kbd>level</kbd> values.
      * </p>
      * <p>
@@ -885,11 +885,11 @@ public final class CSSEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      * @param type the type of escape operation to be performed, see
-     *             {@link org.unbescape.css.CSSIdentifierEscapeType}.
-     * @param level the escape level to be applied, see {@link org.unbescape.css.CSSIdentifierEscapeLevel}.
+     *             {@link CssIdentifierEscapeType}.
+     * @param level the escape level to be applied, see {@link CssIdentifierEscapeLevel}.
      */
-    public static void escapeCSSIdentifier(final char[] text, final int offset, final int len, final Writer writer,
-                                       final CSSIdentifierEscapeType type, final CSSIdentifierEscapeLevel level)
+    public static void escapeCssIdentifier(final char[] text, final int offset, final int len, final Writer writer,
+                                       final CssIdentifierEscapeType type, final CssIdentifierEscapeLevel level)
             throws IOException {
 
         if (writer == null) {
@@ -916,7 +916,7 @@ public final class CSSEscape {
                     "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
         }
 
-        CSSIdentifierEscapeUtil.escape(text, offset, len, writer, type, level);
+        CssIdentifierEscapeUtil.escape(text, offset, len, writer, type, level);
 
     }
 
@@ -946,8 +946,8 @@ public final class CSSEscape {
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String unescapeCSS(final String text) {
-        return CSSUnescapeUtil.unescape(text);
+    public static String unescapeCss(final String text) {
+        return CssUnescapeUtil.unescape(text);
     }
 
 
@@ -970,7 +970,7 @@ public final class CSSEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static void unescapeCSS(final char[] text, final int offset, final int len, final Writer writer)
+    public static void unescapeCss(final char[] text, final int offset, final int len, final Writer writer)
                                    throws IOException{
         if (writer == null) {
             throw new IllegalArgumentException("Argument 'writer' cannot be null");
@@ -988,7 +988,7 @@ public final class CSSEscape {
                     "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
         }
 
-        CSSUnescapeUtil.unescape(text, offset, len, writer);
+        CssUnescapeUtil.unescape(text, offset, len, writer);
 
     }
     
@@ -996,7 +996,7 @@ public final class CSSEscape {
 
 
 
-    private CSSEscape() {
+    private CssEscape() {
         super();
     }
 
