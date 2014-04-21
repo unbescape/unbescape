@@ -51,6 +51,7 @@ final class CSSStringEscapeUtil {
      *   - BACKSLASH ESCAPES:
      *        U+0022 -> %"
      *        U+0027 -> %'
+     *        U+005C -> %%
      *
      *   - UNICODE ESCAPE [HEXA]
      *        Compact representation: %??* (variable-length. Optionally followed by a whitespace U+0020 - required
