@@ -27,7 +27,7 @@ package org.unbescape.json;
  * <ul>
  *     <li><kbd><strong>SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA</strong></kbd>: Use
  *         Single Escape Chars whenever possible (depending on the specified
- *         {@link org.unbescape.json.JSONEscapeLevel}). For escaped characters that do
+ *         {@link JsonEscapeLevel}). For escaped characters that do
  *         not have an associated SEC, default to using <kbd>&#92;uFFFF</kbd> Hexadecimal Escapes.</li>
  *     <li><kbd><strong>UHEXA</strong></kbd>: Replace escaped characters with
  *         <kbd>&#92;uFFFF</kbd> Hexadecimal Escapes.</li>
@@ -35,7 +35,7 @@ package org.unbescape.json;
  *
  * <p>
  *   For further information, see the <em>Glossary</em> and the <em>References</em> sections at the
- *   documentation for the {@link org.unbescape.json.JSONEscape} class.
+ *   documentation for the {@link JsonEscape} class.
  * </p>
  *
  * @author Daniel Fern&aacute;ndez
@@ -43,7 +43,7 @@ package org.unbescape.json;
  * @since 1.0
  *
  */
-public enum JSONEscapeType {
+public enum JsonEscapeType {
 
     /**
      * Use Single Escape Chars if possible, default to &#92;uFFFF hexadecimal escapes.
@@ -58,7 +58,7 @@ public enum JSONEscapeType {
 
     private final boolean useSECs;
 
-    JSONEscapeType(final boolean useSECs) {
+    JsonEscapeType(final boolean useSECs) {
         this.useSECs = useSECs;
     }
 

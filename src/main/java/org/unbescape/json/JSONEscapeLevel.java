@@ -62,7 +62,7 @@ package org.unbescape.json;
  *
  * <p>
  *   For further information, see the <em>Glossary</em> and the <em>References</em> sections at the
- *   documentation for the {@link org.unbescape.json.JSONEscape} class.
+ *   documentation for the {@link JsonEscape} class.
  * </p>
  *
  * @author Daniel Fern&aacute;ndez
@@ -70,7 +70,7 @@ package org.unbescape.json;
  * @since 1.0
  *
  */
-public enum JSONEscapeLevel {
+public enum JsonEscapeLevel {
 
     /**
      * Level 1 escape: escape only the basic escape set: Single Escape Chars plus non-displayable control chars.</kbd>
@@ -107,7 +107,7 @@ public enum JSONEscapeLevel {
      * @param level the level
      * @return the escape level enum constant, or <kbd>IllegalArgumentException</kbd> if level does not exist.
      */
-    public static JSONEscapeLevel forLevel(final int level) {
+    public static JsonEscapeLevel forLevel(final int level) {
         switch (level) {
             case 1: return LEVEL_1_BASIC_ESCAPE_SET;
             case 2: return LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET;
@@ -119,7 +119,7 @@ public enum JSONEscapeLevel {
     }
 
 
-    JSONEscapeLevel(final int escapeLevel) {
+    JsonEscapeLevel(final int escapeLevel) {
         this.escapeLevel = escapeLevel;
     }
 

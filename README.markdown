@@ -162,21 +162,21 @@ And also those that allow a more fine-grained configuration of the escape operat
 JSON Escape/Unescape
 --------------------
 
-JSON escape and unescape operations are performed by means of the `org.unbescape.json.JSONEscape` class. This class defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
+JSON escape and unescape operations are performed by means of the `org.unbescape.json.JsonEscape` class. This class defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
 
 There are simple, preconfigured methods:
 
 ```java
-    final String escaped = JSONEscape.escapeJSON(text);
-    final String unescaped = JSONEscape.unescapeJSON(escaped);
+    final String escaped = JsonEscape.escapeJson(text);
+    final String unescaped = JsonEscape.unescapeJson(escaped);
 ```
 
 And also those that allow a more fine-grained configuration of the escape operation:
 
 ```java
     final String result =
-        JSONEscape.escapeJSON(
+        JsonEscape.escapeJson(
              text,
-             JSONEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO__UHEXA,
-             JSONEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+             JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO__UHEXA,
+             JsonEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
 ```

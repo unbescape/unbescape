@@ -36,12 +36,12 @@ import java.io.Writer;
  * <ul>
  *   <li><em>Level</em>, which defines how deep the escape operation must be (what
  *       chars are to be considered eligible for escaping, depending on the specific
- *       needs of the scenario). Its values are defined by the {@link org.unbescape.json.JSONEscapeLevel}
+ *       needs of the scenario). Its values are defined by the {@link JsonEscapeLevel}
  *       enum.</li>
  *   <li><em>Type</em>, which defines whether escaping should be performed by means of SECs
  *       (Single Escape Characters like <kbd>&#92;n</kbd>) or additionally by means of u-based
  *       hexadecimal references (<kbd>&#92;u00E1</kbd>).
- *       Its values are defined by the {@link org.unbescape.json.JSONEscapeType} enum.</li>
+ *       Its values are defined by the {@link JsonEscapeType} enum.</li>
  * </ul>
  * <p>
  *   <strong>Unescape</strong> operations need no configuration parameters. Unescape operations
@@ -150,7 +150,7 @@ import java.io.Writer;
  * @since 1.0
  *
  */
-public final class JSONEscape {
+public final class JsonEscape {
 
 
     /**
@@ -182,14 +182,14 @@ public final class JSONEscape {
      *   </li>
      * </ul>
      * <p>
-     *   This method calls {@link #escapeJSON(String, org.unbescape.json.JSONEscapeType, org.unbescape.json.JSONEscapeLevel)}
+     *   This method calls {@link #escapeJson(String, JsonEscapeType, JsonEscapeLevel)}
      *   with the following preconfigured values:
      * </p>
      * <ul>
      *   <li><kbd>type</kbd>:
-     *       {@link org.unbescape.json.JSONEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
+     *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.json.JSONEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
+     *       {@link JsonEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -201,10 +201,10 @@ public final class JSONEscape {
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeJSONMinimal(final String text) {
-        return escapeJSON(text,
-                          JSONEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
-                          JSONEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+    public static String escapeJsonMinimal(final String text) {
+        return escapeJson(text,
+                          JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
+                          JsonEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
     }
 
 
@@ -247,14 +247,14 @@ public final class JSONEscape {
      *   Hexadecimal Escapes.
      * </p>
      * <p>
-     *   This method calls {@link #escapeJSON(String, org.unbescape.json.JSONEscapeType, org.unbescape.json.JSONEscapeLevel)}
+     *   This method calls {@link #escapeJson(String, JsonEscapeType, JsonEscapeLevel)}
      *   with the following preconfigured values:
      * </p>
      * <ul>
      *   <li><kbd>type</kbd>:
-     *       {@link org.unbescape.json.JSONEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
+     *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.json.JSONEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
+     *       {@link JsonEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -266,10 +266,10 @@ public final class JSONEscape {
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeJSON(final String text) {
-        return escapeJSON(text,
-                          JSONEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
-                          JSONEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    public static String escapeJson(final String text) {
+        return escapeJson(text,
+                          JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
+                          JsonEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
     }
 
 
@@ -279,11 +279,11 @@ public final class JSONEscape {
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
-     *   {@link org.unbescape.json.JSONEscapeType} and
-     *   {@link org.unbescape.json.JSONEscapeLevel} argument values.
+     *   {@link JsonEscapeType} and
+     *   {@link JsonEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <kbd>String</kbd>-based <kbd>escapeJSON*(...)</kbd> methods call this one with preconfigured
+     *   All other <kbd>String</kbd>-based <kbd>escapeJson*(...)</kbd> methods call this one with preconfigured
      *   <kbd>type</kbd> and <kbd>level</kbd> values.
      * </p>
      * <p>
@@ -292,15 +292,15 @@ public final class JSONEscape {
      *
      * @param text the <kbd>String</kbd> to be escaped.
      * @param type the type of escape operation to be performed, see
-     *             {@link org.unbescape.json.JSONEscapeType}.
-     * @param level the escape level to be applied, see {@link org.unbescape.json.JSONEscapeLevel}.
+     *             {@link JsonEscapeType}.
+     * @param level the escape level to be applied, see {@link JsonEscapeLevel}.
      * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
      *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String escapeJSON(final String text,
-                                    final JSONEscapeType type, final JSONEscapeLevel level) {
+    public static String escapeJson(final String text,
+                                    final JsonEscapeType type, final JsonEscapeLevel level) {
 
         if (type == null) {
             throw new IllegalArgumentException("The 'type' argument cannot be null");
@@ -310,7 +310,7 @@ public final class JSONEscape {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
         }
 
-        return JSONEscapeUtil.escape(text, type, level);
+        return JsonEscapeUtil.escape(text, type, level);
 
     }
 
@@ -347,14 +347,14 @@ public final class JSONEscape {
      * </ul>
      * <p>
      *   This method calls
-     *   {@link #escapeJSON(char[], int, int, java.io.Writer, org.unbescape.json.JSONEscapeType, org.unbescape.json.JSONEscapeLevel)}
+     *   {@link #escapeJson(char[], int, int, java.io.Writer, JsonEscapeType, JsonEscapeLevel)}
      *   with the following preconfigured values:
      * </p>
      * <ul>
      *   <li><kbd>type</kbd>:
-     *       {@link org.unbescape.json.JSONEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
+     *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.json.JSONEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
+     *       {@link JsonEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -366,11 +366,11 @@ public final class JSONEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static void escapeJSONMinimal(final char[] text, final int offset, final int len, final Writer writer)
+    public static void escapeJsonMinimal(final char[] text, final int offset, final int len, final Writer writer)
                                          throws IOException {
-        escapeJSON(text, offset, len, writer,
-                   JSONEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
-                   JSONEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+        escapeJson(text, offset, len, writer,
+                   JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
+                   JsonEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
     }
 
 
@@ -414,14 +414,14 @@ public final class JSONEscape {
      * </p>
      * <p>
      *   This method calls
-     *   {@link #escapeJSON(char[], int, int, java.io.Writer, org.unbescape.json.JSONEscapeType, org.unbescape.json.JSONEscapeLevel)}
+     *   {@link #escapeJson(char[], int, int, java.io.Writer, JsonEscapeType, JsonEscapeLevel)}
      *   with the following preconfigured values:
      * </p>
      * <ul>
      *   <li><kbd>type</kbd>:
-     *       {@link org.unbescape.json.JSONEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
+     *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
      *   <li><kbd>level</kbd>:
-     *       {@link org.unbescape.json.JSONEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
+     *       {@link JsonEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -433,11 +433,11 @@ public final class JSONEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static void escapeJSON(final char[] text, final int offset, final int len, final Writer writer)
+    public static void escapeJson(final char[] text, final int offset, final int len, final Writer writer)
                                   throws IOException {
-        escapeJSON(text, offset, len, writer,
-                   JSONEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
-                   JSONEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+        escapeJson(text, offset, len, writer,
+                   JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
+                   JsonEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
     }
 
 
@@ -447,11 +447,11 @@ public final class JSONEscape {
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
-     *   {@link org.unbescape.json.JSONEscapeType} and
-     *   {@link org.unbescape.json.JSONEscapeLevel} argument values.
+     *   {@link JsonEscapeType} and
+     *   {@link JsonEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <kbd>char[]</kbd>-based <kbd>escapeJSON*(...)</kbd> methods call this one with preconfigured
+     *   All other <kbd>char[]</kbd>-based <kbd>escapeJson*(...)</kbd> methods call this one with preconfigured
      *   <kbd>type</kbd> and <kbd>level</kbd> values.
      * </p>
      * <p>
@@ -464,11 +464,11 @@ public final class JSONEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      * @param type the type of escape operation to be performed, see
-     *             {@link org.unbescape.json.JSONEscapeType}.
-     * @param level the escape level to be applied, see {@link org.unbescape.json.JSONEscapeLevel}.
+     *             {@link JsonEscapeType}.
+     * @param level the escape level to be applied, see {@link JsonEscapeLevel}.
      */
-    public static void escapeJSON(final char[] text, final int offset, final int len, final Writer writer,
-                                  final JSONEscapeType type, final JSONEscapeLevel level)
+    public static void escapeJson(final char[] text, final int offset, final int len, final Writer writer,
+                                  final JsonEscapeType type, final JsonEscapeLevel level)
                                   throws IOException {
 
         if (writer == null) {
@@ -495,7 +495,7 @@ public final class JSONEscape {
                     "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
         }
 
-        JSONEscapeUtil.escape(text, offset, len, writer, type, level);
+        JsonEscapeUtil.escape(text, offset, len, writer, type, level);
 
     }
 
@@ -524,8 +524,8 @@ public final class JSONEscape {
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
      *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static String unescapeJSON(final String text) {
-        return JSONEscapeUtil.unescape(text);
+    public static String unescapeJson(final String text) {
+        return JsonEscapeUtil.unescape(text);
     }
 
 
@@ -547,7 +547,7 @@ public final class JSONEscape {
      * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
      */
-    public static void unescapeJSON(final char[] text, final int offset, final int len, final Writer writer)
+    public static void unescapeJson(final char[] text, final int offset, final int len, final Writer writer)
                                     throws IOException{
         if (writer == null) {
             throw new IllegalArgumentException("Argument 'writer' cannot be null");
@@ -565,14 +565,14 @@ public final class JSONEscape {
                     "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
         }
 
-        JSONEscapeUtil.unescape(text, offset, len, writer);
+        JsonEscapeUtil.unescape(text, offset, len, writer);
 
     }
 
 
 
 
-    private JSONEscape() {
+    private JsonEscape() {
         super();
     }
 

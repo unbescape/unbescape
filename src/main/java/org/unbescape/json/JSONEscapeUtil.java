@@ -33,7 +33,7 @@ import java.util.Arrays;
  * @since 1.0
  *
  */
-final class JSONEscapeUtil {
+final class JsonEscapeUtil {
 
 
 
@@ -188,7 +188,7 @@ final class JSONEscapeUtil {
 
 
 
-    private JSONEscapeUtil() {
+    private JsonEscapeUtil() {
         super();
     }
 
@@ -209,7 +209,7 @@ final class JSONEscapeUtil {
     /*
      * Perform an escape operation, based on String, according to the specified level and type.
      */
-    static String escape(final String text, final JSONEscapeType escapeType, final JSONEscapeLevel escapeLevel) {
+    static String escape(final String text, final JsonEscapeType escapeType, final JsonEscapeLevel escapeLevel) {
 
         if (text == null) {
             return null;
@@ -370,7 +370,7 @@ final class JSONEscapeUtil {
      * Perform an escape operation, based on char[], according to the specified level and type.
      */
     static void escape(final char[] text, final int offset, final int len, final Writer writer,
-                       final JSONEscapeType escapeType, final JSONEscapeLevel escapeLevel)
+                       final JsonEscapeType escapeType, final JsonEscapeLevel escapeLevel)
                        throws IOException {
 
         if (text == null || text.length == 0) {
