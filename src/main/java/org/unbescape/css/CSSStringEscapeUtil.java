@@ -180,6 +180,7 @@ final class CSSStringEscapeUtil {
          */
         ESCAPE_LEVELS[0x22] = 1;
         ESCAPE_LEVELS[0x27] = 1;
+        ESCAPE_LEVELS[0x5C] = 1;
 
 
         /*
