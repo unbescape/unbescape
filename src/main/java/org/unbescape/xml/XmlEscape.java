@@ -30,12 +30,12 @@ import java.io.Writer;
  * <h4><u>Configuration of escape/unescape operations</u></h4>
  *
  * <p>
- *   <strong>Escape</strong> operations can be configured by means of:
+ *   <strong>Escape</strong> operations can be (optionally) configured by means of:
  * </p>
  * <ul>
  *   <li><em>Level</em>, which defines how deep the escape operation must be (what
  *       chars are to be considered eligible for escaping, depending on the specific
- *       needs of the scenario. Its values are defined by the {@link org.unbescape.xml.XmlEscapeLevel}
+ *       needs of the scenario). Its values are defined by the {@link org.unbescape.xml.XmlEscapeLevel}
  *       enum.</li>
  *   <li><em>Type</em>, which defines whether escaping should be performed by means of CERs
  *       (Character Entity References) or by means of decimal/hexadecimal numerical references.

@@ -31,12 +31,12 @@ import java.io.Writer;
  * <h4><u>Configuration of escape/unescape operations</u></h4>
  *
  * <p>
- *   <strong>Escape</strong> operations can be configured by means of:
+ *   <strong>Escape</strong> operations can be (optionally) configured by means of:
  * </p>
  * <ul>
  *   <li><em>Level</em>, which defines how deep the escape operation must be (what
  *       chars are to be considered eligible for escaping, depending on the specific
- *       needs of the scenario. Its values are defined by the {@link org.unbescape.json.JSONEscapeLevel}
+ *       needs of the scenario). Its values are defined by the {@link org.unbescape.json.JSONEscapeLevel}
  *       enum.</li>
  *   <li><em>Type</em>, which defines whether escaping should be performed by means of SECs
  *       (Single Escape Characters like <kbd>&#92;n</kbd>) or additionally by means of u-based
@@ -565,7 +565,6 @@ public final class JSONEscape {
                     "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
         }
 
-        // The chosen symbols (1.0 or 1.1) don't really matter, as both contain the same CERs
         JSONEscapeUtil.unescape(text, offset, len, writer);
 
     }
