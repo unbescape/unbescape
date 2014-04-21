@@ -72,7 +72,7 @@ import java.io.Writer;
  *   <li>Support for the whole Unicode character set: <kbd>&bsol;u0000</kbd> to <kbd>&bsol;u10FFFF</kbd>, including
  *       characters not representable by only one <kbd>char</kbd> in Java (<kbd>&gt;&bsol;uFFFF</kbd>).</li>
  *   <li>Support for unescaping unicode characters &gt; U+FFFF both when represented in standard form (one char,
- *       <kbd>&#92;20000</kbd>) and non-standard (surrogate pair, <kbd>&#92;D840&&#92;DC00</kbd>, used by older
+ *       <kbd>&#92;20000</kbd>) and non-standard (surrogate pair, <kbd>&#92;D840&#92;DC00</kbd>, used by older
  *       WebKit browsers).</li>
  * </ul>
  *

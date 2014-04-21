@@ -80,7 +80,17 @@ Features
       *  Support for U-based hexadecimal escapes (a.k.a. _unicode escapes_) both in escape
          and unescape operations: `\u00E1`.
       *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
-  *   **CSS Escape/Unescape** _[not yet available]_
+  *   **CSS Escape/Unescape**
+      *  Complete set of CSS _Backslash Escapes_ supported (e.g. `\+`, `\;`, `\(`, `\)`, etc.).
+      *  Full set of escape syntax rules supported, both for **CSS identifiers** and **CSS Strings**
+         (or _literals_).
+      *  Non-standard tweaks supported: `\:` not used because of lacking support in Internet Explorer < 8,
+         `\_` escaped at the beginning of identifiers for better Internet Explorer 6 support, etc.
+      *  Hexadecimal escapes (a.k.a. _unicode escapes_) are supported both in escape and unescape operations,
+         and both in _compact_ (`\E1 `) and six-digit forms (`\0000E1`).
+      *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
+      *  Support for unescaping unicode characters >`\uFFFF` both when represented in standard form (one char,
+         `\20000`) and non-standard (surrogate pair, `\D840\DC00`, used by older WebKit browsers).
   *   **Java Literal Escape/Unescape** _[not yet available]_
 
 
