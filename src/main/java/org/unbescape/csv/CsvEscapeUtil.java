@@ -334,7 +334,10 @@ final class CsvEscapeUtil {
                         // This is the closing-double-quote, skip
                         referenceOffset = i + 1;
 
-                    } // else not quoted. Write the quotes anyway (lenient behaviour).
+                    } else {
+                        // else not quoted. Write the quotes anyway (lenient behaviour).
+                        continue;
+                    }
 
                 }
 
@@ -472,7 +475,10 @@ final class CsvEscapeUtil {
                         // This is the closing-double-quote, skip
                         referenceOffset = i + 1;
 
-                    } // else not quoted. Write the quotes anyway (lenient behaviour).
+                    } else {
+                        // else not quoted. Write the quotes anyway (lenient behaviour).
+                        continue;
+                    }
 
                 }
 
