@@ -1,10 +1,12 @@
 
-Unbescape: escaping in Java done right
-======================================
+Unbescape: escape and unescape operations in Java
+=================================================
 
 ------------------------------------------------------------------------------
 
-_Unbescape_ is a Java library aimed at performing fully-featured and high-performance escape and unescape operations for **HTML** (HTML5 and HTML 4), **XML**, **JavaScript**, **JSON**, **CSS** and **Java Literals**.
+_Unbescape_ is a Java library aimed at performing fully-featured and high-performance escape and unescape
+operations for **HTML** (HTML5 and HTML 4), **XML**, **JavaScript**, **JSON**, **CSS**, **CSV**
+(Comma-Separated Values) and **Java Literals**.
 
 
 Status
@@ -14,7 +16,7 @@ This project is still under active development. Some features are already availa
 
 Current versions: 
 
-  * **Version 0.2**
+  * **Version 0.3**
 
 
 License
@@ -91,6 +93,10 @@ Features
       *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
       *  Support for unescaping unicode characters >`\uFFFF` both when represented in standard form (one char,
          `\20000`) and non-standard (surrogate pair, `\D840\DC00`, used by older WebKit browsers).
+  *   **CSV (Comma-Separated Values) Escape/Unescape**
+      *  Works according to the rules specified in RFC4180 (there is no _CSV standard_ as such).
+      *  Encloses escaped values in double-quotes (`"value"`) if they contain any non-alphanumeric characters.
+      *  Escapes double-quote characters (`"`) by writing them twice: `""`.
   *   **Java Literal Escape/Unescape** _[not yet available]_
 
 
@@ -100,7 +106,8 @@ Features
 HTML Escape/Unescape
 -------------------------
 
-HTML escape and unescape operations are performed by means of the `org.unbescape.html.HtmlEscape` class. This class defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
+HTML escape and unescape operations are performed by means of the `org.unbescape.html.HtmlEscape` class. This class
+defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
 
 There are simple, preconfigured methods:
 
@@ -124,7 +131,8 @@ And also those that allow a more fine-grained configuration of the escape operat
 XML Escape/Unescape
 -------------------------
 
-XML escape and unescape operations are performed by means of the `org.unbescape.xml.XmlEscape` class. This class defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
+XML escape and unescape operations are performed by means of the `org.unbescape.xml.XmlEscape` class. This class
+defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
 
 There are simple, preconfigured methods:
 
@@ -148,7 +156,9 @@ And also those that allow a more fine-grained configuration of the escape operat
 JavaScript Escape/Unescape
 --------------------------
 
-JavaScript escape and unescape operations are performed by means of the `org.unbescape.javascript.JavaScriptEscape` class. This class defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
+JavaScript escape and unescape operations are performed by means of the `org.unbescape.javascript.JavaScriptEscape`
+class. This class defines a series of static methods that perform the desired operations
+(see the class _javadoc_ for more info).
 
 There are simple, preconfigured methods:
 
@@ -172,7 +182,8 @@ And also those that allow a more fine-grained configuration of the escape operat
 JSON Escape/Unescape
 --------------------
 
-JSON escape and unescape operations are performed by means of the `org.unbescape.json.JsonEscape` class. This class defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
+JSON escape and unescape operations are performed by means of the `org.unbescape.json.JsonEscape` class. This class
+defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
 
 There are simple, preconfigured methods:
 
@@ -189,4 +200,53 @@ And also those that allow a more fine-grained configuration of the escape operat
              text,
              JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO__UHEXA,
              JsonEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+```
+
+
+
+CSS Escape/Unescape
+--------------------
+
+CSS escape and unescape operations are performed by means of the `org.unbescape.css.CssEscape` class. This class
+defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
+
+Unbescape includes support for escaping both **CSS identifiers** and **CSS strings** (the former type apply
+more strict syntax rules).
+
+There are simple, preconfigured methods:
+
+```java
+    final String escapedIdentifier = CssEscape.escapeCssIdentifier(text);
+    final String escapedString = CssEscape.escapeCssString(text);
+    final String unescaped = CssEscape.unescapeCss(escapedIdentifierOrString);
+```
+
+And also those that allow a more fine-grained configuration of the escape operation:
+
+```java
+    final String identifierResult =
+        CssEscape.escapeCssIdentifier(
+             identifierText,
+             CssIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_SIX_DIGIT_HEXA,
+             CssIdentifierEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    final String stringResult =
+        CssEscape.escapeCssString(
+             stringText,
+             CssStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+             CssStringEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+```
+
+
+
+CSV (Comma-Separated Values) Escape/Unescape
+--------------------------------------------
+
+CSV escape and unescape operations are performed by means of the `org.unbescape.csv.CsvEscape` class. This class
+defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
+
+The methods for this type of escape/unescape operations are very simple:
+
+```java
+    final String escaped = CsvEscape.escapeCsv(text);
+    final String unescaped = CsvEscape.unescapeCsv(escaped);
 ```
