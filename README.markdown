@@ -238,10 +238,10 @@ And also those that allow a more fine-grained configuration of the escape operat
 
 
 
-CSV (Comma-Separated Values) Escape/Unescape
---------------------------------------------
+CSV Escape/Unescape
+-------------------
 
-CSV escape and unescape operations are performed by means of the `org.unbescape.csv.CsvEscape` class. This class
+CSV (Comma-Separated Values) escape and unescape operations are performed by means of the `org.unbescape.csv.CsvEscape` class. This class
 defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
 
 The methods for this type of escape/unescape operations are very simple:
