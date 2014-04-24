@@ -143,7 +143,7 @@ import java.io.Writer;
  *   <dt>Octal escapes</dt>
  *     <dd>Octal representation of unicode codepoints up to <kbd>U+00FF</kbd>, with <kbd>&#92;</kbd>
  *         followed by up to three octal figures: <kbd>&#92;071</kbd>. Though up to three octal figures
- *         are allowed, octal numbers > <kbd>377</kbd> (<kbd>0xFF</kbd>) are not supported. Note
+ *         are allowed, octal numbers &gt; <kbd>377</kbd> (<kbd>0xFF</kbd>) are not supported. Note
  *         <u>octal escapes have been deprecated as of version 5 of the ECMAScript specification</u>.</dd>
  *   <dt>Unicode Codepoint</dt>
  *     <dd>Each of the <kbd>int</kbd> values conforming the Unicode code space.
