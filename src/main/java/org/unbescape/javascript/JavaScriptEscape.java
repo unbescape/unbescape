@@ -137,7 +137,7 @@ import java.io.Writer;
  *   <dt>UHEXA escapes</dt>
  *     <dd>Also called <em>u-based hexadecimal escapes</em> or simply <em>unicode escapes</em>:
  *         complete representation of unicode codepoints up to <kbd>U+FFFF</kbd>, with <kbd>&#92;u</kbd>
- *         followed by exactly four hexadecimal figures: <kbd>&#92;u00E1</kbd>. Unicode codepoints >
+ *         followed by exactly four hexadecimal figures: <kbd>&#92;u00E1</kbd>. Unicode codepoints &gt;
  *         <kbd>U+FFFF</kbd> can be represented in JavaScript by mean of two UHEXA escapes (a
  *         <em>surrogate pair</em>).</dd>
  *   <dt>Octal escapes</dt>
