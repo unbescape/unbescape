@@ -16,7 +16,7 @@ This project is still under active development. Some features are already availa
 
 Current versions: 
 
-  * **Version 0.3**
+  * **Version 0.4**
 
 
 License
@@ -97,7 +97,15 @@ Features
       *  Works according to the rules specified in RFC4180 (there is no _CSV standard_ as such).
       *  Encloses escaped values in double-quotes (`"value"`) if they contain any non-alphanumeric characters.
       *  Escapes double-quote characters (`"`) by writing them twice: `""`.
-  *   **Java Literal Escape/Unescape** _[not yet available]_
+  *   **Java Literal Escape/Unescape**
+      *  Support for the Java basic escape set: `\b`, `\t`, `\n`, `\f`, `\r`, `\"`, `\'`, `\\`.
+      *  Support for escaping non-displayable, control characters: `U+0001` to `U+001F` and `U+007F` to `U+009F`.
+      *  Support for U-based hexadecimal escapes (a.k.a. _unicode escapes_) both in escape
+         and unescape operations: `\u00E1`.
+      *  Support for Octal escapes, though only in unescape operations: `\071`. Not supported
+         in escape operations (use of octal escapes is not recommended by the Java Language Specification).
+      *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
+
 
 
 ------------------------------------------------------------------------------
@@ -249,4 +257,28 @@ The methods for this type of escape/unescape operations are very simple:
 ```java
     final String escaped = CsvEscape.escapeCsv(text);
     final String unescaped = CsvEscape.unescapeCsv(escaped);
+```
+
+
+
+Java Literal Escape/Unescape
+----------------------------
+
+Java escape and unescape operations are performed by means of the `org.unbescape.java.JavaEscape` class. This class
+defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
+
+There are simple, preconfigured methods:
+
+```java
+    final String escaped = JavaEscape.escapeJava(text);
+    final String unescaped = JavaEscape.unescapeJava(escaped);
+```
+
+And also those that allow a more fine-grained configuration of the escape operation:
+
+```java
+    final String result =
+        JavaEscape.escapeJava(
+             text,
+             JavaEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
 ```
