@@ -19,12 +19,11 @@
  */
 package org.unbescape.java;
 
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 
-import org.unbescape.json.JsonEscapeLevel;
-import org.unbescape.json.JsonEscapeType;
 
 /**
  * <p>
@@ -79,7 +78,7 @@ final class JavaEscapeUtil {
      *         Also, Java allows to write any number of 'u' characters in this type of escapes, like \uu00E1 or even
      *         \uuuuuuuuu00E1. This is so in order to enable legacy compatibility with older code-processing tools
      *         that didn't support Unicode processing at all, which would fail when finding an Unicode escape
-     *         like \u00E1, but not \uu00E1 (because they would consider '\u' as the escape).
+     *         like \u00E1, but not \uu00E1 (because they would consider backslash+'u' as the escape).
      *         So yes, this is valid Java code too:
      *
      *             final String hello = \uuuuuuuu0022Hello, World!\u0022;
@@ -677,7 +676,17 @@ final class JavaEscapeUtil {
                     // This can be a uhexa escape, we need exactly four more characters
 
                     int f = i + 2;
-                    while (f < (i + 6) && f < max) {
+                    // First, discard any additional 'u' characters, which are allowed
+                    while (f < max) {
+                        final char cf = text.charAt(f);
+                        if (cf != ESCAPE_UHEXA_PREFIX2) {
+                            break;
+                        }
+                        f++;
+                    }
+                    int s = f;
+                    // Parse the hexadecimal digits
+                    while (f < (s + 4) && f < max) {
                         final char cf = text.charAt(f);
                         if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
                             break;
@@ -685,14 +694,14 @@ final class JavaEscapeUtil {
                         f++;
                     }
 
-                    if ((f - (i + 2)) < 4) {
+                    if ((f - s) < 4) {
                         // We weren't able to consume the required four hexa chars, leave it as slash+'u', which
                         // is invalid, and let the corresponding Java parser fail.
                         i++;
                         continue;
                     }
 
-                    codepoint = parseIntFromReference(text, i + 2, f, 16);
+                    codepoint = parseIntFromReference(text, s, f, 16);
 
                     // Fast-forward to the first char after the parsed codepoint
                     referenceOffset = f - 1;
@@ -765,10 +774,49 @@ final class JavaEscapeUtil {
 
 
 
+    /*
+     * Determine whether we will need unicode unescape or not, so that we avoid creating a writer object
+     * if it is not needed.
+     */
+    static boolean requiresUnicodeUnescape(final char[] text, final int offset, final int len) {
+
+        if (text == null) {
+            return false;
+        }
+
+        final int max = (offset + len);
+
+        for (int i = offset; i < max; i++) {
+
+            final char c = text[i];
+
+            if (c != ESCAPE_PREFIX || (i + 1) >= max) {
+                continue;
+            }
+
+            if (c == ESCAPE_PREFIX) {
+
+                final char c1 = text[i + 1];
+
+                if (c1 == ESCAPE_UHEXA_PREFIX2) {
+                    // This can be a uhexa escape
+                    return true;
+                }
+
+            }
+
+        }
+
+        return false;
+
+    }
+
 
 
     /*
      * Perform the first step unescape operation based on char[].
+     *
+     * NOTE: We should only be calling this if we already executed requiresUnicodeEscape and it returned true!
      */
     static void unicodeUnescape(final char[] text, final int offset, final int len, final Writer writer)
                                 throws IOException {
@@ -804,7 +852,17 @@ final class JavaEscapeUtil {
                     // This can be a uhexa escape, we need exactly four more characters
 
                     int f = i + 2;
-                    while (f < (i + 6) && f < max) {
+                    // First, discard any additional 'u' characters, which are allowed
+                    while (f < max) {
+                        final char cf = text[f];
+                        if (cf != ESCAPE_UHEXA_PREFIX2) {
+                            break;
+                        }
+                        f++;
+                    }
+                    int s = f;
+                    // Parse the hexadecimal digits
+                    while (f < (s + 4) && f < max) {
                         final char cf = text[f];
                         if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
                             break;
@@ -812,14 +870,14 @@ final class JavaEscapeUtil {
                         f++;
                     }
 
-                    if ((f - (i + 2)) < 4) {
+                    if ((f - s) < 4) {
                         // We weren't able to consume the required four hexa chars, leave it as slash+'u', which
                         // is invalid, and let the corresponding Java parser fail.
                         i++;
                         continue;
                     }
 
-                    codepoint = parseIntFromReference(text, i + 2, f, 16);
+                    codepoint = parseIntFromReference(text, s, f, 16);
 
                     // Fast-forward to the first char after the parsed codepoint
                     referenceOffset = f - 1;
@@ -839,16 +897,11 @@ final class JavaEscapeUtil {
 
             /*
              * At this point we know for sure we will need some kind of unescape, so we
-             * can increase the offset and initialize the string builder if needed, along with
-             * copying to it all the contents pending up to this point.
+             * can copy all the contents pending up to this point.
              */
 
-            if (strBuilder == null) {
-                strBuilder = new StringBuilder(max + 5);
-            }
-
             if (i - readOffset > 0) {
-                strBuilder.append(text, readOffset, i);
+                writer.write(text, readOffset, (i - readOffset));
             }
 
             i = referenceOffset;
@@ -863,9 +916,9 @@ final class JavaEscapeUtil {
              */
 
             if (codepoint > '\uFFFF') {
-                strBuilder.append(Character.toChars(codepoint));
+                writer.write(Character.toChars(codepoint));
             } else {
-                strBuilder.append((char)codepoint);
+                writer.write((char) codepoint);
             }
 
         }
@@ -873,20 +926,13 @@ final class JavaEscapeUtil {
 
         /*
          * -----------------------------------------------------------------------------------------------
-         * Final cleaning: return the original String object if no unescape was actually needed. Otherwise
-         *                 append the remaining escaped text to the string builder and return.
+         * Final cleaning: append the remaining escaped text to the string builder and return.
          * -----------------------------------------------------------------------------------------------
          */
 
-        if (strBuilder == null) {
-            return text;
-        }
-
         if (max - readOffset > 0) {
-            strBuilder.append(text, readOffset, max);
+            writer.write(text, readOffset, (max - readOffset));
         }
-
-        return strBuilder.toString();
 
     }
 
@@ -904,17 +950,20 @@ final class JavaEscapeUtil {
             return null;
         }
 
+        // Will be exactly the same object if no unicode escape was needed
+        final String unicodeEscapedText = unicodeUnescape(text);
+
         StringBuilder strBuilder = null;
 
         final int offset = 0;
-        final int max = text.length();
+        final int max = unicodeEscapedText.length();
 
         int readOffset = offset;
         int referenceOffset = offset;
 
         for (int i = offset; i < max; i++) {
 
-            final char c = text.charAt(i);
+            final char c = unicodeEscapedText.charAt(i);
 
             /*
              * Check the need for an unescape operation at this point
@@ -928,51 +977,50 @@ final class JavaEscapeUtil {
 
             if (c == ESCAPE_PREFIX) {
 
-                final char c1 = text.charAt(i + 1);
+                final char c1 = unicodeEscapedText.charAt(i + 1);
 
                 switch (c1) {
+                    case '0': if (!isOctalEscape(unicodeEscapedText,i + 1,max)) { codepoint = 0x00; referenceOffset = i + 1; }; break;
                     case 'b': codepoint = 0x08; referenceOffset = i + 1; break;
                     case 't': codepoint = 0x09; referenceOffset = i + 1; break;
                     case 'n': codepoint = 0x0A; referenceOffset = i + 1; break;
                     case 'f': codepoint = 0x0C; referenceOffset = i + 1; break;
                     case 'r': codepoint = 0x0D; referenceOffset = i + 1; break;
                     case '"': codepoint = 0x22; referenceOffset = i + 1; break;
+                    case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
                     case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
-                    case '/': codepoint = 0x2F; referenceOffset = i + 1; break;
                 }
 
                 if (codepoint == -1) {
 
-                    if (c1 == ESCAPE_UHEXA_PREFIX2) {
-                        // This can be a uhexa escape, we need exactly four more characters
+                    if (c1 >= '0' && c1 <= '7') {
+                        // This can be a octal escape, we need at least 1 more char, and up to 3 more.
 
                         int f = i + 2;
-                        while (f < (i + 6) && f < max) {
-                            final char cf = text.charAt(f);
-                            if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
+                        while (f < (i + 4) && f < max) { // We need only a max of two more chars
+                            final char cf = unicodeEscapedText.charAt(f);
+                            if (!(cf >= '0' && cf <= '7')) {
                                 break;
                             }
                             f++;
                         }
 
-                        if ((f - (i + 2)) < 4) {
-                            // We weren't able to consume the required four hexa chars, leave it as slash+'u', which
-                            // is invalid, and let the corresponding JSON parser fail.
-                            i++;
-                            continue;
+                        codepoint = parseIntFromReference(unicodeEscapedText, i + 1, f, 8);
+
+                        if (codepoint > 0xFF) {
+                            // Maximum octal escape char is FF. Ignore the last digit
+                            codepoint = parseIntFromReference(unicodeEscapedText, i + 1, f - 1, 8);
+                            referenceOffset = f - 2;
+                        } else {
+                            referenceOffset = f - 1;
                         }
-
-                        codepoint = parseIntFromReference(text, i + 2, f, 16);
-
-                        // Fast-forward to the first char after the parsed codepoint
-                        referenceOffset = f - 1;
 
                         // Don't continue here, just let the unescape code below do its job
 
                     } else {
 
-                        // Other escape sequences are not allowed by JSON. So we leave it as is
-                        // and expect the corresponding JSON parser to fail.
+                        // Other escape sequences are not allowed by Java. So we leave it as is
+                        // and expect the corresponding Java parser to fail.
                         i++;
                         continue;
 
@@ -994,7 +1042,7 @@ final class JavaEscapeUtil {
             }
 
             if (i - readOffset > 0) {
-                strBuilder.append(text, readOffset, i);
+                strBuilder.append(unicodeEscapedText, readOffset, i);
             }
 
             i = referenceOffset;
@@ -1025,11 +1073,11 @@ final class JavaEscapeUtil {
          */
 
         if (strBuilder == null) {
-            return text;
+            return unicodeEscapedText;
         }
 
         if (max - readOffset > 0) {
-            strBuilder.append(text, readOffset, max);
+            strBuilder.append(unicodeEscapedText, readOffset, max);
         }
 
         return strBuilder.toString();
@@ -1051,7 +1099,131 @@ final class JavaEscapeUtil {
             return;
         }
 
-        // TODO Copy from String version
+        char[] unicodeEscapedText = text;
+        int unicodeEscapedOffset = offset;
+        int unicodeEscapedLen = len;
+        if (requiresUnicodeUnescape(text, offset, len)) {
+            final CharArrayWriter charArrayWriter = new CharArrayWriter(len + 2);
+            unicodeUnescape(text, offset, len, charArrayWriter);
+            unicodeEscapedText = charArrayWriter.toCharArray();
+            unicodeEscapedOffset = 0;
+            unicodeEscapedLen = unicodeEscapedText.length;
+        }
+
+        final int max = (unicodeEscapedOffset + unicodeEscapedLen);
+
+        int readOffset = unicodeEscapedOffset;
+        int referenceOffset = unicodeEscapedOffset;
+
+        for (int i = unicodeEscapedOffset; i < max; i++) {
+
+            final char c = unicodeEscapedText[i];
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if (c != ESCAPE_PREFIX || (i + 1) >= max) {
+                continue;
+            }
+
+            int codepoint = -1;
+
+            if (c == ESCAPE_PREFIX) {
+
+                final char c1 = unicodeEscapedText[i + 1];
+
+                switch (c1) {
+                    case '0': if (!isOctalEscape(unicodeEscapedText,i + 1,max)) { codepoint = 0x00; referenceOffset = i + 1; }; break;
+                    case 'b': codepoint = 0x08; referenceOffset = i + 1; break;
+                    case 't': codepoint = 0x09; referenceOffset = i + 1; break;
+                    case 'n': codepoint = 0x0A; referenceOffset = i + 1; break;
+                    case 'f': codepoint = 0x0C; referenceOffset = i + 1; break;
+                    case 'r': codepoint = 0x0D; referenceOffset = i + 1; break;
+                    case '"': codepoint = 0x22; referenceOffset = i + 1; break;
+                    case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
+                    case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
+                }
+
+                if (codepoint == -1) {
+
+                    if (c1 >= '0' && c1 <= '7') {
+                        // This can be a octal escape, we need at least 1 more char, and up to 3 more.
+
+                        int f = i + 2;
+                        while (f < (i + 4) && f < max) { // We need only a max of two more chars
+                            final char cf = unicodeEscapedText[f];
+                            if (!(cf >= '0' && cf <= '7')) {
+                                break;
+                            }
+                            f++;
+                        }
+
+                        codepoint = parseIntFromReference(unicodeEscapedText, i + 1, f, 8);
+
+                        if (codepoint > 0xFF) {
+                            // Maximum octal escape char is FF. Ignore the last digit
+                            codepoint = parseIntFromReference(unicodeEscapedText, i + 1, f - 1, 8);
+                            referenceOffset = f - 2;
+                        } else {
+                            referenceOffset = f - 1;
+                        }
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else {
+
+                        // Other escape sequences are not allowed by Java. So we leave it as is
+                        // and expect the corresponding Java parser to fail.
+                        i++;
+                        continue;
+
+                    }
+
+                }
+
+            }
+
+
+            /*
+             * At this point we know for sure we will need some kind of unescape, so we
+             * can copy all the contents pending up to this point.
+             */
+
+            if (i - readOffset > 0) {
+                writer.write(unicodeEscapedText, readOffset, (i - readOffset));
+            }
+
+            i = referenceOffset;
+            readOffset = i + 1;
+
+            /*
+             * --------------------------
+             *
+             * Peform the real unescape
+             *
+             * --------------------------
+             */
+
+            if (codepoint > '\uFFFF') {
+                writer.write(Character.toChars(codepoint));
+            } else {
+                writer.write((char)codepoint);
+            }
+
+        }
+
+
+        /*
+         * -----------------------------------------------------------------------------------------------
+         * Final cleaning: append the remaining escaped text to the string builder and return.
+         * -----------------------------------------------------------------------------------------------
+         */
+
+        if (max - readOffset > 0) {
+            writer.write(unicodeEscapedText, readOffset, (max - readOffset));
+        }
+
 
     }
 

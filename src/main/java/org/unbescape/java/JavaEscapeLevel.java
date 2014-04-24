@@ -42,8 +42,8 @@ package org.unbescape.java;
  *           </li>
  *           <li>
  *               Two ranges of non-displayable, control characters (some of which are already part of the
- *               <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd> (required
- *               by the JSON spec) and <kbd>U+007F</kbd> to <kbd>U+009F</kbd> (additional).
+ *               <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
+ *               and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
  *           </li>
  *         </ul>
  *     </li>
