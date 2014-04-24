@@ -40,6 +40,14 @@ import java.io.Writer;
  *       enum.</li>
  * </ul>
  * <p>
+ *   Unbescape does not define a <em>'type'</em> for Java escaping (just a <em>level</em>) because,
+ *   given the way Unicode Escapes work in Java, there is no possibility to choose whether we want to escape, for
+ *   example, a <em>tab character</em> (U+0009) as a Single Escape Char (<kbd>&#92;t</kbd>) or as a Unicode Escape
+ *   (<kbd>&#92;u0009</kbd>). Given Unicode Escapes are processed by the compiler and not the runtime, using
+ *   <kbd>&#92;u0009</kbd> instead of <kbd>&#92;t</kbd> would really insert a tab character inside our source
+ *   code before compiling, which is not equivalent to inserting <kbd>"&#92;t"</kbd> in a <kbd>String</kbd> literal.
+ * </p>
+ * <p>
  *   <strong>Unescape</strong> operations need no configuration parameters. Unescape operations
  *   will always perform <em>complete</em> unescape of SECs (<kbd>&#92;n</kbd>),
  *   u-based (<kbd>&#92;u00E1</kbd>) and octal (<kbd>&#92;341</kbd>) escapes.
@@ -78,6 +86,38 @@ import java.io.Writer;
  *   <li>Support for the whole Unicode character set: <kbd>&bsol;u0000</kbd> to <kbd>&bsol;u10FFFF</kbd>, including
  *       characters not representable by only one <kbd>char</kbd> in Java (<kbd>&gt;&bsol;uFFFF</kbd>).</li>
  * </ul>
+ *
+ * <h4><u>Specific features of Unicode Escapes in Java</u></h4>
+ *
+ * <p>
+ *   The way Unicode Escapes work in Java is different to other languages like e.g. JavaScript. In Java,
+ *   these UHEXA escapes are processed by the compiler itself, and therefore resolved before any other
+ *   type of escapes. Besides, UHEXA escapes can appear anywhere in the code, not only String literals.
+ *   This means that, while in JavaScript <kbd>'a&#92;u005Cna'</kbd> would be displayed as <kbd>a&#92;na</kbd>,
+ *   in Java <kbd>"a&#92;u005Cna"</kbd> would in fact be displayed in two lines:
+ *   <kbd>a</kbd>+<kbd>&lt;LF&gt;</kbd>+<kbd>a</kbd>.
+ * </p>
+ * <p>
+ *   Going even further, this is perfectly valid Java code:
+ * </p>
+ * <code>
+ *   final String hello = &#92;u0022Hello, World!&#92;u0022;
+ * </code>
+ * <p>
+ *   Also, Java allows to write any number of <kbd>'u'</kbd> characters in this type of escapes, like
+ *   <kbd>&#92;uu00E1</kbd> or even <kbd>&#92;uuuuuuuuu00E1</kbd>. This is so in order to enable legacy
+ *   compatibility with older code-processing tools that didn't support Unicode processing at all, which
+ *   would fail when finding an Unicode escape like <kbd>&#92;u00E1</kbd>, but not <kbd>&#92;uu00E1</kbd>
+ *   (because they would consider <kbd>&#92;u</kbd> as the escape). So this is valid Java code too:
+ * </p>
+ * <code>
+ *   final String hello = &#92;uuuuuuuu0022Hello, World!&#92;u0022;
+ * </code>
+ * <p>
+ *   In order to correctly unescape Java UHEXA escapes like <kbd>"a&#92;u005Cna"</kbd>, Unbescape will
+ *   perform a two-pass process so that all unicode escapes are processed in the first pass, and then
+ *   the single escape characters and octal escapes in the second pass.
+ * </p>
  *
  * <h4><u>Input/Output</u></h4>
  *
@@ -120,8 +160,9 @@ import java.io.Writer;
  *   <dt>Octal escapes</dt>
  *     <dd>Octal representation of unicode codepoints up to <kbd>U+00FF</kbd>, with <kbd>&#92;</kbd>
  *         followed by up to three octal figures: <kbd>&#92;071</kbd>. Though up to three octal figures
- *         are allowed, octal numbers > <kbd>377</kbd> (<kbd>0xFF</kbd>) are not supported. Note
- *         <u>octal escapes have been deprecated as of version 5 of the ECMAScript specification</u>.</dd>
+ *         are allowed, octal numbers &gt; <kbd>377</kbd> (<kbd>0xFF</kbd>) are not supported. These are not supported
+ *         in escape operations because the use of octal escapes is not recommended by the Java Language Specification
+ *         (it's usage is allowed mainly for C compatibility reasons).</dd>
  *   <dt>Unicode Codepoint</dt>
  *     <dd>Each of the <kbd>int</kbd> values conforming the Unicode code space.
  *         Normally corresponding to a Java <kbd>char</kbd> primitive value (codepoint <= <kbd>&bsol;uFFFF</kbd>),
@@ -140,6 +181,8 @@ import java.io.Writer;
  *       Specification - Chapter 3: Lexical Structure.</a> [oracle.com]</li>
  *   <li><a href="http://arity23.blogspot.com/2013/04/secrets-of-scala-lexer-1-uuuuunicode.html"
  *       target="_blank">Secrets of the Scala Lexer 1: &#92;uuuuunicode</a> [blogspot.com]</li>
+ *   <li><a href="http://www.oracle.com/technetwork/articles/javase/supplementary-142654.html"
+ *       target="_blank">Supplementary characters in the Java Platform</a> [oracle.com]</li>
  * </ul>
  *
  * @author Daniel Fern&aacute;ndez
