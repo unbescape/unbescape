@@ -5,18 +5,27 @@ Unbescape: escape and unescape operations in Java
 ------------------------------------------------------------------------------
 
 _Unbescape_ is a Java library aimed at performing fully-featured and high-performance escape and unescape
-operations for **HTML** (HTML5 and HTML 4), **XML**, **JavaScript**, **JSON**, **CSS**, **CSV**
-(Comma-Separated Values) and **Java Literals**.
+operations for:
+
+  * **HTML** (HTML5 and HTML 4)
+  * **XML** (XML 1.0 and XML 1.1)
+  * **JavaScript**
+  * **JSON**
+  * **CSS**
+  * **CSV** (Comma-Separated Values)
+  * **Java literals**
+  * **Java `.properties` files**
 
 
 Status
 ------
 
-This project is still under active development. Some features are already available and fully functional (check below).
+This project is feature-complete and ready to use. All features are already available, but a project
+website and documentation set has not been created yet.
 
 Current versions: 
 
-  * **Version 0.4**
+  * **Version 0.5**
 
 
 License
@@ -46,7 +55,7 @@ Features
       *   No unneeded `String` or `char[]` objects are created, and specific optimizations are applied in order to provide maximum performance (e.g. if a `String` has the same content after escaping/unescaping, exactly the same `String` object is returned, no copy is made).
       *  See (and execute) the [`benchmark.sh`](https://github.com/unbescape/unbescape-tests/blob/20140418/benchmark.sh) script in the
          [`unbescape-tests`](https://github.com/unbescape/unbescape-tests) repository for specific figures.
-  *   **HTML Escape/Unescape** _[already available]_
+  *   **HTML Escape/Unescape**
       *  Whole **HTML5** NCR (Named Character Reference) set supported, if required:    `&rsqb;`,`&NewLine;`, etc. (HTML 4 set available too).
       *  Mixed named and numerical (decimal or hexa) character references supported.
       *  Ability to default to numerical (decimal or hexa) references when an applicable NCR does not exist (depending on the selected operation level).
@@ -56,7 +65,7 @@ Features
          *  Unescape of numerical character references not ending in semi-colon (e.g. `&#x23ac`).
          *  Unescape of specific NCRs not ending in semi-colon (e.g. `&aacute`).
          *  Unescape of specific numerical character references wrongly specified by their Windows-1252 codepage code instead of the Unicode one (e.g. `&#x80;` for `€` (`&euro;`) instead of `&#x20ac;`).
-  *   **XML Escape/Unescape** _[already available]_
+  *   **XML Escape/Unescape**
       *  Support for both XML 1.0 and XML 1.1 escape/unescape operations.
       *  No support for DTD-defined or user-defined entities. Only the five predefined XML character entities are supported: `&lt;`, `&gt;`, `&amp;`, `&quot;` and `&apos;`.
       *  Automatic escaping of allowed control characters.
@@ -106,6 +115,13 @@ Features
          and unescape operations: `\u00E1`.
       *  Support for Octal escapes, though only in unescape operations: `\071`. Not supported
          in escape operations (use of octal escapes is not recommended by the Java Language Specification).
+      *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
+  *   **Java `.properties` File Escape/Unescape**
+      *  Support for the Java Properties basic escape set: `\t`, `\n`, `\f`, `\r`, `\\`. When escaping `.properties`
+         keys `\ `, `\:` and `\=` will be applied too.
+      *  Support for escaping non-displayable, control characters: `U+0001` to `U+001F` and `U+007F` to `U+009F`.
+      *  Support for U-based hexadecimal escapes (a.k.a. _unicode escapes_) both in escape
+         and unescape operations: `\u00E1`.
       *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
 
 
@@ -283,4 +299,34 @@ And also those that allow a more fine-grained configuration of the escape operat
         JavaEscape.escapeJava(
              text,
              JavaEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+```
+
+
+
+Java `.properties` File Escape/Unescape
+---------------------------------------
+
+Java `.properties` escape and unescape operations are performed by means of the `org.unbescape.properties.PropertiesEscape` class. This class
+defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
+
+Unbescape includes support for escaping both **properties keys** and **properties values** (keys require additional
+escaping of ` `, `:` and `=`).
+
+There are simple, preconfigured methods:
+
+```java
+    final String escapedKey = PropertiesEscape.escapePropertiesKey(text);
+    final String escapedString = PropertiesEscape.escapePropertiesValue(text);
+    final String unescaped = PropertiesEscape.unescapeProperties(escapedKeyOrValue);
+```
+
+And also those that allow a more fine-grained configuration of the escape operation:
+
+```java
+    final String identifierResult =
+        PropertiesEscape.escapePropertiesKey(
+             keyText, PropertiesKeyEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    final String stringResult =
+        PropertiesEscape.escapePropertiesValue(
+             valueText, PropertiesValueEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
 ```
