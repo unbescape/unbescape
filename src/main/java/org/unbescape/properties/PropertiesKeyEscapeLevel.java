@@ -35,6 +35,9 @@ package org.unbescape.properties;
  *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
  *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
  *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+ *               <kbd>&#92;&nbsp;</kbd> (<kbd>U+0020</kbd>),
+ *               <kbd>&#92;:</kbd> (<kbd>U+003A</kbd>),
+ *               <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>),
  *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
  *           </li>
  *           <li>
@@ -64,7 +67,7 @@ package org.unbescape.properties;
  * @since 1.0
  *
  */
-public enum PropertiesEscapeLevel {
+public enum PropertiesKeyEscapeLevel {
 
     /**
      * Level 1 escape: escape only the basic escape set: Single Escape Chars plus non-displayable control chars.</kbd>
@@ -101,7 +104,7 @@ public enum PropertiesEscapeLevel {
      * @param level the level
      * @return the escape level enum constant, or <kbd>IllegalArgumentException</kbd> if level does not exist.
      */
-    public static PropertiesEscapeLevel forLevel(final int level) {
+    public static PropertiesKeyEscapeLevel forLevel(final int level) {
         switch (level) {
             case 1: return LEVEL_1_BASIC_ESCAPE_SET;
             case 2: return LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET;
@@ -113,7 +116,7 @@ public enum PropertiesEscapeLevel {
     }
 
 
-    PropertiesEscapeLevel(final int escapeLevel) {
+    PropertiesKeyEscapeLevel(final int escapeLevel) {
         this.escapeLevel = escapeLevel;
     }
 
