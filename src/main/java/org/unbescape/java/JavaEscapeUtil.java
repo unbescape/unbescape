@@ -56,7 +56,7 @@ final class JavaEscapeUtil {
      *        U+000C -> %f
      *        U+000D -> %r
      *        U+0022 -> %"
-     *        U+0027 -> %'
+     *        U+0027 -> %' [ NOT USED IN ESCAPE OF STRINGS IF LEVEL < 3 ]
      *        U+005C -> %%
      *   - UNICODE ESCAPE [UHEXA]
      *        Characters <= U+FFFF: %u????
@@ -145,6 +145,8 @@ final class JavaEscapeUtil {
         SEC_CHARS[0x0C] = 'f';
         SEC_CHARS[0x0D] = 'r';
         SEC_CHARS[0x22] = '"';
+        // Escaping the apostrophe is only required in character literals, but we are escaping
+        // string literals, so we don't really need this escape if level < 3
         SEC_CHARS[0x27] = '\'';
         SEC_CHARS[0x5C] = '\\';
 
@@ -196,7 +198,9 @@ final class JavaEscapeUtil {
         ESCAPE_LEVELS[0x0C] = 1;
         ESCAPE_LEVELS[0x0D] = 1;
         ESCAPE_LEVELS[0x22] = 1;
-        ESCAPE_LEVELS[0x27] = 1;
+        // Escaping the apostrophe is only required in character literals, but we are escaping
+        // string literals, so we don't really need this escape if level < 3
+        ESCAPE_LEVELS[0x27] = 3;
         ESCAPE_LEVELS[0x5C] = 1;
 
         /*

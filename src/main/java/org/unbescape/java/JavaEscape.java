@@ -68,8 +68,9 @@ import java.io.Writer;
  *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
  *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
  *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
- *               <kbd>&#92;&apos;</kbd> (<kbd>U+0022</kbd>) and
- *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
+ *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>) and
+ *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>). Note <kbd>&#92;&apos;</kbd> is not really needed in
+ *               String literals (only in Character literals), so it won't be used until escape level 3.
  *           </li>
  *           <li>
  *               Two ranges of non-displayable, control characters (some of which are already part of the
@@ -148,8 +149,9 @@ import java.io.Writer;
  *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
  *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
  *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
- *               <kbd>&#92;&apos;</kbd> (<kbd>U+0022</kbd>) and
- *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
+ *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>) and
+ *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>). Note <kbd>&#92;&apos;</kbd> is not really needed in
+ *               String literals (only in Character literals), so it won't be used until escape level 3.
  *     </dd>
  *   <dt>UHEXA escapes</dt>
  *     <dd>Also called <em>u-based hexadecimal escapes</em> or simply <em>unicode escapes</em>:
@@ -210,7 +212,8 @@ public final class JavaEscape {
      *       <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
      *       <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
      *       <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>) and
-     *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
+     *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>). Note <kbd>&#92;&apos;</kbd> is not really needed in
+     *       String literals (only in Character literals), so it won't be used until escape level 3.
      *   </li>
      *   <li>
      *       Two ranges of non-displayable, control characters (some of which are already part of the
@@ -260,7 +263,8 @@ public final class JavaEscape {
      *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
      *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
      *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>) and
-     *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
+     *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>). Note <kbd>&#92;&apos;</kbd> is not really needed in
+     *               String literals (only in Character literals), so it won't be used until escape level 3.
      *           </li>
      *           <li>
      *               Two ranges of non-displayable, control characters (some of which are already part of the
@@ -352,7 +356,8 @@ public final class JavaEscape {
      *       <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
      *       <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
      *       <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>) and
-     *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
+     *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>). Note <kbd>&#92;&apos;</kbd> is not really needed in
+     *       String literals (only in Character literals), so it won't be used until escape level 3.
      *   </li>
      *   <li>
      *       Two ranges of non-displayable, control characters (some of which are already part of the
@@ -403,7 +408,8 @@ public final class JavaEscape {
      *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
      *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
      *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>) and
-     *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
+     *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>). Note <kbd>&#92;&apos;</kbd> is not really needed in
+     *               String literals (only in Character literals), so it won't be used until escape level 3.
      *           </li>
      *           <li>
      *               Two ranges of non-displayable, control characters (some of which are already part of the

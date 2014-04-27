@@ -98,7 +98,9 @@ Features
       *  Encloses escaped values in double-quotes (`"value"`) if they contain any non-alphanumeric characters.
       *  Escapes double-quote characters (`"`) by writing them twice: `""`.
   *   **Java Literal Escape/Unescape**
-      *  Support for the Java basic escape set: `\b`, `\t`, `\n`, `\f`, `\r`, `\"`, `\'`, `\\`.
+      *  Support for the Java basic escape set: `\b`, `\t`, `\n`, `\f`, `\r`, `\"`, `\'`, `\\`. Note `\'` will not be
+         used in escaping levels < 3 because escaping the apostrophe is not really required in Java String literals
+         (only in Character literals).
       *  Support for escaping non-displayable, control characters: `U+0001` to `U+001F` and `U+007F` to `U+009F`.
       *  Support for U-based hexadecimal escapes (a.k.a. _unicode escapes_) both in escape
          and unescape operations: `\u00E1`.

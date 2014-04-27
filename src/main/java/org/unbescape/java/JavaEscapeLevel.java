@@ -38,7 +38,8 @@ package org.unbescape.java;
  *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
  *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
  *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>),
- *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
+ *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>). Note <kbd>&#92;&apos;</kbd> is not really needed in
+ *               String literals (only in Character literals), so it won't be used until escape level 3.
  *           </li>
  *           <li>
  *               Two ranges of non-displayable, control characters (some of which are already part of the
