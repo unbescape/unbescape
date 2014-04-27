@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 
-import org.unbescape.java.PropertiesEscapeLevel;
-
 
 /**
  * <p>
