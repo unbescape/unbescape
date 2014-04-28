@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<assembly>
+
+  <id>dist</id>
+  
+  <formats>
+    <format>zip</format>
+  </formats>
+  
+  <fileSets>
+    <fileSet>
+      <directory>${basedir}/target/apidocs/</directory>
+      <outputDirectory>/apidocs</outputDirectory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/target/</directory>
+      <outputDirectory>/dist</outputDirectory>
+      <includes>
+        <include>unbescape-${version}.jar</include>
+        <include>unbescape-${version}-javadoc.jar</include>
+        <include>unbescape-${version}-sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>LICENSE.txt</include>
+        <include>README.txt</include>
+        <include>NOTICE.txt</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+    
+</assembly>
