@@ -20,12 +20,11 @@ operations for:
 Status
 ------
 
-This project is feature-complete and ready to use. All features are already available, but a project
-website and documentation set has not been created yet.
+This project is stable and production-ready.
 
 Current versions: 
 
-  * **Version 0.5**
+  * **Version 1.0** (29 April 2014)
 
 
 License
@@ -51,15 +50,22 @@ Maven info
 Features
 --------
 
-  *   **High performance** and **low memory footprint**
-      *   No unneeded `String` or `char[]` objects are created, and specific optimizations are applied in order to provide maximum performance (e.g. if a `String` has the same content after escaping/unescaping, exactly the same `String` object is returned, no copy is made).
-      *  See (and execute) the [`benchmark.sh`](https://github.com/unbescape/unbescape-tests/blob/20140418/benchmark.sh) script in the
+  *   **High performance**
+      *  No unneeded `String` or `char[]` objects are created, and specific optimizations are applied in order to provide maximum performance and reduce Garbage Collector latency (e.g. if a `String` has the same content after escaping/unescaping, exactly the same `String` object is returned, no copy is made).
+      *  See (and execute) the [`benchmark.sh`](https://github.com/unbescape/unbescape-tests/blob/20140429/benchmark.sh) script in the
          [`unbescape-tests`](https://github.com/unbescape/unbescape-tests) repository for specific figures.
+  *   **Highly configurable**
+      *  Most escaped languages allow specifying the _type_ of escape to be performed: based on literals, on decimal numbers, hexadecimal, octal, etc.
+      *  Most escaped languages allow specifying the _level_ of escape to be performed: only escape the _basic set_, escape _all non-ASCII characters_, escape _all non-alphanumeric_, etc.
+      *  Provides sensible defaults and pre-configured, easy-to-use methods.
+  *   **Documented API**
+      *  Includes full JavaDoc API documentation for all public classes, explaining each escape and unescape operation in detail.
+  *   **Unicode**
+      *  All escape and unescape operations support the whole Unicode character set: `U+0000` to `U+10FFFF`, including characters not representable by only one char in Java (>`U+FFFF`).
   *   **HTML Escape/Unescape**
-      *  Whole **HTML5** NCR (Named Character Reference) set supported, if required:    `&rsqb;`,`&NewLine;`, etc. (HTML 4 set available too).
+      *  Whole **HTML5** NCR (Named Character Reference) set supported, if required: `&rsqb;`,`&NewLine;`, etc. (HTML 4 set available too).
       *  Mixed named and numerical (decimal or hexa) character references supported.
       *  Ability to default to numerical (decimal or hexa) references when an applicable NCR does not exist (depending on the selected operation level).
-      *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
       *  Support for unescape of double-char NCRs in HTML5: `&fjlig;` → `fj`.
       *  Support for a set of HTML5 unescape tweaks included in the HTML5 specification:
          *  Unescape of numerical character references not ending in semi-colon (e.g. `&#x23ac`).
@@ -69,7 +75,6 @@ Features
       *  Support for both XML 1.0 and XML 1.1 escape/unescape operations.
       *  No support for DTD-defined or user-defined entities. Only the five predefined XML character entities are supported: `&lt;`, `&gt;`, `&amp;`, `&quot;` and `&apos;`.
       *  Automatic escaping of allowed control characters.
-      *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
   *   **JavaScript Escape/Unescape**
       *  Support for the JavaScript basic escape set: `\0`, `\b`, `\t`, `\n`, `\v`, `\f`, `\r`, `\"`, `\'`, `\\`.
          Note that `\v` (`U+000B`) will not be used in escape operations (only unescape) because it is
@@ -83,14 +88,12 @@ Features
       *  Support for Octal escapes, though only in unescape operations: `\071`. Not supported
          in escape operations (octal escapes were deprecated in version 5 of the ECMAScript
          specification).
-      *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
   *   **JSON Escape/Unescape**
       *  Support for the JSON basic escape set: `\b`, `\t`, `\n`, `\f`, `\r`, `\"`, `\\`.
       *  Automatic escape of `/` (as `\/` if possible) when it appears after `<`, as in `</something>`.
       *  Support for escaping non-displayable, control characters: `U+0000` to `U+001F` and `U+007F` to `U+009F`.
       *  Support for U-based hexadecimal escapes (a.k.a. _unicode escapes_) both in escape
          and unescape operations: `\u00E1`.
-      *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
   *   **CSS Escape/Unescape**
       *  Complete set of CSS _Backslash Escapes_ supported (e.g. `\+`, `\;`, `\(`, `\)`, etc.).
       *  Full set of escape syntax rules supported, both for **CSS identifiers** and **CSS Strings**
@@ -99,30 +102,28 @@ Features
          `\_` escaped at the beginning of identifiers for better Internet Explorer 6 support, etc.
       *  Hexadecimal escapes (a.k.a. _unicode escapes_) are supported both in escape and unescape operations,
          and both in _compact_ (`\E1 `) and six-digit forms (`\0000E1`).
-      *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
       *  Support for unescaping unicode characters >`\uFFFF` both when represented in standard form (one char,
          `\20000`) and non-standard (surrogate pair, `\D840\DC00`, used by older WebKit browsers).
   *   **CSV (Comma-Separated Values) Escape/Unescape**
       *  Works according to the rules specified in RFC4180 (there is no _CSV standard_ as such).
       *  Encloses escaped values in double-quotes (`"value"`) if they contain any non-alphanumeric characters.
       *  Escapes double-quote characters (`"`) by writing them twice: `""`.
+      *  Honors rules for maximum compatibility with Microsoft Excel.
   *   **Java Literal Escape/Unescape**
       *  Support for the Java basic escape set: `\b`, `\t`, `\n`, `\f`, `\r`, `\"`, `\'`, `\\`. Note `\'` will not be
-         used in escaping levels < 3 because escaping the apostrophe is not really required in Java String literals
+         used in escaping levels < 3 (= _all but alphanumeric_) because escaping the apostrophe is not really required in Java String literals
          (only in Character literals).
       *  Support for escaping non-displayable, control characters: `U+0001` to `U+001F` and `U+007F` to `U+009F`.
       *  Support for U-based hexadecimal escapes (a.k.a. _unicode escapes_) both in escape
          and unescape operations: `\u00E1`.
       *  Support for Octal escapes, though only in unescape operations: `\071`. Not supported
          in escape operations (use of octal escapes is not recommended by the Java Language Specification).
-      *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
   *   **Java `.properties` File Escape/Unescape**
       *  Support for the Java Properties basic escape set: `\t`, `\n`, `\f`, `\r`, `\\`. When escaping `.properties`
-         keys `\ `, `\:` and `\=` will be applied too.
+         keys (not values) `\ `, `\:` and `\=` will be applied too.
       *  Support for escaping non-displayable, control characters: `U+0001` to `U+001F` and `U+007F` to `U+009F`.
       *  Support for U-based hexadecimal escapes (a.k.a. _unicode escapes_) both in escape
          and unescape operations: `\u00E1`.
-      *  Support for the whole Unicode character set: `\u0000` to `\u10FFFF`, including characters not representable by only one char in Java (>`\uFFFF`).
 
 
 
