@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  
+	<title>unbescape: powerful, fast and easy escape/unescape operations for Java</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Java &middot; HTML5 &middot; HTML4 &middot; XML &middot; JavaScript &middot; JSON &middot; CSS &middot; CSV" />
+    <meta name="author" content="The UNBESCAPE Team" />
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+    <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="css/google-code-prettify/prettify.css" rel="stylesheet" />
+        
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+      <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-1276954-11', 'unbescape.org');
+          ga('send', 'pageview');
+
+      </script>
+    
+  </head>
+
+
+  <body lang="en" dir="ltr" onload="prettyPrint()">
+
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html"><img src="img/unbescape.png" alt="unbescape" /></a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              <img src="img/unbescape_motto.png" alt="Java &middot; HTML5 &middot; HTML4 &middot; XML &middot; JavaScript &middot; JSON &middot; CSS &middot; CSV" />
+            </p>
+            <ul class="nav">
+              <li class="active"><a href="index.html">home</a></li>
+              <li><a href="download.html">download</a></li>
+              <li><a href="usingunbescape.html">using unbescape</a></li>
+              <li><a href="javadoc.html">javadoc</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container-fluid">
+    
+      <div class="row-fluid">
+
+        <!-- --------------------------------------------------------------------- -->      
+        <!--   SIDEBAR                                                             -->      
+        <!-- --------------------------------------------------------------------- -->
+              
+        <div class="span2">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+            
+              <li class="nav-header">UNBESCAPE</li>
+            
+              <li class="active"><a href="index.html">home</a></li>
+              <li><a href="download.html">download</a></li>
+            
+              <li class="nav-header">DOCS &amp; HELP</li>
+            
+              <li><a href="usingunbescape.html">using unbescape</a></li>
+              <li><a href="javadoc.html">javadoc API</a></li>
+              <li><a href="issuetracking.html">issue tracking</a></li>
+              <li><a href="license.html">license</a></li>
+              <li><a href="faq.html">faq</a></li>
+              <li><a href="team.html">team</a></li>
+            
+              <li class="nav-header">SOURCE REPOSITORIES</li>
+              
+              <li><a href="http://github.com/unbescape/unbescape">unbescape @GitHub</a></li>
+              
+            </ul>
+          </div>
+        </div>
+
+        
+        <!-- --------------------------------------------------------------------- -->      
+        <!--   CONTENT                                                             -->      
+        <!-- --------------------------------------------------------------------- -->
+              
+        <div class="span10">
+        
+          <h3>What is unbescape?</h3>
+          
+          <p>
+            <strong>unbescape</strong> is a Java library aimed at performing fully-featured and high-performance
+            escape and unescape operations for:
+          </p>
+          <ul>
+              <li><strong>HTML</strong> (HTML5 and HTML 4)</li>
+              <li><strong>XML</strong> (XML 1.0 and XML 1.1)</li>
+              <li><strong>JavaScript</strong></li>
+              <li><strong>JSON</strong></li>
+              <li><strong>CSS</strong> (both identifiers and string literals)</li>
+              <li><strong>CSV</strong> (Comma-Separated Values)</li>
+              <li><strong>Java literals</strong></li>
+              <li><strong>Java <kbd>.properties</kbd> files</strong> (both keys and values)</li>
+          </ul>
+          <p>
+            Its goals are:
+          </p>
+          <ul>
+            <li>To be <strong>easy to use</strong>. Few lines of code needed. No additional dependencies.</li>
+            <li>To be <strong>fast</strong>. Faster and lighter than most other options available in Java.</li>
+            <li>To be <strong>versatile</strong>. Provides different escaping types and levels in order to better adapt
+                to different scenarios and contexts.</li>
+            <li>To be <strong>feature-complete</strong>. Includes <em>full HTML5 support</em>, careful implementation
+                of the JavaScript, JSON, Java, etc specifications, advanced format tweaks...</li>
+          </ul>
+        
+        <hr />
+        
+          <h3>What does it look like? Why should I use it?</h3>
+
+          <p>
+            Performing an <strong>unescape</strong> operation on HTML code is as easy as:
+          </p>
+          
+<pre class="prettyprint linenums language-java">
+final String unescapedText = HtmlEscape.unescapeHtml(escapedText);
+</pre>
+
+          <p>
+              Note this includes support for unescaping HTML5's more than 2,300 <em>entities</em>
+              or <em>named character references</em> (like <kbd>&amp;tcedil;</kbd> = <kbd>'&tcedil;'</kbd>).
+              And also decimal/hexadecimal references (like <kbd>&amp;#225;</kbd> or <kbd>&amp;#xE1;</kbd>
+              = <kbd>'&#xE1;'</kbd>). And the full Unicode character set, including codepoints &gt; U+FFFF
+              (like <kbd>&amp;#x20000;</kbd> = <kbd>'&#x20000;'</kbd>). And even performing a good amount
+              of <em>magic</em> included in the HTML5 specification (like allowing some references not to
+              end in a semicolon, like <kbd>&amp;aacute</kbd> = <kbd>'&aacute'</kbd>).
+              So this text:
+          </p>
+
+<pre class="prettyprint language-html">
+In order to have full HTML support, escape tools should provide
+complete support for characters like the Czech letter '&amp;Tcaron;'
+or the Chinese symbol '&amp;#x200AD;'. And implement some legacy
+compatibility rules like displaying an &amp;ldquo;A with an acute
+accent&amp;rdquo; like '&amp;aacute' or an EURO symbol like '&amp;#x80;'.
+</pre>
+
+          <p>
+              ...will be unescaped as:
+          </p>
+
+<!--                                                                                        -->
+<!--  {HTML5-SAMPLE}                                                                        -->
+<!--  THE CODE BELOW IS VALID HTML5, AND YOUR BROWSER SHOULD DISPLAY EVERY SYMBOL CORRECTLY -->
+<!--                                                                                        -->
+<pre class="prettyprint language-html">
+In order to have full HTML support, escape tools should provide
+complete support for characters like the Czech letter '&Tcaron;' or the
+Chinese symbol '&#x200AD;'. And implement some legacy-compatibility rules
+like displaying an &ldquo;A with an acute accent&rdquo; like '&aacute' or an EURO
+symbol like '&#x80;'.
+</pre>
+<!--                                                                                        -->
+<!--  THE CODE ABOVE IS VALID HTML5, AND YOUR BROWSER SHOULD DISPLAY EVERY SYMBOL CORRECTLY -->
+<!--  {HTML5-SAMPLE}                                                                        -->
+<!--                                                                                        -->
+
+          <p>
+              <em>(If you don't believe the code above is valid HTML5, just click <kbd>View Source</kbd>
+              on your HTML5-enabled browser and look for "HTML5-SAMPLE" ;))</em>
+          </p>
+          <p>
+              <strong>Escape</strong> operations are also extremely powerful, allowing you to (optionally) determine
+              the type and level of escape you want. For example, this:
+          </p>
+
+<pre class="prettyprint linenums language-java">
+final String escapedText =
+        HtmlEscape.escapeHtml(
+                unescapedText,
+                HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
+                HtmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
+</pre>
+
+          <p>
+              ...will perform an HTML escape operation using the HTML 4 set of <em>entities</em>
+              (<em>named character references</em>), defaulting to decimal escapes when needed. But because the
+              established level is <kbd>1</kbd>, only the markup significant characters will be escaped:
+              <kbd>&amp;lt;</kbd>, <kbd>&amp;gt;</kbd>, <kbd>&amp;amp;</kbd>, <kbd>&amp;quot;</kbd> and
+              <kbd>&amp;#39;</kbd> (there is no <kbd>&amp;apos;</kbd> in HTML 4, only in HTML5).
+          </p>
+
+          <p>
+              Easy, preconfigured methods are already provided, in fact the above call is equivalent to:
+          </p>
+
+<pre class="prettyprint linenums language-java">
+final String escapedText = HtmlEscape.escapeHtml4Xml(unescapedText);
+</pre>
+
+          <p>
+              This kind of escape is called <em>HTML4-XML</em> because is mimics the behaviour of
+              the <kbd>escapeXml</kbd> attribute in JSP <kbd>&lt;c:out /&gt;</kbd> tags.
+          </p>
+
+          <p>
+              Want to ensure your escaped text is ASCII-only? Easy: use level 2 and the results will be entirely
+              composed of characters under U+007F &mdash;bye-bye complex encoding issues!&mdash;. Let's try
+              this time with HTML5:
+          </p>
+<pre class="prettyprint linenums language-java">
+final String escapedText =
+        HtmlEscape.escapeHtml(
+                unescapedText,
+                HtmlEscapeType.HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL,
+                HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
+</pre>
+
+          <p>
+              Which in fact is the same as the <em>preconfigured</em>:
+          </p>
+
+<pre class="prettyprint linenums language-java">
+final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
+</pre>
+
+          But of course, Unbescape is much more than HTML: XML, JavaScript, JSON, CSS... have a look at
+          the large <strong>feature list</strong> below to know more.
+
+
+          <hr />
+
+
+          <h3>The features</h3>
+
+          <table class="table table-striped">
+            <tbody>
+            
+              <tr>
+                <td class="span3">
+                  <strong>High performance</strong></strong>
+                </td>
+                <td class="span9">
+                    <ul>
+                        <li>
+                            No unneeded <kbd>String</kbd> or <kbd>char[]</kbd> objects are created, and specific optimizations are applied
+                            in order to provide maximum performance and reduce Garbage Collector latency (e.g. if a
+                            <kbd>String</kbd> has the same content after escaping/unescaping, exactly the same <kbd>String</kbd> object
+                            is returned, no copy is made).
+                        </li>
+                        <li>
+                            See (and execute) the <a href="https://github.com/unbescape/unbescape-tests/blob/20140429/benchmark.sh" target="_blank"><kbd>benchmark.sh</kbd></a> script in the
+                            <a href="https://github.com/unbescape/unbescape-tests" target="_blank"><kbd>unbescape-tests</kbd></a> repository for specific figures.
+                        </li>
+                    </ul>
+                </td>
+              </tr>
+
+              <tr>
+                  <td class="span3">
+                      <strong>Highly configurable</strong></strong>
+                  </td>
+                  <td class="span9">
+                      <ul>
+                          <li>
+                              Most escaped languages allow specifying the <em>type</em> of escape to be performed: based on literals, on decimal numbers, hexadecimal, octal, etc.
+                          </li>
+                          <li>
+                              Most escaped languages allow specifying the <em>level</em> of escape to be performed: only escape the <em>basic set</em>, escape <em>all non-ASCII characters</em>, escape <em>all non-alphanumeric</em>, etc.
+                          </li>
+                          <li>
+                              Provides sensible defaults and pre-configured, easy-to-use methods.
+                          </li>
+                      </ul>
+                  </td>
+              </tr>
+
+              <tr>
+                  <td class="span3">
+                      <strong>Documented API</strong></strong>
+                  </td>
+                  <td class="span9">
+                      <ul>
+                          <li>
+                              Includes full JavaDoc API documentation for all public classes, explaining each escape and unescape operation in detail.
+                          </li>
+                          <li>
+                              See the <a href="javadoc.html" target="_blank">JavaDoc API Documentation</a>.
+                          </li>
+                      </ul>
+                  </td>
+              </tr>
+
+              <tr>
+                  <td class="span3">
+                      <strong>Unicode</strong></strong>
+                  </td>
+                  <td class="span9">
+                      <ul>
+                          <li>
+                              All escape and unescape operations support the whole Unicode character set: <kbd>U+0000</kbd> to <kbd>U+10FFFF</kbd>, including characters not representable by only one char in Java (&gt;<kbd>U+FFFF</kbd>).
+                          </li>
+                      </ul>
+                  </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <strong>HTML</strong>
+                </td>
+                <td>
+                    <ul>
+                        <li>
+                            Whole <strong>HTML5</strong> NCR (Named Character Reference) set supported, if required: <kbd>&amp;rsqb;</kbd>,<kbd>&amp;NewLine;</kbd>, etc. (HTML 4 set available too).
+                        </li>
+                        <li>
+                            Mixed named and numerical (decimal or hexa) character references supported.
+                        </li>
+                        <li>
+                            Ability to default to numerical (decimal or hexa) references when an applicable NCR does not exist (depending on the selected operation level).
+                        </li>
+                        <li>
+                            Support for unescape of double-char NCRs in HTML5: <kbd>&amp;fjlig;</kbd> &rarr; <kbd>fj</kbd>.
+                        </li>
+                        <li>
+                            Support for a set of HTML5 unescape tweaks included in the HTML5 specification:
+                            <ul>
+                                <li>
+                                    Unescape of numerical character references not ending in semi-colon (e.g. <kbd>&amp;#x23ac</kbd>).
+                                </li>
+                                <li>
+                                    Unescape of specific NCRs not ending in semi-colon (e.g. <kbd>&amp;aacute</kbd>).
+                                </li>
+                                <li>
+                                    Unescape of specific numerical character references wrongly specified by their Windows-1252 codepage code instead of the Unicode one (e.g. <kbd>&amp;#x80;</kbd> for <kbd>&euro;</kbd> (<kbd>&amp;euro;</kbd>) instead of <kbd>&amp;#x20ac;</kbd>).
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </td>
+              </tr>
+            
+              <tr>
+                <td>
+                  <strong>XML</strong>
+                </td>
+                <td>
+                    <ul>
+                        <li>
+                            Support for both XML 1.0 and XML 1.1 escape/unescape operations.
+                        </li>
+                        <li>
+                            No support for DTD-defined or user-defined entities. Only the five predefined XML character entities are supported: <kbd>&amp;lt;</kbd>, <kbd>&amp;gt;</kbd>, <kbd>&amp;amp;</kbd>, <kbd>&amp;quot;</kbd> and <kbd>&amp;apos;</kbd>.
+                        </li>
+                        <li>
+                            Automatic escaping of allowed control characters.
+                        </li>
+                    </ul>
+                </td>
+              </tr>
+            
+              <tr>
+                <td>
+                  <strong>JavaScript</strong>
+                </td>
+                <td>
+                    <ul>
+                        <li>
+                            Support for the JavaScript basic escape set: <kbd>&#92;0</kbd>, <kbd>&#92;b</kbd>, <kbd>&#92;t</kbd>, <kbd>&#92;n</kbd>, <kbd>&#92;v</kbd>, <kbd>&#92;f</kbd>, <kbd>&#92;r</kbd>, <kbd>&#92;"</kbd>, <kbd>&#92;'</kbd>, <kbd>&#92;\</kbd>.
+                            Note that <kbd>&#92;v</kbd> (<kbd>U+000B</kbd>) will not be used in escape operations (only unescape) because it is
+                            not supported by Microsoft Internet Explorer versions &lt; 9.
+                        </li>
+                        <li>
+                            Automatic escape of <kbd>/</kbd> (as <kbd>&#92;/</kbd> if possible) when it appears after <kbd>&lt;</kbd>, as in <kbd>&lt;/something&gt;</kbd>.
+                        </li>
+                        <li>
+                            Support for escaping non-displayable, control characters: <kbd>U+0001</kbd> to <kbd>U+001F</kbd> and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+                        </li>
+                        <li>
+                            Support for X-based hexadecimal escapes (a.k.a. <em>hexadecimal escapes</em>) both in escape
+                            and unescape operations: <kbd>&#92;xE1</kbd>.
+                        </li>
+                        <li>
+                            Support for U-based hexadecimal escapes (a.k.a. <em>unicode escapes</em>) both in escape
+                            and unescape operations: <kbd>&#92;u00E1</kbd>.
+                        </li>
+                        <li>
+                            Support for Octal escapes, though only in unescape operations: <kbd>&#92;071</kbd>. Not supported
+                            in escape operations (octal escapes were deprecated in version 5 of the ECMAScript
+                            specification).
+                        </li>
+                    </ul>
+                </td>
+              </tr>
+            
+              <tr>
+                <td>
+                  <strong>JSON</strong>
+                </td>
+                <td>
+                    <ul>
+                        <li>
+                            Support for the JSON basic escape set: <kbd>&#92;b</kbd>, <kbd>&#92;t</kbd>, <kbd>&#92;n</kbd>, <kbd>&#92;f</kbd>, <kbd>&#92;r</kbd>, <kbd>&#92;"</kbd>, <kbd>&#92;\</kbd>.
+                        </li>
+                        <li>
+                            Automatic escape of <kbd>/</kbd> (as <kbd>&#92;/</kbd> if possible) when it appears after <kbd>&lt;</kbd>, as in <kbd>&lt;/something&gt;</kbd>.
+                        </li>
+                        <li>
+                            Support for escaping non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd> and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+                        </li>
+                        <li>
+                            Support for U-based hexadecimal escapes (a.k.a. <em>unicode escapes</em>) both in escape
+                            and unescape operations: <kbd>&#92;u00E1</kbd>.
+                        </li>
+                    </ul>
+                </td>
+              </tr>
+            
+              <tr>
+                <td>
+                  <strong>CSS</strong>
+                </td>
+                <td>
+                    <ul>
+                        <li>
+                            Complete set of CSS <em>Backslash Escapes</em> supported (e.g. <kbd>&#92;+</kbd>, <kbd>&#92;;</kbd>, <kbd>&#92;(</kbd>, <kbd>&#92;)</kbd>, etc.).
+                        </li>
+                        <li>
+                            Full set of escape syntax rules supported, both for <strong>CSS identifiers</strong> and <strong>CSS Strings</strong>
+                            (or <em>literals</em>).
+                        </li>
+                        <li>
+                            Non-standard tweaks supported: <kbd>&#92;:</kbd> not used because of lacking support in Internet Explorer &lt; 8,
+                            <kbd>&#92;_</kbd> escaped at the beginning of identifiers for better Internet Explorer 6 support, etc.
+                        </li>
+                        <li>
+                            Hexadecimal escapes (a.k.a. <em>unicode escapes</em>) are supported both in escape and unescape operations,
+                            and both in <em>compact</em> (<kbd>&#92;E1 </kbd>) and six-digit forms (<kbd>&#92;0000E1</kbd>).
+                        </li>
+                        <li>
+                            Support for unescaping unicode characters &gt;<kbd>&#92;uFFFF</kbd> both when represented in standard form (one char,
+                            <kbd>&#92;20000</kbd>) and non-standard (surrogate pair, <kbd>&#92;D840\DC00</kbd>, used by older WebKit browsers).
+                        </li>
+                    </ul>
+                </td>
+              </tr>
+            
+              <tr>
+                <td>
+                  <strong>CSV (Comma-Separated Values)</strong>
+                </td>
+                <td>
+                    <ul>
+                        <li>
+                            Works according to the rules specified in RFC4180 (there is no <em>CSV standard</em> as such).
+                        </li>
+                        <li>
+                            Encloses escaped values in double-quotes (<kbd>"value"</kbd>) if they contain any non-alphanumeric characters.
+                        </li>
+                        <li>
+                            Escapes double-quote characters (<kbd>"</kbd>) by writing them twice: <kbd>""</kbd>.
+                        </li>
+                        <li>
+                            Honors rules for maximum compatibility with Microsoft Excel.
+                        </li>
+                    </ul>
+                </td>
+              </tr>
+
+              <tr>
+                  <td>
+                      <strong>Java literals</strong>
+                  </td>
+                  <td>
+                      <ul>
+                          <li>
+                              Support for the Java basic escape set: <kbd>&#92;b</kbd>, <kbd>&#92;t</kbd>, <kbd>&#92;n</kbd>, <kbd>&#92;f</kbd>, <kbd>&#92;r</kbd>, <kbd>&#92;"</kbd>, <kbd>&#92;'</kbd>, <kbd>&#92;\</kbd>. Note <kbd>&#92;'</kbd> will not be
+                              used in escaping levels &lt; 3 (= <em>all but alphanumeric</em>) because escaping the apostrophe is not really required in Java String literals
+                              (only in Character literals).
+                          </li>
+                          <li>
+                              Support for escaping non-displayable, control characters: <kbd>U+0001</kbd> to <kbd>U+001F</kbd> and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+                          </li>
+                          <li>
+                              Support for U-based hexadecimal escapes (a.k.a. <em>unicode escapes</em>) both in escape
+                              and unescape operations: <kbd>&#92;u00E1</kbd>.
+                          </li>
+                          <li>
+                              Support for Octal escapes, though only in unescape operations: <kbd>&#92;071</kbd>. Not supported
+                              in escape operations (use of octal escapes is not recommended by the Java Language Specification).
+                          </li>
+                      </ul>
+                  </td>
+              </tr>
+
+              <tr>
+                  <td>
+                      <strong>Java <kbd>.properties</kbd> files</strong>
+                  </td>
+                  <td>
+                      <ul>
+                          <li>
+                              Support for the Java Properties basic escape set: <kbd>&#92;t</kbd>, <kbd>&#92;n</kbd>, <kbd>&#92;f</kbd>, <kbd>&#92;r</kbd>, <kbd>&#92;\</kbd>. When escaping <kbd>.properties</kbd>
+                              keys (not values) <kbd>&#92; </kbd>, <kbd>&#92;:</kbd> and <kbd>&#92;=</kbd> will be applied too.
+                          </li>
+                          <li>
+                              Support for escaping non-displayable, control characters: <kbd>U+0001</kbd> to <kbd>U+001F</kbd> and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+                          </li>
+                          <li>
+                              Support for U-based hexadecimal escapes (a.k.a. <em>unicode escapes</em>) both in escape
+                              and unescape operations: <kbd>&#92;u00E1</kbd>.
+                          </li>
+                      </ul>
+                  </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+
+          <h3>How is it distributed?</h3>
+          
+          <p>
+            unbescape is Open Source Software, and it is distributed under the terms of the <a href="license.html">Apache License 2.0</a>.
+          </p>
+
+          <h3>Project status</h3>
+
+          <p>
+            unbescape is stable and production-ready. Current version is <b>1.0</b>.
+          </p>
+          
+        </div>
+        
+        
+      </div>
+
+      <hr />
+            
+      <footer>
+        <p>Copyright &copy; The <a href="team.html">UNBESCAPE Team</a>.</p>
+      </footer>
+      
+    </div>
+    
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/google-code-prettify/prettify.js"></script>
+    
+  </body>
+  
+</html>

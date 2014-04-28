@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  
+	<title>unbescape: powerful, fast and easy escape/unescape operations for Java</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Java &middot; HTML5 &middot; HTML4 &middot; XML &middot; JavaScript &middot; JSON &middot; CSS &middot; CSV" />
+    <meta name="author" content="The UNBESCAPE Team" />
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+    <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="css/google-code-prettify/prettify.css" rel="stylesheet" />
+        
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+      <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-1276954-11', 'unbescape.org');
+          ga('send', 'pageview');
+
+      </script>
+    
+  </head>
+
+
+  <body lang="en" dir="ltr" onload="prettyPrint()">
+
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html"><img src="img/unbescape.png" alt="unbescape" /></a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              <img src="img/unbescape_motto.png" alt="Java &middot; HTML5 &middot; HTML4 &middot; XML &middot; JavaScript &middot; JSON &middot; CSS &middot; CSV" />
+            </p>
+            <ul class="nav">
+              <li><a href="index.html">home</a></li>
+              <li><a href="download.html">download</a></li>
+              <li><a href="usingunbescape.html">using unbescape</a></li>
+              <li><a href="javadoc.html">javadoc</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container-fluid">
+    
+      <div class="row-fluid">
+
+        <!-- --------------------------------------------------------------------- -->      
+        <!--   SIDEBAR                                                             -->      
+        <!-- --------------------------------------------------------------------- -->
+              
+        <div class="span2">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+            
+              <li class="nav-header">UNBESCAPE</li>
+            
+              <li><a href="index.html">home</a></li>
+              <li><a href="download.html">download</a></li>
+            
+              <li class="nav-header">DOCS &amp; HELP</li>
+            
+              <li><a href="usingunbescape.html">using unbescape</a></li>
+              <li><a href="javadoc.html">javadoc API</a></li>
+              <li><a href="issuetracking.html">issue tracking</a></li>
+              <li><a href="license.html">license</a></li>
+              <li class="active"><a href="faq.html">faq</a></li>
+              <li><a href="team.html">team</a></li>
+            
+              <li class="nav-header">SOURCE REPOSITORIES</li>
+              
+              <li><a href="http://github.com/unbescape/unbescape">unbescape @GitHub</a></li>
+              
+            </ul>
+          </div>
+        </div>
+
+        
+        <!-- --------------------------------------------------------------------- -->      
+        <!--   CONTENT                                                             -->      
+        <!-- --------------------------------------------------------------------- -->
+              
+        <div class="span10">
+        
+            <h3>Frequently Asked Questions</h3>
+           
+            <ul>
+              <li><b>About unbescape</b>
+                <ul>
+                  <li><a href="#where-come-from">Where does unbescape come from? Is it made or backed by any software company?</a>.</li>
+                  <li><a href="#does-offer-support">Does unbescape offer any type of commercial support?</a></li>
+                  <li><a href="#is-it-stable">Is it stable? Can it be considered production-ready?</a></li>
+                  <li><a href="#how-can-i-contribute">How can I contribute to unbescape?</a></li>
+                </ul>
+              </li>
+              <li><b>General</b>
+                <ul>
+                  <li><a href="#use-snapshot">How can I use a SNAPSHOT release of unbescape?</a></li>
+                </ul>
+              </li>
+            </ul>
+            
+        
+        
+        
+            <hr />
+        
+        
+        
+            <h3>About unbescape</h3>
+
+            <a id="where-come-from"></a><hr />
+        
+            <h4>Where does unbescape come from? Is it made or backed by any software company?</h4>
+            
+            <p>
+              unbescape is Open Source Software created in his spare time by a Spanish Software Engineer
+              called <a href="team.html">Daniel Fernández</a>, who's also the author
+              of other popular java libraries like <a href="http://www.thymeleaf.org">thymeleaf</a>,
+              <a href="http://www.attoparser.org">attoparser</a>, <a href="http://www.jasypt.org">jasypt</a>,
+              <a href="http://www.op4j.org">op4j</a> or <a href="http://www.javatuples.org">javatuples</a>.
+            </p>
+            <p>
+              It is neither made nor backed
+              by any software (or any other type of) company, and it is offered to the public
+              totally free of charge, both in binary and in source code forms, under the <b>Apache License 2.0</b>.
+            </p>
+            
+            <a id="does-offer-support"></a><hr />
+        
+            <h4>Does unbescape offer any type of commercial support?</h4>
+            
+            <p>
+              No, it does not. Commercial support is not offered at the moment, but
+              there is an <a href="https://github.com/unbescape/unbescape/issues">issue tracking system</a> at your disposal.
+            </p>
+
+            
+            <a id="is-it-stable"></a><hr />
+        
+            <h4>Is it stable? Can it be considered production-ready?</h4>
+            
+            <p>
+              Yes, all stable (non-beta) releases can be considered production-ready. 
+            </p>
+
+
+            <a id="how-can-i-contribute"></a><hr />
+
+
+            <h4>How can I contribute to unbescape?</h4>
+            
+            <p>
+              In many ways:
+            </p>
+            <ul>
+              <li>You can write in the <a href="https://github.com/unbescape/unbescape/issues">issue
+                  tracking system</a> (or directly to the <a href="team.html">Team</a>) with your
+                  ideas for improving unbescape.</li>
+              <li>You can contribute some code, write a patch for a new feature
+                  or behaviour (please, tell the project admins first about your idea so 
+                  that effort can be adequately coordinated).</li> 
+              <li>You can write articles, reviews, blog posts, etc. about unbescape, showing
+                  how it works or how it integrates with other technologies.</li> 
+              <li>You can promote unbescape in your company/work and among your colleague developers.</li>
+            </ul>
+            <p>
+              If you want to contribute some code to unbescape, please read first the
+              page on <a href="contributing.html">Contributing to unbescape</a>.
+            </p>
+        
+            <hr />
+        
+            <h3>General</h3>
+
+
+            <a id="use-snapshot"></a><hr />
+
+        
+            <h4>How can I use a SNAPSHOT release of unbescape?</h4>
+            
+            <p>    
+              From time to time, unbescape will produce a <i>snapshot</i> release that will allow
+              you to test new or being-developed features. These are <b>non production ready</b>
+              releases, but will be stable enough for most testing purposes, and will enable you
+              to try new features before they are generally available.
+            </p> 
+            <p>
+              In order to use snapshot releases, you need to add the Sonatype OSS Snapshots
+              repository in your Maven <kbd>pom.xml</kbd> file, like this:
+            </p>
+            
+<pre class="prettyprint linenums language-xml">
+&lt;repositories&gt;
+  &lt;repository&gt;
+    &lt;id&gt;sonatype-nexus-snapshots&lt;/id&gt;
+    &lt;name&gt;Sonatype Nexus Snapshots&lt;/name&gt;
+    &lt;url&gt;<b>https://oss.sonatype.org/content/repositories/snapshots</b>&lt;/url&gt;
+    &lt;snapshots&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;/snapshots&gt;
+  &lt;/repository&gt;
+&lt;/repositories&gt;
+</pre>
+            
+            <p>
+              Also, you will have to modify your unbescape dependency/ies to use a
+              <i>snapshot version</i>, which usually consists of the version number of the
+              <b>next</b> release (not the current one), followed by <kbd>-SNAPSHOT</kbd>.
+              For example, meanwhile <kbd>1.0</kbd> is the latest published stable release,
+              snapshots will probably appear under the <kbd>1.1-SNAPSHOT</kbd> or
+              maybe <kbd>2.0-SNAPSHOT</kbd> version numbers:
+            </p>
+        
+<pre class="prettyprint linenums language-xml">
+&lt;dependency&gt;
+  &lt;groupId&gt;org.unbescape&lt;/groupId&gt;
+  &lt;artifactId&gt;unbescape&lt;/artifactId&gt;
+  &lt;version&gt;<b>1.1-SNAPSHOT</b>&lt;/version&gt;
+  &lt;scope&gt;compile&lt;/scope&gt;
+&lt;/dependency&gt;
+</pre>            
+          
+        
+        </div>
+        
+      </div>
+
+      <hr />
+            
+      <footer>
+        <p>Copyright &copy; The <a href="team.html">UNBESCAPE Team</a>.</p>
+      </footer>
+      
+    </div>
+    
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/google-code-prettify/prettify.js"></script>
+    
+  </body>
+  
+</html>
