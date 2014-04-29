@@ -116,57 +116,388 @@
             <h3>HTML</h3>
 
             <p>
-                TBD
+                Escape/unescape utility class:
+                <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/html/HtmlEscape.html" target="_blank"><kbd><strong>org.unbescape.html.HtmlEscape</strong></kbd></a>
             </p>
+            <h5>Configuration</h5>
+            <ul>
+                <li><em>Escape Types</em>: <kbd><strong>org.unbescape.html.HtmlEscapeType</strong></kbd>
+                    <ul>
+                        <li><kbd>HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL</kbd></li>
+                        <li><kbd>HTML4_NAMED_REFERENCES_DEFAULT_TO_HEXA</kbd></li>
+                        <li><kbd>HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL</kbd></li>
+                        <li><kbd>HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA</kbd></li>
+                        <li><kbd>DECIMAL_REFERENCES</kbd></li>
+                        <li><kbd>HEXADECIMAL_REFERENCES</kbd></li>
+                    </ul>
+                </li>
+                <li><em>Escape Levels</em>: <kbd><strong>org.unbescape.html.HtmlEscapeLevel</strong></kbd>
+                    <ul>
+                        <li><kbd>LEVEL_0_ONLY_MARKUP_SIGNIFICANT_EXCEPT_APOS</kbd></li>
+                        <li><kbd>LEVEL_1_ONLY_MARKUP_SIGNIFICANT</kbd></li>
+                        <li><kbd>LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT</kbd></li>
+                        <li><kbd>LEVEL_3_ALL_NON_ALPHANUMERIC</kbd></li>
+                        <li><kbd>LEVEL_4_ALL_CHARACTERS</kbd></li>
+                    </ul>
+                </li>
+            </ul>
+            <h5>Escaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/html/HtmlEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String escaped = HtmlEscape.escapeHtml5(text);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escaped = HtmlEscape.escapeHtml4Xml(text);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escaped =
+        HtmlEscape.escapeHtml(
+             text,
+             HtmlEscapeType.HTML4_NAMED_REFERENCES_DEFAULT_TO_HEXA,
+             HtmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
+</pre>
+            <h5>Unescaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/html/HtmlEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String unescaped = HtmlEscape.unescapeHtml(text);
+</pre>
 
+
+
+            <hr />
 
             <h3>XML</h3>
 
             <p>
-                TBD
+                Escape/unescape utility class:
+                <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/xml/XmlEscape.html" target="_blank"><kbd><strong>org.unbescape.xml.XmlEscape</strong></kbd></a>
             </p>
+            <h5>Configuration</h5>
+            <ul>
+                <li><em>Escape Types</em>: <kbd><strong>org.unbescape.xml.XmlEscapeType</strong></kbd>
+                    <ul>
+                        <li><kbd>CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_DECIMAL</kbd></li>
+                        <li><kbd>CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA</kbd></li>
+                        <li><kbd>DECIMAL_REFERENCES</kbd></li>
+                        <li><kbd>HEXADECIMAL_REFERENCES</kbd></li>
+                    </ul>
+                </li>
+                <li><em>Escape Levels</em>: <kbd><strong>org.unbescape.xml.XmlEscapeLevel</strong></kbd>
+                    <ul>
+                        <li><kbd>LEVEL_1_ONLY_MARKUP_SIGNIFICANT</kbd></li>
+                        <li><kbd>LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT</kbd></li>
+                        <li><kbd>LEVEL_3_ALL_NON_ALPHANUMERIC</kbd></li>
+                        <li><kbd>LEVEL_4_ALL_CHARACTERS</kbd></li>
+                    </ul>
+                </li>
+            </ul>
+            <h5>Escaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/xml/XmlEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String escaped = XmlEscape.escapeXml11(text);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escaped = XmlEscape.escapeXml10Minimal(text);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escaped =
+        XmlEscape.escapeXml11(
+             text,
+             XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_DECIMAL,
+             XmlEscapeLevel.LEVEL_3_ALL_NON_ALPHANUMERIC);
+</pre>
+            <h5>Unescaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/xml/XmlEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String unescaped = XmlEscape.unescapeXml(text);
+</pre>
 
+
+
+            <hr />
 
             <h3>JavaScript</h3>
 
             <p>
-                TBD
+                Escape/unescape utility class:
+                <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/javascript/JavaScriptEscape.html" target="_blank"><kbd><strong>org.unbescape.javascript.JavaScriptEscape</strong></kbd></a>
             </p>
+            <h5>Configuration</h5>
+            <ul>
+                <li><em>Escape Types</em>: <kbd><strong>org.unbescape.javascript.JavaScriptEscapeType</strong></kbd>
+                    <ul>
+                        <li><kbd>SINGLE_ESCAPE_CHARS_DEFAULT_TO_XHEXA_AND_UHEXA</kbd></li>
+                        <li><kbd>SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA</kbd></li>
+                        <li><kbd>XHEXA_DEFAULT_TO_UHEXA</kbd></li>
+                        <li><kbd>UHEXA</kbd></li>
+                    </ul>
+                </li>
+                <li><em>Escape Levels</em>: <kbd><strong>org.unbescape.javascript.JavaScriptEscapeLevel</strong></kbd>
+                    <ul>
+                        <li><kbd>LEVEL_1_BASIC_ESCAPE_SET</kbd></li>
+                        <li><kbd>LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET</kbd></li>
+                        <li><kbd>LEVEL_3_ALL_NON_ALPHANUMERIC</kbd></li>
+                        <li><kbd>LEVEL_4_ALL_CHARACTERS</kbd></li>
+                    </ul>
+                </li>
+            </ul>
+            <h5>Escaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/javascript/JavaScriptEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String escaped = JavaScriptEscape.escapeJavaScript(text);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escaped =
+        JavaScriptEscape.escapeJavaScript(
+             text,
+             JavaScriptEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_XHEXA_AND_UHEXA,
+             JavaScriptEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+</pre>
+            <h5>Unescaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/javascript/JavaScriptEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String unescaped = JavaScriptEscape.unescapeJavaScript(text);
+</pre>
 
+
+
+            <hr />
 
             <h3>JSON</h3>
 
             <p>
-                TBD
+                Escape/unescape utility class:
+                <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/json/JsonEscape.html" target="_blank"><kbd><strong>org.unbescape.json.JsonEscape</strong></kbd></a>
             </p>
+            <h5>Configuration</h5>
+            <ul>
+                <li><em>Escape Types</em>: <kbd>org.json.javascript.JsonEscapeType</kbd>
+                    <ul>
+                        <li><kbd>SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA</kbd></li>
+                        <li><kbd>UHEXA</kbd></li>
+                    </ul>
+                </li>
+                <li><em>Escape Levels</em>: <kbd>org.json.javascript.JsonEscapeLevel</kbd>
+                    <ul>
+                        <li><kbd>LEVEL_1_BASIC_ESCAPE_SET</kbd></li>
+                        <li><kbd>LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET</kbd></li>
+                        <li><kbd>LEVEL_3_ALL_NON_ALPHANUMERIC</kbd></li>
+                        <li><kbd>LEVEL_4_ALL_CHARACTERS</kbd></li>
+                    </ul>
+                </li>
+            </ul>
+            <h5>Escaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/json/JsonEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String escaped = JsonEscape.escapeJson(text);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escaped =
+        JsonEscape.escapeJson(
+             text,
+             JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO__UHEXA,
+             JsonEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+</pre>
+            <h5>Unescaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/json/JsonEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String unescaped = JsonEscape.unescapeJson(text);
+</pre>
 
+
+
+            <hr />
 
             <h3>CSS</h3>
 
             <p>
-                TBD
+                Escape/unescape utility class:
+                <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/css/CssEscape.html" target="_blank"><kbd><strong>org.unbescape.css.CssEscape</strong></kbd></a>
             </p>
+            <h5>Configuration</h5>
+            <ul>
+                <li><em>Escape Types</em>: <kbd><strong>org.unbescape.css.CssIdentifierEscapeType</strong></kbd> / <kbd><strong>org.unbescape.css.CssStringEscapeType</strong></kbd>
+                    <ul>
+                        <li><kbd>BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA</kbd></li>
+                        <li><kbd>BACKSLASH_ESCAPES_DEFAULT_TO_SIX_DIGIT_HEXA</kbd></li>
+                        <li><kbd>COMPACT_HEXA</kbd></li>
+                        <li><kbd>SIX_DIGIT_HEXA</kbd></li>
+                    </ul>
+                </li>
+                <li><em>Escape Levels</em>: <kbd><strong>org.unbescape.css.CssIdentifierEscapeLevel</strong></kbd> / <kbd><strong>org.unbescape.css.CssStringEscapeLevel</strong></kbd>
+                    <ul>
+                        <li><kbd>LEVEL_1_BASIC_ESCAPE_SET</kbd></li>
+                        <li><kbd>LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET</kbd></li>
+                        <li><kbd>LEVEL_3_ALL_NON_ALPHANUMERIC</kbd></li>
+                        <li><kbd>LEVEL_4_ALL_CHARACTERS</kbd></li>
+                    </ul>
+                </li>
+            </ul>
+            <h5>Escaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/css/CssEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String escapedIdentifier = CssEscape.escapeCssIdentifier(text);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escapedString = CssEscape.escapeCssString(text);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escapedIdentifier =
+        CssEscape.escapeCssIdentifier(
+             text,
+             CssIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_SIX_DIGIT_HEXA,
+             CssIdentifierEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escapedString =
+        CssEscape.escapeCssString(
+             text,
+             CssStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+             CssStringEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+</pre>
+            <h5>Unescaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/css/CssEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String unescaped = CssEscape.unescapeCss(escapedIdentifierOrString);
+</pre>
 
+
+
+            <hr />
 
             <h3>CSV (Comma-Separated Values)</h3>
 
             <p>
-                TBD
+                Escape/unescape utility class:
+                <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/csv/CsvEscape.html" target="_blank"><kbd><strong>org.unbescape.csv.CsvEscape</strong></kbd></a>
             </p>
+            <h5>Escaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/csv/CsvEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String escaped = CsvEscape.escapeCsv(text);
+</pre>
+            <h5>Unescaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/csv/CsvEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String unescaped = CsvEscape.unescapeCsv(text);
+</pre>
 
+
+
+            <hr />
 
             <h3>Java literals</h3>
 
             <p>
-                TBD
+                Escape/unescape utility class:
+                <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/java/JavaEscape.html" target="_blank"><kbd><strong>org.unbescape.java.JavaEscape</strong></kbd></a>
             </p>
+            <h5>Configuration</h5>
+            <ul>
+                <li><em>Escape Levels</em>: <kbd><strong>org.unbescape.java.JavaEscapeLevel</strong></kbd>
+                    <ul>
+                        <li><kbd>LEVEL_1_BASIC_ESCAPE_SET</kbd></li>
+                        <li><kbd>LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET</kbd></li>
+                        <li><kbd>LEVEL_3_ALL_NON_ALPHANUMERIC</kbd></li>
+                        <li><kbd>LEVEL_4_ALL_CHARACTERS</kbd></li>
+                    </ul>
+                </li>
+            </ul>
+            <h5>Escaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/java/JavaEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String escaped = JavaEscape.escapeJava(text);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escaped =
+        JavaEscape.escapeJava(
+             text,
+             JavaEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+</pre>
+            <h5>Unescaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/java/JavaEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String unescaped = JavaEscape.unescapeJava(escaped);
+</pre>
 
+
+
+            <hr />
 
             <h3>Java <kbd>.properties</kbd> files</h3>
 
             <p>
-                TBD
+                Escape/unescape utility class:
+                <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/properties/PropertiesEscape.html" target="_blank"><kbd><strong>org.unbescape.properties.PropertiesEscape</strong></kbd></a>
             </p>
+            <h5>Configuration</h5>
+            <ul>
+                <li><em>Escape Levels</em>: <kbd><strong>org.unbescape.properties.PropertiesKeyEscapeLevel</strong></kbd> / <kbd><strong>org.unbescape.properties.PropertiesValueEscapeLevel</strong></kbd>
+                    <ul>
+                        <li><kbd>LEVEL_1_BASIC_ESCAPE_SET</kbd></li>
+                        <li><kbd>LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET</kbd></li>
+                        <li><kbd>LEVEL_3_ALL_NON_ALPHANUMERIC</kbd></li>
+                        <li><kbd>LEVEL_4_ALL_CHARACTERS</kbd></li>
+                    </ul>
+                </li>
+            </ul>
+            <h5>Escaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/properties/PropertiesEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String escapedKey = PropertiesEscape.escapePropertiesKey(text);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escapedString = PropertiesEscape.escapePropertiesValue(text);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escapedKey =
+        PropertiesEscape.escapePropertiesKey(
+             keyText, PropertiesKeyEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String escapedValue =
+        PropertiesEscape.escapePropertiesValue(
+             valueText, PropertiesValueEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+</pre>
+            <h5>Unescaping</h5>
+            <p>
+                Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.0/org/unbescape/properties/PropertiesEscape.html" target="_blank">javadoc</a> for more detail):
+            </p>
+<pre class="prettyprint linenums language-java">
+final String unescaped = PropertiesEscape.unescapeProperties(escapedKeyOrValue);
+</pre>
+
+
 
         </div>
         
