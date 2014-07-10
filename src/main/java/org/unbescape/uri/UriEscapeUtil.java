@@ -38,16 +38,28 @@ final class UriEscapeUtil {
 
 
     /*
-     * RFC: http://www.ietf.org/rfc/rfc3986.txt
-     * This that should be possible to escape/unescape:
-     *     * Path
-     *     * Path fragment
-     *     * Query Param (name vs value?)
-     *     * Fragment
+     * URI ESCAPE/UNESCAPE OPERATIONS
+     * ------------------------------
+     *
+     *   See: http://www.ietf.org/rfc/rfc3986.txt
+     *        http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4
+     *
+     *   Different parts of an URI allow different characters, and therefore require different sets of
+     *   characters to be escaped (see RFC3986 for a list of reserved characters for each URI part) - but
+     *   the escaping method is always the same: convert the character to the bytes representing it in a
+     *   specific encoding (UTF-8 by default) and then percent-encode these bytes with two hexadecimal
+     *   digits, like '%0A'.
+     *
+     *   - PATH:            Part of the URI path, might include several path levels/segments:
+     *                      '/admin/users/list?x=1' -> 'users/list'
+     *   - PATH SEGMENT:    Part of the URI path, can include only one path level ('/' chars will be escaped):
+     *                      '/admin/users/list?x=1' -> 'users'
+     *   - QUERY PARAMETER: Names and values of the URI query parameters:
+     *                      '/admin/users/list?x=1' -> 'x' (name), '1' (value)
+     *   - URI FRAGMENT:    URI fragments:
+     *                      '/admin/users/list?x=1#something' -> '#something'
+     *
      */
-
-    // TODO Unescape + as %20
-    // TODO Modes that use + instead of %20 for escape?
 
 
 
@@ -78,6 +90,10 @@ final class UriEscapeUtil {
                 }
                 return isPchar(c) || '/' == c || '?' == c;
             }
+            @Override
+            public boolean isPlusUsedToEscapeWhitespace() {
+                return true;
+            }
         },
 
         FRAGMENT {
@@ -89,6 +105,22 @@ final class UriEscapeUtil {
 
 
         public abstract boolean isAllowed(final int c);
+
+        /*
+         * Determines whether whitespace could be escaped as '+' in the
+         * current escape type.
+         *
+         * This allows unescaping of application/x-www-form-urlencoded
+         * URI query parameters, which specify '+' as escape character
+         * for whitespace instead of the '%20' specified by RFC3986.
+         *
+         * http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4
+         * http://www.ietf.org/rfc/rfc3986.txt
+         */
+        public boolean isPlusUsedToEscapeWhitespace() {
+            // Will only be true for QUERY_PARAM
+            return false;
+        }
 
         /*
          * Specification of 'pchar' according to RFC3986
@@ -213,7 +245,7 @@ final class UriEscapeUtil {
 
 
     /*
-     * Perform an escape operation, based on String, according to the specified level and type.
+     * Perform an escape operation, based on String, according to the specified type.
      */
     static String escape(final String text, final UriEscapeType escapeType, final String encoding) {
 
@@ -456,7 +488,7 @@ final class UriEscapeUtil {
     /*
      * Perform an unescape operation based on String.
      */
-    static String unescape(final String text, final String encoding) {
+    static String unescape(final String text, final UriEscapeType escapeType, final String encoding) {
 
         if (text == null) {
             return null;
@@ -477,13 +509,9 @@ final class UriEscapeUtil {
              * Check the need for an unescape operation at this point
              */
 
-            if (c != ESCAPE_PREFIX) {
+            if (c != ESCAPE_PREFIX && (c != '+' || !escapeType.isPlusUsedToEscapeWhitespace())) {
                 continue;
             }
-
-            // If there are more than one percent-encoded/escaped sequences together, we will
-            // need to unescape them all at once (because they might be bytes --up to 4-- of
-            // the same char).
 
 
             /*
@@ -499,6 +527,27 @@ final class UriEscapeUtil {
             if (i - readOffset > 0) {
                 strBuilder.append(text, readOffset, i);
             }
+
+
+            /*
+             * Deal with possible '+'-escaped whitespace (application/x-www-form-urlencoded)
+             */
+            if (c == '+') {
+                // if we reached this point with c == '+', it's escaping a whitespace
+                strBuilder.append(' ');
+                readOffset = i + 1;
+                continue;
+            }
+
+
+            /*
+             * ESCAPE PROCESS
+             * --------------
+             * If there are more than one percent-encoded/escaped sequences together, we will
+             * need to unescape them all at once (because they might be bytes --up to 4-- of
+             * the same char).
+             */
+
 
             // Max possible size will be the remaining amount of chars / 3
             final byte[] bytes = new byte[(max-i)/3];
@@ -558,7 +607,7 @@ final class UriEscapeUtil {
      * Perform an unescape operation based on char[].
      */
     static void unescape(final char[] text, final int offset, final int len, final Writer writer,
-                         final String encoding)
+                         final UriEscapeType escapeType, final String encoding)
                          throws IOException {
 
         if (text == null) {
@@ -577,13 +626,9 @@ final class UriEscapeUtil {
              * Check the need for an unescape operation at this point
              */
 
-            if (c != ESCAPE_PREFIX) {
+            if (c != ESCAPE_PREFIX && (c != '+' || !escapeType.isPlusUsedToEscapeWhitespace())) {
                 continue;
             }
-
-            // If there are more than one percent-encoded/escaped sequences together, we will
-            // need to unescape them all at once (because they might be bytes --up to 4-- of
-            // the same char).
 
 
             /*
@@ -594,6 +639,26 @@ final class UriEscapeUtil {
             if (i - readOffset > 0) {
                 writer.write(text, readOffset, (i - readOffset));
             }
+
+
+            /*
+             * Deal with possible '+'-escaped whitespace (application/x-www-form-urlencoded)
+             */
+            if (c == '+') {
+                // if we reached this point with c == '+', it's escaping a whitespace
+                writer.write(' ');
+                readOffset = i + 1;
+                continue;
+            }
+
+
+            /*
+             * ESCAPE PROCESS
+             * --------------
+             * If there are more than one percent-encoded/escaped sequences together, we will
+             * need to unescape them all at once (because they might be bytes --up to 4-- of
+             * the same char).
+             */
 
             // Max possible size will be the remaining amount of chars / 3
             final byte[] bytes = new byte[(max-i)/3];
