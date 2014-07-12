@@ -56,7 +56,7 @@ final class UriEscapeUtil {
      *                      '/admin/users/list?x=1' -> 'users'
      *   - QUERY PARAMETER: Names and values of the URI query parameters:
      *                      '/admin/users/list?x=1' -> 'x' (name), '1' (value)
-     *   - URI FRAGMENT:    URI fragments:
+     *   - URI FRAGMENT ID: URI fragments:
      *                      '/admin/users/list?x=1#something' -> '#something'
      *
      */
@@ -91,12 +91,12 @@ final class UriEscapeUtil {
                 return isPchar(c) || '/' == c || '?' == c;
             }
             @Override
-            public boolean isPlusUsedToEscapeWhitespace() {
+            public boolean canPlusEscapeWhitespace() {
                 return true;
             }
         },
 
-        FRAGMENT {
+        FRAGMENT_ID {
             @Override
             public boolean isAllowed(final int c) {
                 return isPchar(c) || '/' == c || '?' == c;
@@ -107,7 +107,7 @@ final class UriEscapeUtil {
         public abstract boolean isAllowed(final int c);
 
         /*
-         * Determines whether whitespace could be escaped as '+' in the
+         * Determines whether whitespace could appear escaped as '+' in the
          * current escape type.
          *
          * This allows unescaping of application/x-www-form-urlencoded
@@ -117,7 +117,7 @@ final class UriEscapeUtil {
          * http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4
          * http://www.ietf.org/rfc/rfc3986.txt
          */
-        public boolean isPlusUsedToEscapeWhitespace() {
+        public boolean canPlusEscapeWhitespace() {
             // Will only be true for QUERY_PARAM
             return false;
         }
@@ -509,7 +509,7 @@ final class UriEscapeUtil {
              * Check the need for an unescape operation at this point
              */
 
-            if (c != ESCAPE_PREFIX && (c != '+' || !escapeType.isPlusUsedToEscapeWhitespace())) {
+            if (c != ESCAPE_PREFIX && (c != '+' || !escapeType.canPlusEscapeWhitespace())) {
                 continue;
             }
 
@@ -626,7 +626,7 @@ final class UriEscapeUtil {
              * Check the need for an unescape operation at this point
              */
 
-            if (c != ESCAPE_PREFIX && (c != '+' || !escapeType.isPlusUsedToEscapeWhitespace())) {
+            if (c != ESCAPE_PREFIX && (c != '+' || !escapeType.canPlusEscapeWhitespace())) {
                 continue;
             }
 
