@@ -103,7 +103,7 @@ public final class UriEscape {
      * </p>
      *
      * @param text the <kbd>String</kbd> to be escaped.
-     * @param encoding the encoding to be used for escaping.
+     * @param encoding the encoding to be used for unescaping.
      * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
      *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
      *         no additional <kbd>String</kbd> objects will be created during processing). Will
@@ -718,6 +718,619 @@ public final class UriEscape {
         UriEscapeUtil.escape(text, offset, len, writer, UriEscapeUtil.UriEscapeType.FRAGMENT_ID, encoding);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * <p>
+     *   Perform am URI path <strong>unescape</strong> operation
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
+    public static String unescapeUriPath(final String text) {
+        return unescapeUriPath(text, DEFAULT_ENCODING);
+    }
+
+
+    /**
+     * <p>
+     *   Perform am URI path <strong>unescape</strong> operation
+     *   on a <kbd>String</kbd> input.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use the specified <kbd>encoding</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param encoding the encoding to be used for unescaping.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
+    public static String unescapeUriPath(final String text, final String encoding) {
+        if (encoding == null) {
+            throw new IllegalArgumentException("Argument 'encoding' cannot be null");
+        }
+        return UriEscapeUtil.unescape(text, UriEscapeUtil.UriEscapeType.PATH, encoding);
+    }
+
+
+
+    /**
+     * <p>
+     *   Perform am URI path segment <strong>unescape</strong> operation
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
+    public static String unescapeUriPathSegment(final String text) {
+        return unescapeUriPathSegment(text, DEFAULT_ENCODING);
+    }
+
+
+    /**
+     * <p>
+     *   Perform am URI path segment <strong>unescape</strong> operation
+     *   on a <kbd>String</kbd> input.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param encoding the encoding to be used for unescaping.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
+    public static String unescapeUriPathSegment(final String text, final String encoding) {
+        if (encoding == null) {
+            throw new IllegalArgumentException("Argument 'encoding' cannot be null");
+        }
+        return UriEscapeUtil.unescape(text, UriEscapeUtil.UriEscapeType.PATH_SEGMENT, encoding);
+    }
+
+
+
+    /**
+     * <p>
+     *   Perform am URI query parameter (name or value) <strong>unescape</strong> operation
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
+    public static String unescapeUriQueryParam(final String text) {
+        return unescapeUriQueryParam(text, DEFAULT_ENCODING);
+    }
+
+
+    /**
+     * <p>
+     *   Perform am URI query parameter (name or value) <strong>unescape</strong> operation
+     *   on a <kbd>String</kbd> input.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param encoding the encoding to be used for unescaping.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
+    public static String unescapeUriQueryParam(final String text, final String encoding) {
+        if (encoding == null) {
+            throw new IllegalArgumentException("Argument 'encoding' cannot be null");
+        }
+        return UriEscapeUtil.unescape(text, UriEscapeUtil.UriEscapeType.QUERY_PARAM, encoding);
+    }
+
+
+
+    /**
+     * <p>
+     *   Perform am URI fragment identifier <strong>unescape</strong> operation
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
+    public static String unescapeUriFragmentId(final String text) {
+        return unescapeUriFragmentId(text, DEFAULT_ENCODING);
+    }
+
+
+    /**
+     * <p>
+     *   Perform am URI fragment identifier <strong>unescape</strong> operation
+     *   on a <kbd>String</kbd> input.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param encoding the encoding to be used for unescaping.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
+    public static String unescapeUriFragmentId(final String text, final String encoding) {
+        if (encoding == null) {
+            throw new IllegalArgumentException("Argument 'encoding' cannot be null");
+        }
+        return UriEscapeUtil.unescape(text, UriEscapeUtil.UriEscapeType.FRAGMENT_ID, encoding);
+    }
+
+
+
+
+
+
+
+    /**
+     * <p>
+     *   Perform am URI path <strong>unescape</strong> operation
+     *   on a <kbd>char[]</kbd> input using <kbd>UTF-8</kbd> as encoding.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
+    public static void unescapeUriPath(final char[] text, final int offset, final int len, final Writer writer)
+            throws IOException {
+        unescapeUriPath(text, offset, len, writer, DEFAULT_ENCODING);
+    }
+
+
+    /**
+     * <p>
+     *   Perform am URI path <strong>unescape</strong> operation
+     *   on a <kbd>char[]</kbd> input.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param encoding the encoding to be used for unescaping.
+     */
+    public static void unescapeUriPath(final char[] text, final int offset, final int len, final Writer writer,
+                                     final String encoding)
+            throws IOException {
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        if (encoding == null) {
+            throw new IllegalArgumentException("Argument 'encoding' cannot be null");
+        }
+
+        final int textLen = (text == null? 0 : text.length);
+
+        if (offset < 0 || offset > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+
+        if (len < 0 || (offset + len) > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+
+        UriEscapeUtil.unescape(text, offset, len, writer, UriEscapeUtil.UriEscapeType.PATH, encoding);
+    }
+
+
+
+    /**
+     * <p>
+     *   Perform am URI path segment <strong>unescape</strong> operation
+     *   on a <kbd>char[]</kbd> input using <kbd>UTF-8</kbd> as encoding.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
+    public static void unescapeUriPathSegment(final char[] text, final int offset, final int len, final Writer writer)
+            throws IOException {
+        unescapeUriPathSegment(text, offset, len, writer, DEFAULT_ENCODING);
+    }
+
+
+    /**
+     * <p>
+     *   Perform am URI path segment <strong>unescape</strong> operation
+     *   on a <kbd>char[]</kbd> input.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param encoding the encoding to be used for unescaping.
+     */
+    public static void unescapeUriPathSegment(final char[] text, final int offset, final int len, final Writer writer,
+                                            final String encoding)
+            throws IOException {
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        if (encoding == null) {
+            throw new IllegalArgumentException("Argument 'encoding' cannot be null");
+        }
+
+        final int textLen = (text == null? 0 : text.length);
+
+        if (offset < 0 || offset > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+
+        if (len < 0 || (offset + len) > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+        UriEscapeUtil.unescape(text, offset, len, writer, UriEscapeUtil.UriEscapeType.PATH_SEGMENT, encoding);
+    }
+
+
+
+    /**
+     * <p>
+     *   Perform am URI query parameter (name or value) <strong>unescape</strong> operation
+     *   on a <kbd>char[]</kbd> input using <kbd>UTF-8</kbd> as encoding.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
+    public static void unescapeUriQueryParam(final char[] text, final int offset, final int len, final Writer writer)
+            throws IOException {
+        unescapeUriQueryParam(text, offset, len, writer, DEFAULT_ENCODING);
+    }
+
+
+    /**
+     * <p>
+     *   Perform am URI query parameter (name or value) <strong>unescape</strong> operation
+     *   on a <kbd>char[]</kbd> input.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param encoding the encoding to be used for unescaping.
+     */
+    public static void unescapeUriQueryParam(final char[] text, final int offset, final int len, final Writer writer,
+                                           final String encoding)
+            throws IOException {
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        if (encoding == null) {
+            throw new IllegalArgumentException("Argument 'encoding' cannot be null");
+        }
+
+        final int textLen = (text == null? 0 : text.length);
+
+        if (offset < 0 || offset > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+
+        if (len < 0 || (offset + len) > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+        UriEscapeUtil.unescape(text, offset, len, writer, UriEscapeUtil.UriEscapeType.QUERY_PARAM, encoding);
+    }
+
+
+
+    /**
+     * <p>
+     *   Perform am URI fragment identifier <strong>unescape</strong> operation
+     *   on a <kbd>char[]</kbd> input using <kbd>UTF-8</kbd> as encoding.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     */
+    public static void unescapeUriFragmentId(final char[] text, final int offset, final int len, final Writer writer)
+            throws IOException {
+        unescapeUriFragmentId(text, offset, len, writer, DEFAULT_ENCODING);
+    }
+
+
+    /**
+     * <p>
+     *   Perform am URI fragment identifier <strong>unescape</strong> operation
+     *   on a <kbd>char[]</kbd> input.
+     * </p>
+     * <p>
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
+     *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
+     *   can be percent-encoded even if/when this is not required, though it is not generally considered a
+     *   good practice).
+     * </p>
+     * <p>
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
+     *   percent-encoded byte sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param encoding the encoding to be used for unescaping.
+     */
+    public static void unescapeUriFragmentId(final char[] text, final int offset, final int len, final Writer writer,
+                                           final String encoding)
+            throws IOException {
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        if (encoding == null) {
+            throw new IllegalArgumentException("Argument 'encoding' cannot be null");
+        }
+
+        final int textLen = (text == null? 0 : text.length);
+
+        if (offset < 0 || offset > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+
+        if (len < 0 || (offset + len) > textLen) {
+            throw new IllegalArgumentException(
+                    "Invalid (offset, len). offset=" + offset + ", len=" + len + ", text.length=" + textLen);
+        }
+        UriEscapeUtil.unescape(text, offset, len, writer, UriEscapeUtil.UriEscapeType.FRAGMENT_ID, encoding);
+    }
 
 
 
