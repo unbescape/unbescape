@@ -27,6 +27,68 @@ import java.io.Writer;
  *   Utility class for performing URI escape/unescape operations.
  * </p>
  *
+ * <h4><u>Features</u></h4>
+ *
+ * <p>
+ *   Specific features of the URI escape/unescape operations performed by means of this class:
+ * </p>
+ * <ul>
+ *   <li>Support for percent-encoding-based escape operations (RFC3986) for diverse parts of an URI:
+ *         <ul>
+ *           <li><strong>Paths</strong>: Part of the URI path, might include several path levels/segments:
+ *               <kbd>/admin/users/list?x=1</kbd> &rarr; <kbd>users/list</kbd></li>
+ *           <li><strong>Path Segments</strong>: Part of the URI path, can include only one path level
+ *               (<kbd>/</kbd> chars will be escaped): <kbd>/admin/users/list?x=1</kbd> &rarr; <kbd>users</kbd></li>
+ *           <li><strong>Query Parameters</strong>: Names and values of the URI query parameters:
+ *               <kbd>/admin/users/list?x=1</kbd> &rarr; <kbd>x</kbd> (name), <kbd>1</kbd> (value)</li>
+ *           <li><strong>URI Fragment Identifiers</strong>: client-side part of URIs, specified after <kbd>#</kbd>:
+ *               <kbd>/admin/users/list?x=1#something</kbd> &rarr; <kbd>#something</kbd></li>
+ *         </ul>
+ *   </li>
+ *   <li>Support for both <em>percent-encoding</em> and <kbd>+</kbd> based unescaping of whitespace in query
+ *       parameters.</li>
+ * </ul>
+ *
+ * <h4><u>Input/Output</u></h4>
+ *
+ * <p>
+ *   There are two different input/output modes that can be used in escape/unescape operations:
+ * </p>
+ * <ul>
+ *   <li><em><kbd>String</kbd> input, <kbd>String</kbd> output</em>: Input is specified as a <kbd>String</kbd> object
+ *       and output is returned as another. In order to improve memory performance, all escape and unescape
+ *       operations <u>will return the exact same input object as output if no escape/unescape modifications
+ *       are required</u>.</li>
+ *   <li><em><kbd>char[]</kbd> input, <kbd>java.io.Writer</kbd> output</em>: Input will be read from a char array
+ *       (<kbd>char[]</kbd>) and output will be written into the specified <kbd>java.io.Writer</kbd>.
+ *       Two <kbd>int</kbd> arguments called <kbd>offset</kbd> and <kbd>len</kbd> will be
+ *       used for specifying the part of the <kbd>char[]</kbd> that should be escaped/unescaped. These methods
+ *       should be called with <kbd>offset = 0</kbd> and <kbd>len = text.length</kbd> in order to process
+ *       the whole <kbd>char[]</kbd>.</li>
+ * </ul>
+ *
+ * <h4><u>Glossary</u></h4>
+ *
+ * <dl>
+ *   <dt>Percent encoding</dt>
+ *     <dd>The percent-encoding technique for escaping consists of transforming the character that needs to be
+ *         escaped into a sequence of bytes using a previously specified encoding (<kbd>UTF-8</kbd> by default), and
+ *         then wrinting each byte as <kbd>%HH</kbd>, being <kbd>HH</kbd> its hexadecimal value (of the byte).
+ *     </dd>
+ * </dl>
+ *
+ * <h4><u>References</u></h4>
+ *
+ * <p>
+ *   The following references apply:
+ * </p>
+ * <ul>
+ *   <li><a href="http://www.ietf.org/rfc/rfc3986.txt" target="_blank">RFC3986: Uniform Resource Identifier
+ *       (URI): Generic Syntax</a> [ietf.org]</li>
+ *   <li><a href="http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4" target="_blank">HTML 4.01 Specification:
+ *       Form Content Types</a> [w3.org]</li>
+ * </ul>
+ *
  *
  * @author Daniel Fern&aacute;ndez
  *
