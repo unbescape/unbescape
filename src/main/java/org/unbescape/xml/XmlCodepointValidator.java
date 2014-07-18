@@ -31,7 +31,7 @@ package org.unbescape.xml;
  *
  * @author Daniel Fern&aacute;ndez
  *
- * @since 1.0
+ * @since 1.0.0
  *
  */
 interface XmlCodepointValidator {

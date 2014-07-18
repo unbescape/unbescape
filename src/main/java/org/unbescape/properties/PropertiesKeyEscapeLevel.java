@@ -64,7 +64,7 @@ package org.unbescape.properties;
  *
  * @author Daniel Fern&aacute;ndez
  *
- * @since 1.0
+ * @since 1.0.0
  *
  */
 public enum PropertiesKeyEscapeLevel {

@@ -67,7 +67,7 @@ package org.unbescape.json;
  *
  * @author Daniel Fern&aacute;ndez
  * 
- * @since 1.0
+ * @since 1.0.0
  *
  */
 public enum JsonEscapeLevel {

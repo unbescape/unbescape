@@ -92,7 +92,7 @@ import java.io.Writer;
  *
  * @author Daniel Fern&aacute;ndez
  *
- * @since 1.1
+ * @since 1.1.0
  *
  */
 public final class UriEscape {

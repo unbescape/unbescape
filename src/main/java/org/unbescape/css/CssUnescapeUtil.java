@@ -29,7 +29,7 @@ import java.io.Writer;
  *
  * @author Daniel Fern&aacute;ndez
  *
- * @since 1.0
+ * @since 1.0.0
  *
  */
 final class CssUnescapeUtil {
