@@ -343,6 +343,9 @@ final String escapedPathSegment = UriEscape.escapeUriPathSegment(text);
 <pre class="prettyprint linenums language-java">
 final String escapedQueryParam = UriEscape.escapeUriQueryParam(text);
 </pre>
+<pre class="prettyprint linenums language-java">
+final String escapedFragmentId = UriEscape.escapeUriFragmentId(text);
+</pre>
             <h5>Unescaping</h5>
             <p>
                 Some sample code (see the <a href="http://www.unbescape.org/apidocs/unbescape/1.1.0.RELEASE/org/unbescape/uri/UriEscape.html" target="_blank">javadoc</a> for more detail):
@@ -355,6 +358,9 @@ final String unescapedPathSegment = UriEscape.unescapeUriPathSegment(text);
 </pre>
 <pre class="prettyprint linenums language-java">
 final String unescapedQueryParam = UriEscape.unescapeUriQueryParam(text);
+</pre>
+<pre class="prettyprint linenums language-java">
+final String unescapedFragmentId = UriEscape.unescapeUriFragmentId(text);
 </pre>
 
 

@@ -11,6 +11,7 @@ operations for:
   * **XML** (XML 1.0 and XML 1.1)
   * **JavaScript**
   * **JSON**
+  * **URI**/**URL**
   * **CSS**
   * **CSV** (Comma-Separated Values)
   * **Java literals**
@@ -94,6 +95,9 @@ Features
       *  Support for escaping non-displayable, control characters: `U+0000` to `U+001F` and `U+007F` to `U+009F`.
       *  Support for U-based hexadecimal escapes (a.k.a. _unicode escapes_) both in escape
          and unescape operations: `\u00E1`.
+  *   **URI/URL Escape/Unescape**
+      *  Support for escape operations using percent-encoding (`%HH`).
+      *  Escape URI paths, path fragments, query parameters and fragment identifiers.
   *   **CSS Escape/Unescape**
       *  Complete set of CSS _Backslash Escapes_ supported (e.g. `\+`, `\;`, `\(`, `\)`, etc.).
       *  Full set of escape syntax rules supported, both for **CSS identifiers** and **CSS Strings**
@@ -227,6 +231,30 @@ And also those that allow a more fine-grained configuration of the escape operat
              text,
              JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO__UHEXA,
              JsonEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+```
+
+
+
+URI/URL Escape/Unescape
+-----------------------
+
+URI/URL escape and unescape operations are performed by means of the `org.unbescape.uri.UriEscape` class. This class
+defines a series of static methods that perform the desired operations (see the class _javadoc_ for more info).
+
+The methods for this type of escape/unescape operations are very simple:
+
+```java
+    final String escapedPath = UriEscape.escapeUriPath(text);
+    final String escapedPathSegment = UriEscape.escapeUriPathSegment(text);
+    final String escapedQueryParam = UriEscape.escapeUriQueryParam(text);
+    final String escapedFragmentId = UriEscape.escapeUriFragmentId(text);
+```
+
+```java
+    final String unescapedPath = UriEscape.unescapeUriPath(text);
+    final String unescapedPathSegment = UriEscape.unescapeUriPathSegment(text);
+    final String unescapedQueryParam = UriEscape.unescapeUriQueryParam(text);
+    final String unescapedFragmentId = UriEscape.unescapeUriFragmentId(text);
 ```
 
 
