@@ -114,11 +114,11 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI path (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'&'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>'+'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd>,<kbd>'='</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
-     *   <li><kbd>'/'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ & ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -149,11 +149,11 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI path (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'&'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>'+'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd>,<kbd>'='</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
-     *   <li><kbd>'/'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ & ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -189,10 +189,10 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI path segment (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'&'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>'+'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd>,<kbd>'='</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ & ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -223,10 +223,10 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI path segment (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'&'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>'+'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd>,<kbd>'='</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ & ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -262,11 +262,11 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI query parameter (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
-     *   <li><kbd>'/'</kbd>,<kbd>'?'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ ' ( ) * , ;</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -297,11 +297,11 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI query parameter (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
-     *   <li><kbd>'/'</kbd>,<kbd>'?'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ ' ( ) * , ;</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -337,11 +337,11 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI fragment identifier (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'&'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>'+'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd>,<kbd>'='</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
-     *   <li><kbd>'/'</kbd>,<kbd>'?'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ & ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -372,11 +372,11 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI fragment identifier (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'&'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>'+'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd>,<kbd>'='</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
-     *   <li><kbd>'/'</kbd>,<kbd>'?'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ & ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -416,11 +416,11 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI path (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'&'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>'+'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd>,<kbd>'='</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
-     *   <li><kbd>'/'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ & ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -452,11 +452,11 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI path (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'&'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>'+'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd>,<kbd>'='</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
-     *   <li><kbd>'/'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ & ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -511,10 +511,10 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI path segment (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'&'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>'+'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd>,<kbd>'='</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ & ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -546,10 +546,10 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI path segment (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'&'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>'+'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd>,<kbd>'='</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ & ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -603,11 +603,11 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI query parameter (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
-     *   <li><kbd>'/'</kbd>,<kbd>'?'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ ' ( ) * , ;</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -639,11 +639,11 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI query parameter (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
-     *   <li><kbd>'/'</kbd>,<kbd>'?'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ ' ( ) * , ;</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -697,11 +697,11 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI fragment identifier (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'&'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>'+'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd>,<kbd>'='</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
-     *   <li><kbd>'/'</kbd>,<kbd>'?'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ & ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
@@ -733,11 +733,11 @@ public final class UriEscape {
      *   The following are the only allowed chars in an URI fragment identifier (will not be escaped):
      * </p>
      * <ul>
-     *   <li><kbd>'A'-'Z'</kbd>,<kbd>'a'-'z'</kbd>,<kbd>'0'-'9'</kbd></li>
-     *   <li><kbd>'-'</kbd>,<kbd>'.'</kbd>,<kbd>'_'</kbd>,<kbd>'~'</kbd></li>
-     *   <li><kbd>'!'</kbd>,<kbd>'$'</kbd>,<kbd>'&'</kbd>,<kbd>'\''</kbd>,<kbd>'('</kbd>,<kbd>')'</kbd>,<kbd>'*'</kbd>,<kbd>'+'</kbd>,<kbd>','</kbd>,<kbd>';'</kbd>,<kbd>'='</kbd></li>
-     *   <li><kbd>':'</kbd>,<kbd>'@'</kbd></li>
-     *   <li><kbd>'/'</kbd>,<kbd>'?'</kbd></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ & ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
