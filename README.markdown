@@ -24,7 +24,7 @@ This project is stable and production-ready.
 
 Current versions: 
 
-  * **Version 1.0** (29 April 2014)
+  * Version **1.1.0.RELEASE** (29 July 2014)
 
 
 License

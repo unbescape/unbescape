@@ -124,6 +124,7 @@
               <li><strong>XML</strong> (XML 1.0 and XML 1.1)</li>
               <li><strong>JavaScript</strong></li>
               <li><strong>JSON</strong></li>
+              <li><strong>URI</strong> / <strong>URL</strong> (both paths and query parameters)</li>
               <li><strong>CSS</strong> (both identifiers and string literals)</li>
               <li><strong>CSV</strong> (Comma-Separated Values)</li>
               <li><strong>Java literals</strong></li>
@@ -442,7 +443,23 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
                     </ul>
                 </td>
               </tr>
-            
+
+              <tr>
+                  <td>
+                      <strong>URI</strong> / <strong>URL</strong>
+                  </td>
+                  <td>
+                      <ul>
+                          <li>
+                              Support for escape operations using percent-encoding (<kbd>%HH</kbd>).
+                          </li>
+                          <li>
+                              Escape URI paths, path fragments and query parameters.
+                          </li>
+                      </ul>
+                  </td>
+              </tr>
+
               <tr>
                 <td>
                   <strong>CSS</strong>
@@ -554,7 +571,7 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
           <h3>Project status</h3>
 
           <p>
-            unbescape is stable and production-ready. Current version is <b>1.0</b>.
+            unbescape is stable and production-ready. Current version is <b>1.1.0.RELEASE</b>.
           </p>
           
         </div>
