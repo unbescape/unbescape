@@ -408,7 +408,9 @@ final class HtmlEscapeUtil {
     static int translateIllFormedCodepoint(final int codepoint) {
         switch (codepoint) {
             case 0x00: return 0xFFFD;
+            case 0x7F: return 0xFFFD;
             case 0x80: return 0x20AC;
+            case 0x81: return 0xFFFD;
             case 0x82: return 0x201A;
             case 0x83: return 0x0192;
             case 0x84: return 0x201E;
@@ -420,7 +422,10 @@ final class HtmlEscapeUtil {
             case 0x8A: return 0x0160;
             case 0x8B: return 0x2039;
             case 0x8C: return 0x0152;
+            case 0x8D: return 0xFFFD;
             case 0x8E: return 0x017D;
+            case 0x8F: return 0xFFFD;
+            case 0x90: return 0xFFFD;
             case 0x91: return 0x2018;
             case 0x92: return 0x2019;
             case 0x93: return 0x201C;
@@ -433,9 +438,60 @@ final class HtmlEscapeUtil {
             case 0x9A: return 0x0161;
             case 0x9B: return 0x203A;
             case 0x9C: return 0x0153;
+            case 0x9D: return 0xFFFD;
             case 0x9E: return 0x017E;
             case 0x9F: return 0x0178;
-            default: return codepoint;
+
+            case 0x000B: return 0xFFFD;
+            case 0xFFFE: return 0xFFFD;
+            case 0xFFFF: return 0xFFFD;
+            case 0x1FFFE: return 0xFFFD;
+            case 0x1FFFF: return 0xFFFD;
+            case 0x2FFFE: return 0xFFFD;
+            case 0x2FFFF: return 0xFFFD;
+            case 0x3FFFE: return 0xFFFD;
+            case 0x3FFFF: return 0xFFFD;
+            case 0x4FFFE: return 0xFFFD;
+            case 0x4FFFF: return 0xFFFD;
+            case 0x5FFFE: return 0xFFFD;
+            case 0x5FFFF: return 0xFFFD;
+            case 0x6FFFE: return 0xFFFD;
+            case 0x6FFFF: return 0xFFFD;
+            case 0x7FFFE: return 0xFFFD;
+            case 0x7FFFF: return 0xFFFD;
+            case 0x8FFFE: return 0xFFFD;
+            case 0x8FFFF: return 0xFFFD;
+            case 0x9FFFE: return 0xFFFD;
+            case 0x9FFFF: return 0xFFFD;
+            case 0xAFFFE: return 0xFFFD;
+            case 0xAFFFF: return 0xFFFD;
+            case 0xBFFFE: return 0xFFFD;
+            case 0xBFFFF: return 0xFFFD;
+            case 0xCFFFE: return 0xFFFD;
+            case 0xCFFFF: return 0xFFFD;
+            case 0xDFFFE: return 0xFFFD;
+            case 0xDFFFF: return 0xFFFD;
+            case 0xEFFFE: return 0xFFFD;
+            case 0xEFFFF: return 0xFFFD;
+            case 0xFFFFE: return 0xFFFD;
+            case 0xFFFFF: return 0xFFFD;
+            case 0x10FFFE: return 0xFFFD;
+            case 0x10FFFF: return 0xFFFD;
+
+            default: break;
+        }
+        if (codepoint >= 0x0001 && codepoint <= 0x0008) {
+            return 0xFFFD;
+        } else if (codepoint >= 0x000D && codepoint <= 0x001F) {
+            return 0xFFFD;
+        } else if (codepoint >= 0xFDD0 && codepoint <= 0xFDEF) {
+            return 0xFFFD;
+        } else if (codepoint >= 0xD800 && codepoint <= 0xDFFF) {
+            return 0xFFFD;
+        } else if (codepoint > 0x10FFFF) {
+            return 0xFFFD;
+        } else {
+          return codepoint;
         }
     }
 
