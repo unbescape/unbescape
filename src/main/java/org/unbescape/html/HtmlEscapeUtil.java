@@ -464,7 +464,14 @@ final class HtmlEscapeUtil {
                     break;
                 }
             }
-            result = (radix * result) + n;
+            result *= radix;
+            if (result < 0) {
+                return 0xFFFD;
+            }
+            result += n;
+            if (result < 0) {
+                return 0xFFFD;
+            }
         }
         return result;
     }
@@ -480,7 +487,14 @@ final class HtmlEscapeUtil {
                     break;
                 }
             }
-            result = (radix * result) + n;
+            result *= radix;
+            if (result < 0) {
+                return 0xFFFD;
+            }
+            result += n;
+            if (result < 0) {
+                return 0xFFFD;
+            }
         }
         return result;
     }
