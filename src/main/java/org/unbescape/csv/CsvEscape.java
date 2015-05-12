@@ -28,7 +28,7 @@ import java.io.Writer;
  *   Utility class for performing CSV escape/unescape operations.
  * </p>
  *
- * <h4><u>Features</u></h4>
+ * <strong><u>Features</u></strong>
  *
  * <p>
  *   Specific features of the CSV escape/unescape operations performed by means of this class:
@@ -40,7 +40,7 @@ import java.io.Writer;
  *   <li>Escapes double-quote characters (<tt>"</tt>) by writing them twice: <tt>""</tt>.</li>
  * </ul>
  *
- * <h4><u>Input/Output</u></h4>
+ * <strong><u>Input/Output</u></strong>
  *
  * <p>
  *   There are two different input/output modes that can be used in escape/unescape operations:
@@ -58,7 +58,7 @@ import java.io.Writer;
  *       the whole <tt>char[]</tt>.</li>
  * </ul>
  *
- * <h4><u>Specific instructions for Microsoft Excel-compatible files</u></h4>
+ * <strong><u>Specific instructions for Microsoft Excel-compatible files</u></strong>
  *
  * <p>
  *   In order for Microsoft Excel to correcly open a CSV file &mdash;including field values with line
@@ -91,7 +91,7 @@ import java.io.Writer;
  *   Google Spreadsheets (<tt>File -&gt; Import...</tt>)
  * </p>
  *
- * <h4><u>References</u></h4>
+ * <strong><u>References</u></strong>
  *
  * <p>
  *   The following references apply:

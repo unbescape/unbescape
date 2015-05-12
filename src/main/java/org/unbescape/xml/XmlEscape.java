@@ -27,7 +27,7 @@ import java.io.Writer;
  *   Utility class for performing XML escape/unescape operations.
  * </p>
  *
- * <h4><u>Configuration of escape/unescape operations</u></h4>
+ * <strong><u>Configuration of escape/unescape operations</u></strong>
  *
  * <p>
  *   <strong>Escape</strong> operations can be (optionally) configured by means of:
@@ -46,7 +46,7 @@ import java.io.Writer;
  *   will always perform <em>complete</em> unescape of CERs, decimal and hexadecimal references.
  * </p>
  *
- * <h4><u>Features</u></h4>
+ * <strong><u>Features</u></strong>
  *
  * <p>
  *   This class supports both XML 1.0 and XML 1.1 escape/unescape operations. Whichever the XML version used,
@@ -69,7 +69,7 @@ import java.io.Writer;
  *   including characters not representable by only one <tt>char</tt> in Java (<tt>&gt;&#92;uFFFF</tt>).
  * </p>
  *
- * <h4><u>Input/Output</u></h4>
+ * <strong><u>Input/Output</u></strong>
  *
  * <p>
  *   There are two different input/output modes that can be used in escape/unescape operations:
@@ -87,7 +87,7 @@ import java.io.Writer;
  *       the whole <tt>char[]</tt>.</li>
  * </ul>
  *
- * <h4><u>Glossary</u></h4>
+ * <strong><u>Glossary</u></strong>
  *
  * <dl>
  *   <dt>ER</dt>
@@ -116,7 +116,7 @@ import java.io.Writer;
  *         second is a low surrogate (<tt>&#92;uDC00</tt> to <tt>&#92;uDFFF</tt>).</dd>
  * </dl>
  *
- * <h4><u>References</u></h4>
+ * <strong><u>References</u></strong>
  *
  * <p>
  *   The following references apply:

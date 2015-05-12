@@ -57,7 +57,7 @@ public enum JavaScriptEscapeType {
 
     /**
      * Use Single Escape Chars if possible, default to &#92;xFF hexadecimal escapes
-     * if possible (characters <= U+FF), then default to &#92;uFFFF hexadecimal escapes.
+     * if possible (characters &lt;= U+FF), then default to &#92;uFFFF hexadecimal escapes.
      */
     SINGLE_ESCAPE_CHARS_DEFAULT_TO_XHEXA_AND_UHEXA(true, true),
 
@@ -67,7 +67,7 @@ public enum JavaScriptEscapeType {
     SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA(true, false),
 
     /**
-     * Use &#92;xFF hexadecimal escapes if possible (characters <= U+FF), default
+     * Use &#92;xFF hexadecimal escapes if possible (characters &lt;= U+FF), default
      * to &#92;uFFFF hexadecimal escapes.
      */
     XHEXA_DEFAULT_TO_UHEXA(false, true),

@@ -27,7 +27,7 @@ import java.io.Writer;
  *   Utility class for performing URI escape/unescape operations.
  * </p>
  *
- * <h4><u>Features</u></h4>
+ * <strong><u>Features</u></strong>
  *
  * <p>
  *   Specific features of the URI escape/unescape operations performed by means of this class:
@@ -49,7 +49,7 @@ import java.io.Writer;
  *       parameters.</li>
  * </ul>
  *
- * <h4><u>Input/Output</u></h4>
+ * <strong><u>Input/Output</u></strong>
  *
  * <p>
  *   There are two different input/output modes that can be used in escape/unescape operations:
@@ -67,7 +67,7 @@ import java.io.Writer;
  *       the whole <tt>char[]</tt>.</li>
  * </ul>
  *
- * <h4><u>Glossary</u></h4>
+ * <strong><u>Glossary</u></strong>
  *
  * <dl>
  *   <dt>Percent encoding</dt>
@@ -77,7 +77,7 @@ import java.io.Writer;
  *     </dd>
  * </dl>
  *
- * <h4><u>References</u></h4>
+ * <strong><u>References</u></strong>
  *
  * <p>
  *   The following references apply:
