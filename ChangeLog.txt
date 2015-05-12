@@ -1,3 +1,12 @@
+1.1.1.RELEASE
+=============
+- Fixed HTML unescape for codepoints > U+10FFFF (was throwing IllegalArgumentException).
+- Fixed HTML unescape for codepoints > Integer.MAX_VALUE (was throwing ArrayIndexOutOfBounds).
+- Simplified and improved performance of codepoint-computing code by using Character.codePointAt(...) instead
+  of a complex conditional structure based on Character.isHighSurrogate(...) and Character.isLowSurrogate(...).
+- [doc] Fixed description of MSExcel-compatible CSV files.
+
+
 1.1.0.RELEASE
 =============
 - Added URI/URL escape and unescape operations.
