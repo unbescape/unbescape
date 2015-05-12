@@ -65,7 +65,10 @@ import java.io.Writer;
  *   breaks&mdash; these rules should be followed:
  * </p>
  * <ul>
- *   <li>Separate fields with semi-colon (<kbd>;</kbd>), records with Windows-style line breaks
+ *   <li>Separate fields with comma (<kbd>,</kbd>) in English-language setups, and semi-colon (<kbd>;</kbd>) in
+ *       non-English-language setups (this depends on the language of the installation of MS Excel you intend
+ *       your files to be open in).</li>
+ *   <li>Separate records with Windows-style line breaks
  *       (<kbd>&#92;r&#92;n</kbd>, <kbd>U+000D</kbd> + <kbd>U+000A</kbd>).</li>
  *   <li>Enclose field values in double-quotes (<kbd>"</kbd>) if they contain any non-alphanumeric characters.</li>
  *   <li>Don't leave any whitespace between the field separator (<kbd>;</kbd>) and the enclosing quotes
