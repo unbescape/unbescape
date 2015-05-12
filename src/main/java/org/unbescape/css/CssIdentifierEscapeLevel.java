@@ -31,46 +31,46 @@ package org.unbescape.css;
  *         <em>basic set</em> consists of:
  *         <ul>
  *           <li>The <em>Backslash Escapes</em>:
- *               <kbd>&#92; </kbd> (<kbd>U+0020</kbd>),
- *               <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
- *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
- *               <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
- *               <kbd>&#92;$</kbd> (<kbd>U+0024</kbd>),
- *               <kbd>&#92;%</kbd> (<kbd>U+0025</kbd>),
- *               <kbd>&#92;&amp;</kbd> (<kbd>U+0026</kbd>),
- *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>),
- *               <kbd>&#92;(</kbd> (<kbd>U+0028</kbd>),
- *               <kbd>&#92;)</kbd> (<kbd>U+0029</kbd>),
- *               <kbd>&#92;*</kbd> (<kbd>U+002A</kbd>),
- *               <kbd>&#92;+</kbd> (<kbd>U+002B</kbd>),
- *               <kbd>&#92;,</kbd> (<kbd>U+002C</kbd>),
- *               <kbd>&#92;.</kbd> (<kbd>U+002E</kbd>),
- *               <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>),
- *               <kbd>&#92;;</kbd> (<kbd>U+003B</kbd>),
- *               <kbd>&#92;&lt;</kbd> (<kbd>U+003C</kbd>),
- *               <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>),
- *               <kbd>&#92;&gt;</kbd> (<kbd>U+003E</kbd>),
- *               <kbd>&#92;?</kbd> (<kbd>U+003F</kbd>),
- *               <kbd>&#92;@</kbd> (<kbd>U+0040</kbd>),
- *               <kbd>&#92;[</kbd> (<kbd>U+005B</kbd>),
- *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>),
- *               <kbd>&#92;]</kbd> (<kbd>U+005D</kbd>),
- *               <kbd>&#92;^</kbd> (<kbd>U+005E</kbd>),
- *               <kbd>&#92;`</kbd> (<kbd>U+0060</kbd>),
- *               <kbd>&#92;{</kbd> (<kbd>U+007B</kbd>),
- *               <kbd>&#92;|</kbd> (<kbd>U+007C</kbd>),
- *               <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
- *               <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
- *               Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
- *               when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
- *               (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
- *               problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
- *               (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
+ *               <tt>&#92; </tt> (<tt>U+0020</tt>),
+ *               <tt>&#92;!</tt> (<tt>U+0021</tt>),
+ *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+ *               <tt>&#92;#</tt> (<tt>U+0023</tt>),
+ *               <tt>&#92;$</tt> (<tt>U+0024</tt>),
+ *               <tt>&#92;%</tt> (<tt>U+0025</tt>),
+ *               <tt>&#92;&amp;</tt> (<tt>U+0026</tt>),
+ *               <tt>&#92;&#39;</tt> (<tt>U+0027</tt>),
+ *               <tt>&#92;(</tt> (<tt>U+0028</tt>),
+ *               <tt>&#92;)</tt> (<tt>U+0029</tt>),
+ *               <tt>&#92;*</tt> (<tt>U+002A</tt>),
+ *               <tt>&#92;+</tt> (<tt>U+002B</tt>),
+ *               <tt>&#92;,</tt> (<tt>U+002C</tt>),
+ *               <tt>&#92;.</tt> (<tt>U+002E</tt>),
+ *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>),
+ *               <tt>&#92;;</tt> (<tt>U+003B</tt>),
+ *               <tt>&#92;&lt;</tt> (<tt>U+003C</tt>),
+ *               <tt>&#92;=</tt> (<tt>U+003D</tt>),
+ *               <tt>&#92;&gt;</tt> (<tt>U+003E</tt>),
+ *               <tt>&#92;?</tt> (<tt>U+003F</tt>),
+ *               <tt>&#92;@</tt> (<tt>U+0040</tt>),
+ *               <tt>&#92;[</tt> (<tt>U+005B</tt>),
+ *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>),
+ *               <tt>&#92;]</tt> (<tt>U+005D</tt>),
+ *               <tt>&#92;^</tt> (<tt>U+005E</tt>),
+ *               <tt>&#92;`</tt> (<tt>U+0060</tt>),
+ *               <tt>&#92;{</tt> (<tt>U+007B</tt>),
+ *               <tt>&#92;|</tt> (<tt>U+007C</tt>),
+ *               <tt>&#92;}</tt> (<tt>U+007D</tt>) and
+ *               <tt>&#92;~</tt> (<tt>U+007E</tt>).
+ *               Note that the <tt>&#92;-</tt> (<tt>U+002D</tt>) escape sequence exists, but will only be used
+ *               when an identifier starts with two hypens or hyphen + digit. Also, the <tt>&#92;_</tt>
+ *               (<tt>U+005F</tt>) escape will only be used at the beginning of an identifier to avoid
+ *               problems with Internet Explorer 6. In the same sense, note that the <tt>&#92;:</tt>
+ *               (<tt>U+003A</tt>) escape sequence is also defined in the standard, but will not be
  *               used for escaping as Internet Explorer &lt; 8 does not recognize it.
  *           </li>
  *           <li>
- *               Two ranges of non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
- *               and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+ *               Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+ *               and <tt>U+007F</tt> to <tt>U+009F</tt>.
  *           </li>
  *         </ul>
  *     </li>
@@ -78,7 +78,7 @@ package org.unbescape.css;
  *         non-ASCII characters. The result of a level-2 escape operation is therefore always ASCII-only text, and
  *         safer to use in complex scenarios with mixed input/output character encodings.</li>
  *     <li><strong>Level 3</strong>: Escape all non-alphanumeric characters, this is, all but those in the
- *         <kbd>A</kbd>-<kbd>Z</kbd>, <kbd>a</kbd>-<kbd>z</kbd> and <kbd>0</kbd>-<kbd>9</kbd> ranges. This level
+ *         <tt>A</tt>-<tt>Z</tt>, <tt>a</tt>-<tt>z</tt> and <tt>0</tt>-<tt>9</tt> ranges. This level
  *         can be safely used for completely escaping texts, including whitespace, line feeds, punctuation, etc. in
  *         scenarios where this adds an extra level of safety.</li>
  *     <li><strong>Level 4</strong>: Escape all characters, even alphanumeric ones.</li>
@@ -97,7 +97,7 @@ package org.unbescape.css;
 public enum CssIdentifierEscapeLevel {
 
     /**
-     * Level 1 escape: escape only the basic escape set: Backslash Escape plus non-displayable control chars.</kbd>
+     * Level 1 escape: escape only the basic escape set: Backslash Escape plus non-displayable control chars.</tt>
      */
     LEVEL_1_BASIC_ESCAPE_SET(1),
 
@@ -108,7 +108,7 @@ public enum CssIdentifierEscapeLevel {
 
     /**
      * Level 3 escape: escape all non-alphanumeric characteres (escape all but those in the
-     * <kbd>A</kbd>-<kbd>Z</kbd>, <kbd>a</kbd>-<kbd>z</kbd> and <kbd>0</kbd>-<kbd>9</kbd> ranges).
+     * <tt>A</tt>-<tt>Z</tt>, <tt>a</tt>-<tt>z</tt> and <tt>0</tt>-<tt>9</tt> ranges).
      */
     LEVEL_3_ALL_NON_ALPHANUMERIC(3),
 
@@ -125,11 +125,11 @@ public enum CssIdentifierEscapeLevel {
 
     /**
      * <p>
-     *   Utility method for obtaining an enum value from its corresponding <kbd>int</kbd> level value.
+     *   Utility method for obtaining an enum value from its corresponding <tt>int</tt> level value.
      * </p>
      *
      * @param level the level
-     * @return the escape level enum constant, or <kbd>IllegalArgumentException</kbd> if level does not exist.
+     * @return the escape level enum constant, or <tt>IllegalArgumentException</tt> if level does not exist.
      */
     public static CssIdentifierEscapeLevel forLevel(final int level) {
         switch (level) {
@@ -148,7 +148,7 @@ public enum CssIdentifierEscapeLevel {
     }
 
     /**
-     * Return the <kbd>int</kbd> escape level.
+     * Return the <tt>int</tt> escape level.
      *
      * @return the escape level.
      */

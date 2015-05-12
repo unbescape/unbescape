@@ -31,12 +31,12 @@ package org.unbescape.css;
  *         <em>basic set</em> consists of:
  *         <ul>
  *           <li>The <em>Backslash Escapes</em>:
- *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>) and
- *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>).
+ *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>) and
+ *               <tt>&#92;&#39;</tt> (<tt>U+0027</tt>).
  *           </li>
  *           <li>
- *               Two ranges of non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
- *               and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+ *               Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+ *               and <tt>U+007F</tt> to <tt>U+009F</tt>.
  *           </li>
  *         </ul>
  *     </li>
@@ -44,7 +44,7 @@ package org.unbescape.css;
  *         non-ASCII characters. The result of a level-2 escape operation is therefore always ASCII-only text, and
  *         safer to use in complex scenarios with mixed input/output character encodings.</li>
  *     <li><strong>Level 3</strong>: Escape all non-alphanumeric characters, this is, all but those in the
- *         <kbd>A</kbd>-<kbd>Z</kbd>, <kbd>a</kbd>-<kbd>z</kbd> and <kbd>0</kbd>-<kbd>9</kbd> ranges. This level
+ *         <tt>A</tt>-<tt>Z</tt>, <tt>a</tt>-<tt>z</tt> and <tt>0</tt>-<tt>9</tt> ranges. This level
  *         can be safely used for completely escaping texts, including whitespace, line feeds, punctuation, etc. in
  *         scenarios where this adds an extra level of safety.</li>
  *     <li><strong>Level 4</strong>: Escape all characters, even alphanumeric ones.</li>
@@ -63,7 +63,7 @@ package org.unbescape.css;
 public enum CssStringEscapeLevel {
 
     /**
-     * Level 1 escape: escape only the basic escape set: Backslash Escape plus non-displayable control chars.</kbd>
+     * Level 1 escape: escape only the basic escape set: Backslash Escape plus non-displayable control chars.</tt>
      */
     LEVEL_1_BASIC_ESCAPE_SET(1),
 
@@ -74,7 +74,7 @@ public enum CssStringEscapeLevel {
 
     /**
      * Level 3 escape: escape all non-alphanumeric characteres (escape all but those in the
-     * <kbd>A</kbd>-<kbd>Z</kbd>, <kbd>a</kbd>-<kbd>z</kbd> and <kbd>0</kbd>-<kbd>9</kbd> ranges).
+     * <tt>A</tt>-<tt>Z</tt>, <tt>a</tt>-<tt>z</tt> and <tt>0</tt>-<tt>9</tt> ranges).
      */
     LEVEL_3_ALL_NON_ALPHANUMERIC(3),
 
@@ -91,11 +91,11 @@ public enum CssStringEscapeLevel {
 
     /**
      * <p>
-     *   Utility method for obtaining an enum value from its corresponding <kbd>int</kbd> level value.
+     *   Utility method for obtaining an enum value from its corresponding <tt>int</tt> level value.
      * </p>
      *
      * @param level the level
-     * @return the escape level enum constant, or <kbd>IllegalArgumentException</kbd> if level does not exist.
+     * @return the escape level enum constant, or <tt>IllegalArgumentException</tt> if level does not exist.
      */
     public static CssStringEscapeLevel forLevel(final int level) {
         switch (level) {
@@ -114,7 +114,7 @@ public enum CssStringEscapeLevel {
     }
 
     /**
-     * Return the <kbd>int</kbd> escape level.
+     * Return the <tt>int</tt> escape level.
      *
      * @return the escape level.
      */

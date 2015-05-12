@@ -59,20 +59,20 @@ import java.io.Writer;
  *   Specific features of the CSS escape/unescape operations performed by means of this class:
  * </p>
  * <ul>
- *   <li>Complete set of CSS <em>Backslash Escapes</em> supported (e.g. <kbd>&#92;+</kbd>, <kbd>&#92;(</kbd>,
- *       <kbd>&#92;)</kbd>, etc.).</li>
+ *   <li>Complete set of CSS <em>Backslash Escapes</em> supported (e.g. <tt>&#92;+</tt>, <tt>&#92;(</tt>,
+ *       <tt>&#92;)</tt>, etc.).</li>
  *   <li>Full set of escape syntax rules supported, both for <strong>CSS identifiers</strong> and
  *       <strong>CSS Strings</strong> (or <em>literals</em>).</li>
- *   <li>Non-standard tweaks supported: <kbd>&#92;:</kbd> not used because of lacking support in
- *       Internet Explorer &lt; 8, <kbd>&#92;_</kbd> escaped at the beginning of identifiers for better
+ *   <li>Non-standard tweaks supported: <tt>&#92;:</tt> not used because of lacking support in
+ *       Internet Explorer &lt; 8, <tt>&#92;_</tt> escaped at the beginning of identifiers for better
  *       Internet Explorer 6 support, etc.</li>
  *   <li>Hexadecimal escapes (a.k.a. <em>unicode escapes</em>) are supported both in escape
- *       and unescape operations, and both in <em>compact</em> (<kbd>&#92;E1 </kbd>) and six-digit
- *       forms (<kbd>&#92;0000E1</kbd>).</li>
- *   <li>Support for the whole Unicode character set: <kbd>&bsol;u0000</kbd> to <kbd>&bsol;u10FFFF</kbd>, including
- *       characters not representable by only one <kbd>char</kbd> in Java (<kbd>&gt;&bsol;uFFFF</kbd>).</li>
+ *       and unescape operations, and both in <em>compact</em> (<tt>&#92;E1 </tt>) and six-digit
+ *       forms (<tt>&#92;0000E1</tt>).</li>
+ *   <li>Support for the whole Unicode character set: <tt>&#92;u0000</tt> to <tt>&#92;u10FFFF</tt>, including
+ *       characters not representable by only one <tt>char</tt> in Java (<tt>&gt;&#92;uFFFF</tt>).</li>
  *   <li>Support for unescaping unicode characters &gt; U+FFFF both when represented in standard form (one char,
- *       <kbd>&#92;20000</kbd>) and non-standard (surrogate pair, <kbd>&#92;D840&#92;DC00</kbd>, used by older
+ *       <tt>&#92;20000</tt>) and non-standard (surrogate pair, <tt>&#92;D840&#92;DC00</tt>, used by older
  *       WebKit browsers).</li>
  * </ul>
  *
@@ -82,41 +82,41 @@ import java.io.Writer;
  *   There are two different input/output modes that can be used in escape/unescape operations:
  * </p>
  * <ul>
- *   <li><em><kbd>String</kbd> input, <kbd>String</kbd> output</em>: Input is specified as a <kbd>String</kbd> object
+ *   <li><em><tt>String</tt> input, <tt>String</tt> output</em>: Input is specified as a <tt>String</tt> object
  *       and output is returned as another. In order to improve memory performance, all escape and unescape
  *       operations <u>will return the exact same input object as output if no escape/unescape modifications
  *       are required</u>.</li>
- *   <li><em><kbd>char[]</kbd> input, <kbd>java.io.Writer</kbd> output</em>: Input will be read from a char array
- *       (<kbd>char[]</kbd>) and output will be written into the specified <kbd>java.io.Writer</kbd>.
- *       Two <kbd>int</kbd> arguments called <kbd>offset</kbd> and <kbd>len</kbd> will be
- *       used for specifying the part of the <kbd>char[]</kbd> that should be escaped/unescaped. These methods
- *       should be called with <kbd>offset = 0</kbd> and <kbd>len = text.length</kbd> in order to process
- *       the whole <kbd>char[]</kbd>.</li>
+ *   <li><em><tt>char[]</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a char array
+ *       (<tt>char[]</tt>) and output will be written into the specified <tt>java.io.Writer</tt>.
+ *       Two <tt>int</tt> arguments called <tt>offset</tt> and <tt>len</tt> will be
+ *       used for specifying the part of the <tt>char[]</tt> that should be escaped/unescaped. These methods
+ *       should be called with <tt>offset = 0</tt> and <tt>len = text.length</tt> in order to process
+ *       the whole <tt>char[]</tt>.</li>
  * </ul>
  *
  * <h4><u>Glossary</u></h4>
  *
  * <dl>
  *   <dt>Backslash escapes</dt>
- *     <dd>Escape sequences performed by means of prefixing a <em>backslash</em> (<kbd>&#92;</kbd>) to
- *         the escaped char: <kbd>&#92;+</kbd>, <kbd>&#92;(</kbd>, <kbd>&#92;)</kbd></dd>
+ *     <dd>Escape sequences performed by means of prefixing a <em>backslash</em> (<tt>&#92;</tt>) to
+ *         the escaped char: <tt>&#92;+</tt>, <tt>&#92;(</tt>, <tt>&#92;)</tt></dd>
  *   <dt>HEXA escapes</dt>
- *     <dd>Complete representation of unicode codepoints up to <kbd>U+10FFFF</kbd>, in two forms:
+ *     <dd>Complete representation of unicode codepoints up to <tt>U+10FFFF</tt>, in two forms:
  *         <ul>
- *           <li><em>Compact</em>: non-zero-padded hexadecimal representation (<kbd>&#92;E1 </kbd>), followed
- *               by an optional whitespace (<kbd>U+0020</kbd>), required if after the escaped character comes
- *               a hexadecimal digit (<kbd>[0-9A-Fa-f]</kbd>) or another whitespace (<kbd>&nbps;</kbd>).</li>
- *           <li><em>Six-digit</em>: zero-padded hexadecimal representation (<kbd>&#92;0000E1</kbd>), followed
- *               by an optional whitespace (<kbd>U+0020</kbd>), required if after the escaped character comes
- *               another whitespace (<kbd>&nbsp;</kbd>).</li>
+ *           <li><em>Compact</em>: non-zero-padded hexadecimal representation (<tt>&#92;E1 </tt>), followed
+ *               by an optional whitespace (<tt>U+0020</tt>), required if after the escaped character comes
+ *               a hexadecimal digit (<tt>[0-9A-Fa-f]</tt>) or another whitespace (<tt>&nbps;</tt>).</li>
+ *           <li><em>Six-digit</em>: zero-padded hexadecimal representation (<tt>&#92;0000E1</tt>), followed
+ *               by an optional whitespace (<tt>U+0020</tt>), required if after the escaped character comes
+ *               another whitespace (<tt>&nbsp;</tt>).</li>
  *         </ul>
  *     </dd>
  *   <dt>Unicode Codepoint</dt>
- *     <dd>Each of the <kbd>int</kbd> values conforming the Unicode code space.
- *         Normally corresponding to a Java <kbd>char</kbd> primitive value (codepoint <= <kbd>&bsol;uFFFF</kbd>),
- *         but might be two <kbd>char</kbd>s for codepoints <kbd>&bsol;u10000</kbd> to <kbd>&bsol;u10FFFF</kbd> if the
- *         first <kbd>char</kbd> is a high surrogate (<kbd>&bsol;uD800</kbd> to <kbd>&bsol;uDBFF</kbd>) and the
- *         second is a low surrogate (<kbd>&bsol;uDC00</kbd> to <kbd>&bsol;uDFFF</kbd>).</dd>
+ *     <dd>Each of the <tt>int</tt> values conforming the Unicode code space.
+ *         Normally corresponding to a Java <tt>char</tt> primitive value (codepoint <= <tt>&#92;uFFFF</tt>),
+ *         but might be two <tt>char</tt>s for codepoints <tt>&#92;u10000</tt> to <tt>&#92;u10FFFF</tt> if the
+ *         first <tt>char</tt> is a high surrogate (<tt>&#92;uD800</tt> to <tt>&#92;uDBFF</tt>) and the
+ *         second is a low surrogate (<tt>&#92;uDC00</tt> to <tt>&#92;uDFFF</tt>).</dd>
  * </dl>
  *
  * <h4><u>References</u></h4>
@@ -145,24 +145,24 @@ public final class CssEscape {
     /**
      * <p>
      *   Perform a CSS String level 1 (only basic set) <strong>escape</strong> operation
-     *   on a <kbd>String</kbd> input.
+     *   on a <tt>String</tt> input.
      * </p>
      * <p>
      *   <em>Level 1</em> means this method will only escape the CSS String basic escape set:
      * </p>
      * <ul>
      *   <li>The <em>Backslash Escapes</em>:
-     *       <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>) and
-     *       <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>).
+     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>) and
+     *       <tt>&#92;&#39;</tt> (<tt>U+0027</tt>).
      *   </li>
      *   <li>
-     *       Two ranges of non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
-     *       and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+     *       Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *       and <tt>U+007F</tt> to <tt>U+009F</tt>.
      *   </li>
      * </ul>
      * <p>
      *   This escape will be performed by using Backslash escapes whenever possible. For escaped
-     *   characters that do not have an associated Backslash, default to <kbd>&#92;FF </kbd>
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
      *   Hexadecimal Escapes.
      * </p>
      * <p>
@@ -170,20 +170,20 @@ public final class CssEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><kbd>type</kbd>:
+     *   <li><tt>type</tt>:
      *       {@link CssStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
-     *   <li><kbd>level</kbd>:
+     *   <li><tt>level</tt>:
      *       {@link CssStringEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>String</kbd> to be escaped.
-     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
-     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
-     *         no additional <kbd>String</kbd> objects will be created during processing). Will
-     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param text the <tt>String</tt> to be escaped.
+     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
      */
     public static String escapeCssStringMinimal(final String text) {
         return escapeCssString(text,
@@ -195,7 +195,7 @@ public final class CssEscape {
     /**
      * <p>
      *   Perform a CSS String level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
-     *   on a <kbd>String</kbd> input.
+     *   on a <tt>String</tt> input.
      * </p>
      * <p>
      *   <em>Level 2</em> means this method will escape:
@@ -204,12 +204,12 @@ public final class CssEscape {
      *   <li>The CSS String basic escape set:
      *         <ul>
      *           <li>The <em>Backslash Escapes</em>:
-     *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>) and
-     *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>).
+     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>) and
+     *               <tt>&#92;&#39;</tt> (<tt>U+0027</tt>).
      *           </li>
      *           <li>
-     *               Two ranges of non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
-     *               and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+     *               Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *               and <tt>U+007F</tt> to <tt>U+009F</tt>.
      *           </li>
      *         </ul>
      *   </li>
@@ -217,7 +217,7 @@ public final class CssEscape {
      * </ul>
      * <p>
      *   This escape will be performed by using Backslash escapes whenever possible. For escaped
-     *   characters that do not have an associated Backslash, default to <kbd>&#92;FF </kbd>
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
      *   Hexadecimal Escapes.
      * </p>
      * <p>
@@ -226,20 +226,20 @@ public final class CssEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><kbd>type</kbd>:
+     *   <li><tt>type</tt>:
      *       {@link CssStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
-     *   <li><kbd>level</kbd>:
+     *   <li><tt>level</tt>:
      *       {@link CssStringEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>String</kbd> to be escaped.
-     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
-     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
-     *         no additional <kbd>String</kbd> objects will be created during processing). Will
-     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param text the <tt>String</tt> to be escaped.
+     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
      */
     public static String escapeCssString(final String text) {
         return escapeCssString(text,
@@ -250,7 +250,7 @@ public final class CssEscape {
 
     /**
      * <p>
-     *   Perform a (configurable) CSS String <strong>escape</strong> operation on a <kbd>String</kbd> input.
+     *   Perform a (configurable) CSS String <strong>escape</strong> operation on a <tt>String</tt> input.
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
@@ -258,21 +258,21 @@ public final class CssEscape {
      *   {@link CssStringEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <kbd>String</kbd>-based <kbd>escapeCssString*(...)</kbd> methods call this one with preconfigured
-     *   <kbd>type</kbd> and <kbd>level</kbd> values.
+     *   All other <tt>String</tt>-based <tt>escapeCssString*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>String</kbd> to be escaped.
+     * @param text the <tt>String</tt> to be escaped.
      * @param type the type of escape operation to be performed, see
      *             {@link CssStringEscapeType}.
      * @param level the escape level to be applied, see {@link CssStringEscapeLevel}.
-     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
-     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
-     *         no additional <kbd>String</kbd> objects will be created during processing). Will
-     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
      */
     public static String escapeCssString(final String text,
                                     final CssStringEscapeType type, final CssStringEscapeLevel level) {
@@ -295,24 +295,24 @@ public final class CssEscape {
     /**
      * <p>
      *   Perform a CSS String level 1 (only basic set) <strong>escape</strong> operation
-     *   on a <kbd>char[]</kbd> input.
+     *   on a <tt>char[]</tt> input.
      * </p>
      * <p>
      *   <em>Level 1</em> means this method will only escape the CSS String basic escape set:
      * </p>
      * <ul>
      *   <li>The <em>Backslash Escapes</em>:
-     *       <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>) and
-     *       <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>).
+     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>) and
+     *       <tt>&#92;&#39;</tt> (<tt>U+0027</tt>).
      *   </li>
      *   <li>
-     *       Two ranges of non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
-     *       and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+     *       Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *       and <tt>U+007F</tt> to <tt>U+009F</tt>.
      *   </li>
      * </ul>
      * <p>
      *   This escape will be performed by using Backslash escapes whenever possible. For escaped
-     *   characters that do not have an associated Backslash, default to <kbd>&#92;FF </kbd>
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
      *   Hexadecimal Escapes.
      * </p>
      * <p>
@@ -321,20 +321,20 @@ public final class CssEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><kbd>type</kbd>:
+     *   <li><tt>type</tt>:
      *       {@link CssStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
-     *   <li><kbd>level</kbd>:
+     *   <li><tt>level</tt>:
      *       {@link CssStringEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>char[]</kbd> to be escaped.
-     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
-     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
-     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param text the <tt>char[]</tt> to be escaped.
+     * @param offset the position in <tt>text</tt> at which the escape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      */
     public static void escapeCssStringMinimal(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
@@ -347,7 +347,7 @@ public final class CssEscape {
     /**
      * <p>
      *   Perform a CSS String level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
-     *   on a <kbd>char[]</kbd> input.
+     *   on a <tt>char[]</tt> input.
      * </p>
      * <p>
      *   <em>Level 2</em> means this method will escape:
@@ -356,12 +356,12 @@ public final class CssEscape {
      *   <li>The CSS String basic escape set:
      *         <ul>
      *           <li>The <em>Backslash Escapes</em>:
-     *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>) and
-     *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>).
+     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>) and
+     *               <tt>&#92;&#39;</tt> (<tt>U+0027</tt>).
      *           </li>
      *           <li>
-     *               Two ranges of non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
-     *               and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+     *               Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *               and <tt>U+007F</tt> to <tt>U+009F</tt>.
      *           </li>
      *         </ul>
      *   </li>
@@ -369,7 +369,7 @@ public final class CssEscape {
      * </ul>
      * <p>
      *   This escape will be performed by using Backslash escapes whenever possible. For escaped
-     *   characters that do not have an associated Backslash, default to <kbd>&#92;FF </kbd>
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
      *   Hexadecimal Escapes.
      * </p>
      * <p>
@@ -378,20 +378,20 @@ public final class CssEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><kbd>type</kbd>:
+     *   <li><tt>type</tt>:
      *       {@link CssStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
-     *   <li><kbd>level</kbd>:
+     *   <li><tt>level</tt>:
      *       {@link CssStringEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>char[]</kbd> to be escaped.
-     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
-     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
-     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param text the <tt>char[]</tt> to be escaped.
+     * @param offset the position in <tt>text</tt> at which the escape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      */
     public static void escapeCssString(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
@@ -403,7 +403,7 @@ public final class CssEscape {
 
     /**
      * <p>
-     *   Perform a (configurable) CSS String <strong>escape</strong> operation on a <kbd>char[]</kbd> input.
+     *   Perform a (configurable) CSS String <strong>escape</strong> operation on a <tt>char[]</tt> input.
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
@@ -411,18 +411,18 @@ public final class CssEscape {
      *   {@link CssStringEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <kbd>char[]</kbd>-based <kbd>escapeCssString*(...)</kbd> methods call this one with preconfigured
-     *   <kbd>type</kbd> and <kbd>level</kbd> values.
+     *   All other <tt>char[]</tt>-based <tt>escapeCssString*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>char[]</kbd> to be escaped.
-     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
-     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
-     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param text the <tt>char[]</tt> to be escaped.
+     * @param offset the position in <tt>text</tt> at which the escape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param type the type of escape operation to be performed, see
      *             {@link CssStringEscapeType}.
      * @param level the escape level to be applied, see {@link CssStringEscapeLevel}.
@@ -470,58 +470,58 @@ public final class CssEscape {
     /**
      * <p>
      *   Perform a CSS Identifier level 1 (only basic set) <strong>escape</strong> operation
-     *   on a <kbd>String</kbd> input.
+     *   on a <tt>String</tt> input.
      * </p>
      * <p>
      *   <em>Level 1</em> means this method will only escape the CSS Identifier basic escape set:
      * </p>
      * <ul>
      *   <li>The <em>Backslash Escapes</em>:
-     *       <kbd>&#92; </kbd> (<kbd>U+0020</kbd>),
-     *       <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
-     *       <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
-     *       <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
-     *       <kbd>&#92;$</kbd> (<kbd>U+0024</kbd>),
-     *       <kbd>&#92;%</kbd> (<kbd>U+0025</kbd>),
-     *       <kbd>&#92;&amp;</kbd> (<kbd>U+0026</kbd>),
-     *       <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>),
-     *       <kbd>&#92;(</kbd> (<kbd>U+0028</kbd>),
-     *       <kbd>&#92;)</kbd> (<kbd>U+0029</kbd>),
-     *       <kbd>&#92;*</kbd> (<kbd>U+002A</kbd>),
-     *       <kbd>&#92;+</kbd> (<kbd>U+002B</kbd>),
-     *       <kbd>&#92;,</kbd> (<kbd>U+002C</kbd>),
-     *       <kbd>&#92;.</kbd> (<kbd>U+002E</kbd>),
-     *       <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>),
-     *       <kbd>&#92;;</kbd> (<kbd>U+003B</kbd>),
-     *       <kbd>&#92;&lt;</kbd> (<kbd>U+003C</kbd>),
-     *       <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>),
-     *       <kbd>&#92;&gt;</kbd> (<kbd>U+003E</kbd>),
-     *       <kbd>&#92;?</kbd> (<kbd>U+003F</kbd>),
-     *       <kbd>&#92;@</kbd> (<kbd>U+0040</kbd>),
-     *       <kbd>&#92;[</kbd> (<kbd>U+005B</kbd>),
-     *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>),
-     *       <kbd>&#92;]</kbd> (<kbd>U+005D</kbd>),
-     *       <kbd>&#92;^</kbd> (<kbd>U+005E</kbd>),
-     *       <kbd>&#92;`</kbd> (<kbd>U+0060</kbd>),
-     *       <kbd>&#92;{</kbd> (<kbd>U+007B</kbd>),
-     *       <kbd>&#92;|</kbd> (<kbd>U+007C</kbd>),
-     *       <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
-     *       <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
-     *       Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
-     *       when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
-     *       (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
-     *       problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
-     *       (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
+     *       <tt>&#92; </tt> (<tt>U+0020</tt>),
+     *       <tt>&#92;!</tt> (<tt>U+0021</tt>),
+     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+     *       <tt>&#92;#</tt> (<tt>U+0023</tt>),
+     *       <tt>&#92;$</tt> (<tt>U+0024</tt>),
+     *       <tt>&#92;%</tt> (<tt>U+0025</tt>),
+     *       <tt>&#92;&amp;</tt> (<tt>U+0026</tt>),
+     *       <tt>&#92;&#39;</tt> (<tt>U+0027</tt>),
+     *       <tt>&#92;(</tt> (<tt>U+0028</tt>),
+     *       <tt>&#92;)</tt> (<tt>U+0029</tt>),
+     *       <tt>&#92;*</tt> (<tt>U+002A</tt>),
+     *       <tt>&#92;+</tt> (<tt>U+002B</tt>),
+     *       <tt>&#92;,</tt> (<tt>U+002C</tt>),
+     *       <tt>&#92;.</tt> (<tt>U+002E</tt>),
+     *       <tt>&#92;&#47;</tt> (<tt>U+002F</tt>),
+     *       <tt>&#92;;</tt> (<tt>U+003B</tt>),
+     *       <tt>&#92;&lt;</tt> (<tt>U+003C</tt>),
+     *       <tt>&#92;=</tt> (<tt>U+003D</tt>),
+     *       <tt>&#92;&gt;</tt> (<tt>U+003E</tt>),
+     *       <tt>&#92;?</tt> (<tt>U+003F</tt>),
+     *       <tt>&#92;@</tt> (<tt>U+0040</tt>),
+     *       <tt>&#92;[</tt> (<tt>U+005B</tt>),
+     *       <tt>&#92;&#92;</tt> (<tt>U+005C</tt>),
+     *       <tt>&#92;]</tt> (<tt>U+005D</tt>),
+     *       <tt>&#92;^</tt> (<tt>U+005E</tt>),
+     *       <tt>&#92;`</tt> (<tt>U+0060</tt>),
+     *       <tt>&#92;{</tt> (<tt>U+007B</tt>),
+     *       <tt>&#92;|</tt> (<tt>U+007C</tt>),
+     *       <tt>&#92;}</tt> (<tt>U+007D</tt>) and
+     *       <tt>&#92;~</tt> (<tt>U+007E</tt>).
+     *       Note that the <tt>&#92;-</tt> (<tt>U+002D</tt>) escape sequence exists, but will only be used
+     *       when an identifier starts with two hypens or hyphen + digit. Also, the <tt>&#92;_</tt>
+     *       (<tt>U+005F</tt>) escape will only be used at the beginning of an identifier to avoid
+     *       problems with Internet Explorer 6. In the same sense, note that the <tt>&#92;:</tt>
+     *       (<tt>U+003A</tt>) escape sequence is also defined in the standard, but will not be
      *       used for escaping as Internet Explorer &lt; 8 does not recognize it.
      *   </li>
      *   <li>
-     *       Two ranges of non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
-     *       and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+     *       Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *       and <tt>U+007F</tt> to <tt>U+009F</tt>.
      *   </li>
      * </ul>
      * <p>
      *   This escape will be performed by using Backslash escapes whenever possible. For escaped
-     *   characters that do not have an associated Backslash, default to <kbd>&#92;FF </kbd>
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
      *   Hexadecimal Escapes.
      * </p>
      * <p>
@@ -529,20 +529,20 @@ public final class CssEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><kbd>type</kbd>:
+     *   <li><tt>type</tt>:
      *       {@link CssIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
-     *   <li><kbd>level</kbd>:
+     *   <li><tt>level</tt>:
      *       {@link CssIdentifierEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>String</kbd> to be escaped.
-     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
-     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
-     *         no additional <kbd>String</kbd> objects will be created during processing). Will
-     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param text the <tt>String</tt> to be escaped.
+     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
      */
     public static String escapeCssIdentifierMinimal(final String text) {
         return escapeCssIdentifier(text,
@@ -554,7 +554,7 @@ public final class CssEscape {
     /**
      * <p>
      *   Perform a CSS Identifier level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
-     *   on a <kbd>String</kbd> input.
+     *   on a <tt>String</tt> input.
      * </p>
      * <p>
      *   <em>Level 2</em> means this method will escape:
@@ -563,46 +563,46 @@ public final class CssEscape {
      *   <li>The CSS Identifier basic escape set:
      *         <ul>
      *           <li>The <em>Backslash Escapes</em>:
-     *               <kbd>&#92; </kbd> (<kbd>U+0020</kbd>),
-     *               <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
-     *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
-     *               <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
-     *               <kbd>&#92;$</kbd> (<kbd>U+0024</kbd>),
-     *               <kbd>&#92;%</kbd> (<kbd>U+0025</kbd>),
-     *               <kbd>&#92;&amp;</kbd> (<kbd>U+0026</kbd>),
-     *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>),
-     *               <kbd>&#92;(</kbd> (<kbd>U+0028</kbd>),
-     *               <kbd>&#92;)</kbd> (<kbd>U+0029</kbd>),
-     *               <kbd>&#92;*</kbd> (<kbd>U+002A</kbd>),
-     *               <kbd>&#92;+</kbd> (<kbd>U+002B</kbd>),
-     *               <kbd>&#92;,</kbd> (<kbd>U+002C</kbd>),
-     *               <kbd>&#92;.</kbd> (<kbd>U+002E</kbd>),
-     *               <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>),
-     *               <kbd>&#92;;</kbd> (<kbd>U+003B</kbd>),
-     *               <kbd>&#92;&lt;</kbd> (<kbd>U+003C</kbd>),
-     *               <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>),
-     *               <kbd>&#92;&gt;</kbd> (<kbd>U+003E</kbd>),
-     *               <kbd>&#92;?</kbd> (<kbd>U+003F</kbd>),
-     *               <kbd>&#92;@</kbd> (<kbd>U+0040</kbd>),
-     *               <kbd>&#92;[</kbd> (<kbd>U+005B</kbd>),
-     *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>),
-     *               <kbd>&#92;]</kbd> (<kbd>U+005D</kbd>),
-     *               <kbd>&#92;^</kbd> (<kbd>U+005E</kbd>),
-     *               <kbd>&#92;`</kbd> (<kbd>U+0060</kbd>),
-     *               <kbd>&#92;{</kbd> (<kbd>U+007B</kbd>),
-     *               <kbd>&#92;|</kbd> (<kbd>U+007C</kbd>),
-     *               <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
-     *               <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
-     *               Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
-     *               when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
-     *               (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
-     *               problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
-     *               (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
+     *               <tt>&#92; </tt> (<tt>U+0020</tt>),
+     *               <tt>&#92;!</tt> (<tt>U+0021</tt>),
+     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+     *               <tt>&#92;#</tt> (<tt>U+0023</tt>),
+     *               <tt>&#92;$</tt> (<tt>U+0024</tt>),
+     *               <tt>&#92;%</tt> (<tt>U+0025</tt>),
+     *               <tt>&#92;&amp;</tt> (<tt>U+0026</tt>),
+     *               <tt>&#92;&#39;</tt> (<tt>U+0027</tt>),
+     *               <tt>&#92;(</tt> (<tt>U+0028</tt>),
+     *               <tt>&#92;)</tt> (<tt>U+0029</tt>),
+     *               <tt>&#92;*</tt> (<tt>U+002A</tt>),
+     *               <tt>&#92;+</tt> (<tt>U+002B</tt>),
+     *               <tt>&#92;,</tt> (<tt>U+002C</tt>),
+     *               <tt>&#92;.</tt> (<tt>U+002E</tt>),
+     *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>),
+     *               <tt>&#92;;</tt> (<tt>U+003B</tt>),
+     *               <tt>&#92;&lt;</tt> (<tt>U+003C</tt>),
+     *               <tt>&#92;=</tt> (<tt>U+003D</tt>),
+     *               <tt>&#92;&gt;</tt> (<tt>U+003E</tt>),
+     *               <tt>&#92;?</tt> (<tt>U+003F</tt>),
+     *               <tt>&#92;@</tt> (<tt>U+0040</tt>),
+     *               <tt>&#92;[</tt> (<tt>U+005B</tt>),
+     *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>),
+     *               <tt>&#92;]</tt> (<tt>U+005D</tt>),
+     *               <tt>&#92;^</tt> (<tt>U+005E</tt>),
+     *               <tt>&#92;`</tt> (<tt>U+0060</tt>),
+     *               <tt>&#92;{</tt> (<tt>U+007B</tt>),
+     *               <tt>&#92;|</tt> (<tt>U+007C</tt>),
+     *               <tt>&#92;}</tt> (<tt>U+007D</tt>) and
+     *               <tt>&#92;~</tt> (<tt>U+007E</tt>).
+     *               Note that the <tt>&#92;-</tt> (<tt>U+002D</tt>) escape sequence exists, but will only be used
+     *               when an identifier starts with two hypens or hyphen + digit. Also, the <tt>&#92;_</tt>
+     *               (<tt>U+005F</tt>) escape will only be used at the beginning of an identifier to avoid
+     *               problems with Internet Explorer 6. In the same sense, note that the <tt>&#92;:</tt>
+     *               (<tt>U+003A</tt>) escape sequence is also defined in the standard, but will not be
      *               used for escaping as Internet Explorer &lt; 8 does not recognize it.
      *           </li>
      *           <li>
-     *               Two ranges of non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
-     *               and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+     *               Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *               and <tt>U+007F</tt> to <tt>U+009F</tt>.
      *           </li>
      *         </ul>
      *   </li>
@@ -610,7 +610,7 @@ public final class CssEscape {
      * </ul>
      * <p>
      *   This escape will be performed by using Backslash escapes whenever possible. For escaped
-     *   characters that do not have an associated Backslash, default to <kbd>&#92;FF </kbd>
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
      *   Hexadecimal Escapes.
      * </p>
      * <p>
@@ -619,20 +619,20 @@ public final class CssEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><kbd>type</kbd>:
+     *   <li><tt>type</tt>:
      *       {@link CssIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
-     *   <li><kbd>level</kbd>:
+     *   <li><tt>level</tt>:
      *       {@link CssIdentifierEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>String</kbd> to be escaped.
-     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
-     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
-     *         no additional <kbd>String</kbd> objects will be created during processing). Will
-     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param text the <tt>String</tt> to be escaped.
+     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
      */
     public static String escapeCssIdentifier(final String text) {
         return escapeCssIdentifier(text,
@@ -643,7 +643,7 @@ public final class CssEscape {
 
     /**
      * <p>
-     *   Perform a (configurable) CSS Identifier <strong>escape</strong> operation on a <kbd>String</kbd> input.
+     *   Perform a (configurable) CSS Identifier <strong>escape</strong> operation on a <tt>String</tt> input.
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
@@ -651,21 +651,21 @@ public final class CssEscape {
      *   {@link CssIdentifierEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <kbd>String</kbd>-based <kbd>escapeCssIdentifier*(...)</kbd> methods call this one with preconfigured
-     *   <kbd>type</kbd> and <kbd>level</kbd> values.
+     *   All other <tt>String</tt>-based <tt>escapeCssIdentifier*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>String</kbd> to be escaped.
+     * @param text the <tt>String</tt> to be escaped.
      * @param type the type of escape operation to be performed, see
      *             {@link CssIdentifierEscapeType}.
      * @param level the escape level to be applied, see {@link CssIdentifierEscapeLevel}.
-     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
-     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
-     *         no additional <kbd>String</kbd> objects will be created during processing). Will
-     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
      */
     public static String escapeCssIdentifier(final String text,
                                          final CssIdentifierEscapeType type, final CssIdentifierEscapeLevel level) {
@@ -688,58 +688,58 @@ public final class CssEscape {
     /**
      * <p>
      *   Perform a CSS Identifier level 1 (only basic set) <strong>escape</strong> operation
-     *   on a <kbd>char[]</kbd> input.
+     *   on a <tt>char[]</tt> input.
      * </p>
      * <p>
      *   <em>Level 1</em> means this method will only escape the CSS Identifier basic escape set:
      * </p>
      * <ul>
      *   <li>The <em>Backslash Escapes</em>:
-     *       <kbd>&#92; </kbd> (<kbd>U+0020</kbd>),
-     *       <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
-     *       <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
-     *       <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
-     *       <kbd>&#92;$</kbd> (<kbd>U+0024</kbd>),
-     *       <kbd>&#92;%</kbd> (<kbd>U+0025</kbd>),
-     *       <kbd>&#92;&amp;</kbd> (<kbd>U+0026</kbd>),
-     *       <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>),
-     *       <kbd>&#92;(</kbd> (<kbd>U+0028</kbd>),
-     *       <kbd>&#92;)</kbd> (<kbd>U+0029</kbd>),
-     *       <kbd>&#92;*</kbd> (<kbd>U+002A</kbd>),
-     *       <kbd>&#92;+</kbd> (<kbd>U+002B</kbd>),
-     *       <kbd>&#92;,</kbd> (<kbd>U+002C</kbd>),
-     *       <kbd>&#92;.</kbd> (<kbd>U+002E</kbd>),
-     *       <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>),
-     *       <kbd>&#92;;</kbd> (<kbd>U+003B</kbd>),
-     *       <kbd>&#92;&lt;</kbd> (<kbd>U+003C</kbd>),
-     *       <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>),
-     *       <kbd>&#92;&gt;</kbd> (<kbd>U+003E</kbd>),
-     *       <kbd>&#92;?</kbd> (<kbd>U+003F</kbd>),
-     *       <kbd>&#92;@</kbd> (<kbd>U+0040</kbd>),
-     *       <kbd>&#92;[</kbd> (<kbd>U+005B</kbd>),
-     *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>),
-     *       <kbd>&#92;]</kbd> (<kbd>U+005D</kbd>),
-     *       <kbd>&#92;^</kbd> (<kbd>U+005E</kbd>),
-     *       <kbd>&#92;`</kbd> (<kbd>U+0060</kbd>),
-     *       <kbd>&#92;{</kbd> (<kbd>U+007B</kbd>),
-     *       <kbd>&#92;|</kbd> (<kbd>U+007C</kbd>),
-     *       <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
-     *       <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
-     *       Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
-     *       when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
-     *       (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
-     *       problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
-     *       (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
+     *       <tt>&#92; </tt> (<tt>U+0020</tt>),
+     *       <tt>&#92;!</tt> (<tt>U+0021</tt>),
+     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+     *       <tt>&#92;#</tt> (<tt>U+0023</tt>),
+     *       <tt>&#92;$</tt> (<tt>U+0024</tt>),
+     *       <tt>&#92;%</tt> (<tt>U+0025</tt>),
+     *       <tt>&#92;&amp;</tt> (<tt>U+0026</tt>),
+     *       <tt>&#92;&#39;</tt> (<tt>U+0027</tt>),
+     *       <tt>&#92;(</tt> (<tt>U+0028</tt>),
+     *       <tt>&#92;)</tt> (<tt>U+0029</tt>),
+     *       <tt>&#92;*</tt> (<tt>U+002A</tt>),
+     *       <tt>&#92;+</tt> (<tt>U+002B</tt>),
+     *       <tt>&#92;,</tt> (<tt>U+002C</tt>),
+     *       <tt>&#92;.</tt> (<tt>U+002E</tt>),
+     *       <tt>&#92;&#47;</tt> (<tt>U+002F</tt>),
+     *       <tt>&#92;;</tt> (<tt>U+003B</tt>),
+     *       <tt>&#92;&lt;</tt> (<tt>U+003C</tt>),
+     *       <tt>&#92;=</tt> (<tt>U+003D</tt>),
+     *       <tt>&#92;&gt;</tt> (<tt>U+003E</tt>),
+     *       <tt>&#92;?</tt> (<tt>U+003F</tt>),
+     *       <tt>&#92;@</tt> (<tt>U+0040</tt>),
+     *       <tt>&#92;[</tt> (<tt>U+005B</tt>),
+     *       <tt>&#92;&#92;</tt> (<tt>U+005C</tt>),
+     *       <tt>&#92;]</tt> (<tt>U+005D</tt>),
+     *       <tt>&#92;^</tt> (<tt>U+005E</tt>),
+     *       <tt>&#92;`</tt> (<tt>U+0060</tt>),
+     *       <tt>&#92;{</tt> (<tt>U+007B</tt>),
+     *       <tt>&#92;|</tt> (<tt>U+007C</tt>),
+     *       <tt>&#92;}</tt> (<tt>U+007D</tt>) and
+     *       <tt>&#92;~</tt> (<tt>U+007E</tt>).
+     *       Note that the <tt>&#92;-</tt> (<tt>U+002D</tt>) escape sequence exists, but will only be used
+     *       when an identifier starts with two hypens or hyphen + digit. Also, the <tt>&#92;_</tt>
+     *       (<tt>U+005F</tt>) escape will only be used at the beginning of an identifier to avoid
+     *       problems with Internet Explorer 6. In the same sense, note that the <tt>&#92;:</tt>
+     *       (<tt>U+003A</tt>) escape sequence is also defined in the standard, but will not be
      *       used for escaping as Internet Explorer &lt; 8 does not recognize it.
      *   </li>
      *   <li>
-     *       Two ranges of non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
-     *       and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+     *       Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *       and <tt>U+007F</tt> to <tt>U+009F</tt>.
      *   </li>
      * </ul>
      * <p>
      *   This escape will be performed by using Backslash escapes whenever possible. For escaped
-     *   characters that do not have an associated Backslash, default to <kbd>&#92;FF </kbd>
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
      *   Hexadecimal Escapes.
      * </p>
      * <p>
@@ -748,20 +748,20 @@ public final class CssEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><kbd>type</kbd>:
+     *   <li><tt>type</tt>:
      *       {@link CssIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
-     *   <li><kbd>level</kbd>:
+     *   <li><tt>level</tt>:
      *       {@link CssIdentifierEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>char[]</kbd> to be escaped.
-     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
-     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
-     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param text the <tt>char[]</tt> to be escaped.
+     * @param offset the position in <tt>text</tt> at which the escape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      */
     public static void escapeCssIdentifierMinimal(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
@@ -774,7 +774,7 @@ public final class CssEscape {
     /**
      * <p>
      *   Perform a CSS Identifier level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
-     *   on a <kbd>char[]</kbd> input.
+     *   on a <tt>char[]</tt> input.
      * </p>
      * <p>
      *   <em>Level 2</em> means this method will escape:
@@ -783,46 +783,46 @@ public final class CssEscape {
      *   <li>The CSS Identifier basic escape set:
      *         <ul>
      *           <li>The <em>Backslash Escapes</em>:
-     *               <kbd>&#92; </kbd> (<kbd>U+0020</kbd>),
-     *               <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
-     *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
-     *               <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
-     *               <kbd>&#92;$</kbd> (<kbd>U+0024</kbd>),
-     *               <kbd>&#92;%</kbd> (<kbd>U+0025</kbd>),
-     *               <kbd>&#92;&amp;</kbd> (<kbd>U+0026</kbd>),
-     *               <kbd>&#92;&apos;</kbd> (<kbd>U+0027</kbd>),
-     *               <kbd>&#92;(</kbd> (<kbd>U+0028</kbd>),
-     *               <kbd>&#92;)</kbd> (<kbd>U+0029</kbd>),
-     *               <kbd>&#92;*</kbd> (<kbd>U+002A</kbd>),
-     *               <kbd>&#92;+</kbd> (<kbd>U+002B</kbd>),
-     *               <kbd>&#92;,</kbd> (<kbd>U+002C</kbd>),
-     *               <kbd>&#92;.</kbd> (<kbd>U+002E</kbd>),
-     *               <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>),
-     *               <kbd>&#92;;</kbd> (<kbd>U+003B</kbd>),
-     *               <kbd>&#92;&lt;</kbd> (<kbd>U+003C</kbd>),
-     *               <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>),
-     *               <kbd>&#92;&gt;</kbd> (<kbd>U+003E</kbd>),
-     *               <kbd>&#92;?</kbd> (<kbd>U+003F</kbd>),
-     *               <kbd>&#92;@</kbd> (<kbd>U+0040</kbd>),
-     *               <kbd>&#92;[</kbd> (<kbd>U+005B</kbd>),
-     *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>),
-     *               <kbd>&#92;]</kbd> (<kbd>U+005D</kbd>),
-     *               <kbd>&#92;^</kbd> (<kbd>U+005E</kbd>),
-     *               <kbd>&#92;`</kbd> (<kbd>U+0060</kbd>),
-     *               <kbd>&#92;{</kbd> (<kbd>U+007B</kbd>),
-     *               <kbd>&#92;|</kbd> (<kbd>U+007C</kbd>),
-     *               <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
-     *               <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
-     *               Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
-     *               when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
-     *               (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
-     *               problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
-     *               (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
+     *               <tt>&#92; </tt> (<tt>U+0020</tt>),
+     *               <tt>&#92;!</tt> (<tt>U+0021</tt>),
+     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+     *               <tt>&#92;#</tt> (<tt>U+0023</tt>),
+     *               <tt>&#92;$</tt> (<tt>U+0024</tt>),
+     *               <tt>&#92;%</tt> (<tt>U+0025</tt>),
+     *               <tt>&#92;&amp;</tt> (<tt>U+0026</tt>),
+     *               <tt>&#92;&#39;</tt> (<tt>U+0027</tt>),
+     *               <tt>&#92;(</tt> (<tt>U+0028</tt>),
+     *               <tt>&#92;)</tt> (<tt>U+0029</tt>),
+     *               <tt>&#92;*</tt> (<tt>U+002A</tt>),
+     *               <tt>&#92;+</tt> (<tt>U+002B</tt>),
+     *               <tt>&#92;,</tt> (<tt>U+002C</tt>),
+     *               <tt>&#92;.</tt> (<tt>U+002E</tt>),
+     *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>),
+     *               <tt>&#92;;</tt> (<tt>U+003B</tt>),
+     *               <tt>&#92;&lt;</tt> (<tt>U+003C</tt>),
+     *               <tt>&#92;=</tt> (<tt>U+003D</tt>),
+     *               <tt>&#92;&gt;</tt> (<tt>U+003E</tt>),
+     *               <tt>&#92;?</tt> (<tt>U+003F</tt>),
+     *               <tt>&#92;@</tt> (<tt>U+0040</tt>),
+     *               <tt>&#92;[</tt> (<tt>U+005B</tt>),
+     *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>),
+     *               <tt>&#92;]</tt> (<tt>U+005D</tt>),
+     *               <tt>&#92;^</tt> (<tt>U+005E</tt>),
+     *               <tt>&#92;`</tt> (<tt>U+0060</tt>),
+     *               <tt>&#92;{</tt> (<tt>U+007B</tt>),
+     *               <tt>&#92;|</tt> (<tt>U+007C</tt>),
+     *               <tt>&#92;}</tt> (<tt>U+007D</tt>) and
+     *               <tt>&#92;~</tt> (<tt>U+007E</tt>).
+     *               Note that the <tt>&#92;-</tt> (<tt>U+002D</tt>) escape sequence exists, but will only be used
+     *               when an identifier starts with two hypens or hyphen + digit. Also, the <tt>&#92;_</tt>
+     *               (<tt>U+005F</tt>) escape will only be used at the beginning of an identifier to avoid
+     *               problems with Internet Explorer 6. In the same sense, note that the <tt>&#92;:</tt>
+     *               (<tt>U+003A</tt>) escape sequence is also defined in the standard, but will not be
      *               used for escaping as Internet Explorer &lt; 8 does not recognize it.
      *           </li>
      *           <li>
-     *               Two ranges of non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
-     *               and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+     *               Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *               and <tt>U+007F</tt> to <tt>U+009F</tt>.
      *           </li>
      *         </ul>
      *   </li>
@@ -830,7 +830,7 @@ public final class CssEscape {
      * </ul>
      * <p>
      *   This escape will be performed by using Backslash escapes whenever possible. For escaped
-     *   characters that do not have an associated Backslash, default to <kbd>&#92;FF </kbd>
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
      *   Hexadecimal Escapes.
      * </p>
      * <p>
@@ -839,20 +839,20 @@ public final class CssEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><kbd>type</kbd>:
+     *   <li><tt>type</tt>:
      *       {@link CssIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
-     *   <li><kbd>level</kbd>:
+     *   <li><tt>level</tt>:
      *       {@link CssIdentifierEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>char[]</kbd> to be escaped.
-     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
-     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
-     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param text the <tt>char[]</tt> to be escaped.
+     * @param offset the position in <tt>text</tt> at which the escape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      */
     public static void escapeCssIdentifier(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
@@ -864,7 +864,7 @@ public final class CssEscape {
 
     /**
      * <p>
-     *   Perform a (configurable) CSS Identifier <strong>escape</strong> operation on a <kbd>char[]</kbd> input.
+     *   Perform a (configurable) CSS Identifier <strong>escape</strong> operation on a <tt>char[]</tt> input.
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
@@ -872,18 +872,18 @@ public final class CssEscape {
      *   {@link CssIdentifierEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <kbd>char[]</kbd>-based <kbd>escapeCssIdentifier*(...)</kbd> methods call this one with preconfigured
-     *   <kbd>type</kbd> and <kbd>level</kbd> values.
+     *   All other <tt>char[]</tt>-based <tt>escapeCssIdentifier*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>char[]</kbd> to be escaped.
-     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
-     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
-     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param text the <tt>char[]</tt> to be escaped.
+     * @param offset the position in <tt>text</tt> at which the escape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param type the type of escape operation to be performed, see
      *             {@link CssIdentifierEscapeType}.
      * @param level the escape level to be applied, see {@link CssIdentifierEscapeLevel}.
@@ -929,7 +929,7 @@ public final class CssEscape {
 
     /**
      * <p>
-     *   Perform a CSS <strong>unescape</strong> operation on a <kbd>String</kbd> input.
+     *   Perform a CSS <strong>unescape</strong> operation on a <tt>String</tt> input.
      * </p>
      * <p>
      *   No additional configuration arguments are required. Unescape operations
@@ -940,11 +940,11 @@ public final class CssEscape {
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>String</kbd> to be unescaped.
-     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
-     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
-     *         no additional <kbd>String</kbd> objects will be created during processing). Will
-     *         return <kbd>null</kbd> if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param text the <tt>String</tt> to be unescaped.
+     * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
      */
     public static String unescapeCss(final String text) {
         return CssUnescapeUtil.unescape(text);
@@ -953,7 +953,7 @@ public final class CssEscape {
 
     /**
      * <p>
-     *   Perform a CSS <strong>unescape</strong> operation on a <kbd>char[]</kbd> input.
+     *   Perform a CSS <strong>unescape</strong> operation on a <tt>char[]</tt> input.
      * </p>
      * <p>
      *   No additional configuration arguments are required. Unescape operations
@@ -964,11 +964,11 @@ public final class CssEscape {
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <kbd>char[]</kbd> to be unescaped.
-     * @param offset the position in <kbd>text</kbd> at which the unescape operation should start.
-     * @param len the number of characters in <kbd>text</kbd> that should be unescaped.
-     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if <kbd>text</kbd> is <kbd>null</kbd>.
+     * @param text the <tt>char[]</tt> to be unescaped.
+     * @param offset the position in <tt>text</tt> at which the unescape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be unescaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      */
     public static void unescapeCss(final char[] text, final int offset, final int len, final Writer writer)
                                    throws IOException{
