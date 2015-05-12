@@ -46,7 +46,7 @@ package org.unbescape.javascript;
  *               closing <tt>&lt;script&gt;</tt> tags in HTML. Also, note that <tt>&#92;v</tt>
  *               (<tt>U+000B</tt>) is actually included as a Single Escape
  *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
- *               is not supported by Microsoft Internet Explorer versions < 9.
+ *               is not supported by Microsoft Internet Explorer versions &lt; 9.
  *           </li>
  *           <li>
  *               Two ranges of non-displayable, control characters (some of which are already part of the
@@ -78,7 +78,7 @@ package org.unbescape.javascript;
 public enum JavaScriptEscapeLevel {
 
     /**
-     * Level 1 escape: escape only the basic escape set: Single Escape Chars plus non-displayable control chars.</tt>
+     * Level 1 escape: escape only the basic escape set: Single Escape Chars plus non-displayable control chars.
      */
     LEVEL_1_BASIC_ESCAPE_SET(1),
 

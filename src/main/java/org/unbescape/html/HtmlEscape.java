@@ -106,7 +106,7 @@ import java.io.Writer;
  *         <tt>&amp;#xE1;</tt></dd>
  *   <dt>Unicode Codepoint</dt>
  *     <dd>Each of the <tt>int</tt> values conforming the Unicode code space.
- *         Normally corresponding to a Java <tt>char</tt> primitive value (codepoint <= <tt>&#92;uFFFF</tt>),
+ *         Normally corresponding to a Java <tt>char</tt> primitive value (codepoint &lt;= <tt>&#92;uFFFF</tt>),
  *         but might be two <tt>char</tt>s for codepoints <tt>&#92;u10000</tt> to <tt>&#92;u10FFFF</tt> if the
  *         first <tt>char</tt> is a high surrogate (<tt>&#92;uD800</tt> to <tt>&#92;uDBFF</tt>) and the
  *         second is a low surrogate (<tt>&#92;uDC00</tt> to <tt>&#92;uDFFF</tt>).</dd>
@@ -154,7 +154,7 @@ public final class HtmlEscape {
      * </p>
      * <ul>
      *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
-     *       <tt>&quot</tt> and <tt>&#39;</tt></li>
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
      *   <li>All non ASCII characters.</li>
      * </ul>
      * <p>
@@ -194,7 +194,7 @@ public final class HtmlEscape {
      * </p>
      * <p>
      *   <em>Level 1</em> means this method will only escape the five markup-significant characters:
-     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot</tt> and <tt>&#39;</tt>. It is called
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>. It is called
      *   <em>XML-style</em> in order to link it with JSP's <tt>escapeXml</tt> attribute in JSTL's
      *   <tt>&lt;c:out ... /&gt;</tt> tags.
      * </p>
@@ -238,7 +238,7 @@ public final class HtmlEscape {
      * </p>
      * <ul>
      *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
-     *       <tt>&quot</tt> and <tt>&#39;</tt></li>
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
      *   <li>All non ASCII characters.</li>
      * </ul>
      * <p>
@@ -278,7 +278,7 @@ public final class HtmlEscape {
      * </p>
      * <p>
      *   <em>Level 1</em> means this method will only escape the five markup-significant characters:
-     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot</tt> and <tt>&#39;</tt>. It is called
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>. It is called
      *   <em>XML-style</em> in order to link it with JSP's <tt>escapeXml</tt> attribute in JSTL's
      *   <tt>&lt;c:out ... /&gt;</tt> tags.
      * </p>
@@ -367,7 +367,7 @@ public final class HtmlEscape {
      * </p>
      * <ul>
      *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
-     *       <tt>&quot</tt> and <tt>&#39;</tt></li>
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
      *   <li>All non ASCII characters.</li>
      * </ul>
      * <p>
@@ -394,6 +394,7 @@ public final class HtmlEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeHtml5(final char[] text, final int offset, final int len, final Writer writer)
                                    throws IOException {
@@ -408,7 +409,7 @@ public final class HtmlEscape {
      * </p>
      * <p>
      *   <em>Level 1</em> means this method will only escape the five markup-significant characters:
-     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot</tt> and <tt>&#39;</tt>. It is called
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>. It is called
      *   <em>XML-style</em> in order to link it with JSP's <tt>escapeXml</tt> attribute in JSTL's
      *   <tt>&lt;c:out ... /&gt;</tt> tags.
      * </p>
@@ -437,6 +438,7 @@ public final class HtmlEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeHtml5Xml(final char[] text, final int offset, final int len, final Writer writer)
                                       throws IOException {
@@ -454,7 +456,7 @@ public final class HtmlEscape {
      * </p>
      * <ul>
      *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
-     *       <tt>&quot</tt> and <tt>&#39;</tt></li>
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
      *   <li>All non ASCII characters.</li>
      * </ul>
      * <p>
@@ -481,6 +483,7 @@ public final class HtmlEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeHtml4(final char[] text, final int offset, final int len, final Writer writer)
                                    throws IOException {
@@ -495,7 +498,7 @@ public final class HtmlEscape {
      * </p>
      * <p>
      *   <em>Level 1</em> means this method will only escape the five markup-significant characters:
-     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot</tt> and <tt>&#39;</tt>. It is called
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>. It is called
      *   <em>XML-style</em> in order to link it with JSP's <tt>escapeXml</tt> attribute in JSTL's
      *   <tt>&lt;c:out ... /&gt;</tt> tags.
      * </p>
@@ -523,6 +526,7 @@ public final class HtmlEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeHtml4Xml(final char[] text, final int offset, final int len, final Writer writer)
                                       throws IOException {
@@ -555,6 +559,7 @@ public final class HtmlEscape {
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param type the type of escape operation to be performed, see {@link org.unbescape.html.HtmlEscapeType}.
      * @param level the escape level to be applied, see {@link org.unbescape.html.HtmlEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeHtml(final char[] text, final int offset, final int len, final Writer writer,
                                   final HtmlEscapeType type, final HtmlEscapeLevel level)
@@ -636,6 +641,7 @@ public final class HtmlEscape {
      * @param len the number of characters in <tt>text</tt> that should be unescaped.
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeHtml(final char[] text, final int offset, final int len, final Writer writer)
                                     throws IOException{

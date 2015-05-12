@@ -96,7 +96,7 @@ import java.io.Writer;
  *         <tt>';'</tt>.</dd>
  *   <dt>CER</dt>
  *     <dd>Character Entity Reference: XML Entity Reference used to define a shortcut to a specific
- *         character. XML specifies five <em>predefined</em> CERs: <tt>&amp;lt;<tt> (<tt>&lt;</tt>),
+ *         character. XML specifies five <em>predefined</em> CERs: <tt>&amp;lt;</tt> (<tt>&lt;</tt>),
  *         <tt>&amp;gt;</tt> (<tt>&gt;</tt>), <tt>&amp;amp;</tt> (<tt>&amp;</tt>),
  *         <tt>&amp;quot;</tt> (<tt>&quot;</tt>) and <tt>&amp;apos;</tt>
  *         (<tt>&#39;</tt>).</dd>
@@ -106,11 +106,11 @@ import java.io.Writer;
  *   <dt>HCR</dt>
  *     <dd>Hexadecimal Character Reference: hexadecimal numerical representation of an Unicode codepoint:
  *         <tt>&#xE1;</tt>. Note that XML only allows lower-case <tt>'x'</tt> for defining hexadecimal
- *         character entity references (in contrast with HTML, which allows both <tt>'&#x...;'</tt> and
- *         <tt>'&#X...;'</tt>).</dd>
+ *         character entity references (in contrast with HTML, which allows both <tt>'&amp;#x...;'</tt> and
+ *         <tt>'&amp;#x...;'</tt>).</dd>
  *   <dt>Unicode Codepoint</dt>
  *     <dd>Each of the <tt>int</tt> values conforming the Unicode code space.
- *         Normally corresponding to a Java <tt>char</tt> primitive value (codepoint <= <tt>&#92;uFFFF</tt>),
+ *         Normally corresponding to a Java <tt>char</tt> primitive value (codepoint &lt;= <tt>&#92;uFFFF</tt>),
  *         but might be two <tt>char</tt>s for codepoints <tt>&#92;u10000</tt> to <tt>&#92;u10FFFF</tt> if the
  *         first <tt>char</tt> is a high surrogate (<tt>&#92;uD800</tt> to <tt>&#92;uDBFF</tt>) and the
  *         second is a low surrogate (<tt>&#92;uDC00</tt> to <tt>&#92;uDFFF</tt>).</dd>
@@ -149,7 +149,7 @@ public final class XmlEscape {
      * <p>
      *   <em>Level 1</em> means this method will only escape the five markup-significant characters which
      *   are <em>predefined</em> as Character Entity References in XML:
-     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot</tt> and <tt>&#39;</tt>.
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>.
      * </p>
      * <p>
      *   This method calls {@link #escapeXml10(String, XmlEscapeType, XmlEscapeLevel)} with the following
@@ -186,7 +186,7 @@ public final class XmlEscape {
      * <p>
      *   <em>Level 1</em> means this method will only escape the five markup-significant characters which
      *   are <em>predefined</em> as Character Entity References in XML:
-     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot</tt> and <tt>&#39;</tt>.
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>.
      * </p>
      * <p>
      *   This method calls {@link #escapeXml11(String, XmlEscapeType, XmlEscapeLevel)} with the following
@@ -225,7 +225,7 @@ public final class XmlEscape {
      * </p>
      * <ul>
      *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
-     *       <tt>&quot</tt> and <tt>&#39;</tt></li>
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
      *   <li>All non ASCII characters.</li>
      * </ul>
      * <p>
@@ -270,7 +270,7 @@ public final class XmlEscape {
      * </p>
      * <ul>
      *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
-     *       <tt>&quot</tt> and <tt>&#39;</tt></li>
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
      *   <li>All non ASCII characters.</li>
      * </ul>
      * <p>
@@ -396,7 +396,7 @@ public final class XmlEscape {
      * <p>
      *   <em>Level 1</em> means this method will only escape the five markup-significant characters which
      *   are <em>predefined</em> as Character Entity References in XML:
-     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot</tt> and <tt>&#39;</tt>.
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>.
      * </p>
      * <p>
      *   This method calls
@@ -418,6 +418,7 @@ public final class XmlEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeXml10Minimal(final char[] text, final int offset, final int len, final Writer writer)
                                           throws IOException {
@@ -435,7 +436,7 @@ public final class XmlEscape {
      * <p>
      *   <em>Level 1</em> means this method will only escape the five markup-significant characters which
      *   are <em>predefined</em> as Character Entity References in XML:
-     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot</tt> and <tt>&#39;</tt>.
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>.
      * </p>
      * <p>
      *   This method calls
@@ -457,6 +458,7 @@ public final class XmlEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeXml11Minimal(final char[] text, final int offset, final int len, final Writer writer)
                                           throws IOException {
@@ -476,7 +478,7 @@ public final class XmlEscape {
      * </p>
      * <ul>
      *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
-     *       <tt>&quot</tt> and <tt>&#39;</tt></li>
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
      *   <li>All non ASCII characters.</li>
      * </ul>
      * <p>
@@ -503,6 +505,7 @@ public final class XmlEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeXml10(final char[] text, final int offset, final int len, final Writer writer)
                                    throws IOException {
@@ -522,7 +525,7 @@ public final class XmlEscape {
      * </p>
      * <ul>
      *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
-     *       <tt>&quot</tt> and <tt>&#39;</tt></li>
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
      *   <li>All non ASCII characters.</li>
      * </ul>
      * <p>
@@ -549,6 +552,7 @@ public final class XmlEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeXml11(final char[] text, final int offset, final int len, final Writer writer)
                                    throws IOException {
@@ -582,6 +586,7 @@ public final class XmlEscape {
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param type the type of escape operation to be performed, see {@link org.unbescape.xml.XmlEscapeType}.
      * @param level the escape level to be applied, see {@link org.unbescape.xml.XmlEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeXml10(final char[] text, final int offset, final int len, final Writer writer,
                                    final XmlEscapeType type, final XmlEscapeLevel level)
@@ -614,6 +619,7 @@ public final class XmlEscape {
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param type the type of escape operation to be performed, see {@link org.unbescape.xml.XmlEscapeType}.
      * @param level the escape level to be applied, see {@link org.unbescape.xml.XmlEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeXml11(final char[] text, final int offset, final int len, final Writer writer,
                                    final XmlEscapeType type, final XmlEscapeLevel level)
@@ -703,6 +709,7 @@ public final class XmlEscape {
      * @param len the number of characters in <tt>text</tt> that should be unescaped.
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeXml(final char[] text, final int offset, final int len, final Writer writer)
                                    throws IOException{

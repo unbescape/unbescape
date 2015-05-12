@@ -97,7 +97,7 @@ package org.unbescape.css;
 public enum CssIdentifierEscapeLevel {
 
     /**
-     * Level 1 escape: escape only the basic escape set: Backslash Escape plus non-displayable control chars.</tt>
+     * Level 1 escape: escape only the basic escape set: Backslash Escape plus non-displayable control chars.
      */
     LEVEL_1_BASIC_ESCAPE_SET(1),
 

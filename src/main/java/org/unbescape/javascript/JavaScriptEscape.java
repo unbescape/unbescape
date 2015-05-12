@@ -74,7 +74,7 @@ import java.io.Writer;
  *               closing <tt>&lt;script&gt;</tt> tags in HTML. Also, note that <tt>&#92;v</tt>
  *               (<tt>U+000B</tt>) is actually included as a Single Escape
  *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
- *               is not supported by Microsoft Internet Explorer versions < 9.
+ *               is not supported by Microsoft Internet Explorer versions &lt; 9.
  *           </li>
  *           <li>
  *               Two ranges of non-displayable, control characters (some of which are already part of the
@@ -147,7 +147,7 @@ import java.io.Writer;
  *         <u>octal escapes have been deprecated as of version 5 of the ECMAScript specification</u>.</dd>
  *   <dt>Unicode Codepoint</dt>
  *     <dd>Each of the <tt>int</tt> values conforming the Unicode code space.
- *         Normally corresponding to a Java <tt>char</tt> primitive value (codepoint <= <tt>&#92;uFFFF</tt>),
+ *         Normally corresponding to a Java <tt>char</tt> primitive value (codepoint &lt;= <tt>&#92;uFFFF</tt>),
  *         but might be two <tt>char</tt>s for codepoints <tt>&#92;u10000</tt> to <tt>&#92;u10FFFF</tt> if the
  *         first <tt>char</tt> is a high surrogate (<tt>&#92;uD800</tt> to <tt>&#92;uDBFF</tt>) and the
  *         second is a low surrogate (<tt>&#92;uDC00</tt> to <tt>&#92;uDFFF</tt>).</dd>
@@ -200,7 +200,7 @@ public final class JavaScriptEscape {
      *       closing <tt>&lt;script&gt;</tt> tags in HTML. Also, note that <tt>&#92;v</tt>
      *       (<tt>U+000B</tt>) is actually included as a Single Escape
      *       Character in the JavaScript (ECMAScript) specification, but will not be used as it
-     *       is not supported by Microsoft Internet Explorer versions < 9.
+     *       is not supported by Microsoft Internet Explorer versions &lt; 9.
      *   </li>
      *   <li>
      *       Two ranges of non-displayable, control characters (some of which are already part of the
@@ -263,7 +263,7 @@ public final class JavaScriptEscape {
      *               closing <tt>&lt;script&gt;</tt> tags in HTML. Also, note that <tt>&#92;v</tt>
      *               (<tt>U+000B</tt>) is actually included as a Single Escape
      *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
-     *               is not supported by Microsoft Internet Explorer versions < 9.
+     *               is not supported by Microsoft Internet Explorer versions &lt; 9.
      *           </li>
      *           <li>
      *               Two ranges of non-displayable, control characters (some of which are already part of the
@@ -277,7 +277,7 @@ public final class JavaScriptEscape {
      * <p>
      *   This escape will be performed by using the Single Escape Chars whenever possible. For escaped
      *   characters that do not have an associated SEC, default to using <tt>&#92;xFF</tt> Hexadecimal Escapes
-     *   if possible (characters <= <tt>U+00FF</tt>), then default to <tt>&#92;uFFFF</tt>
+     *   if possible (characters &lt;= <tt>U+00FF</tt>), then default to <tt>&#92;uFFFF</tt>
      *   Hexadecimal Escapes. This type of escape <u>produces the smallest escaped string possible</u>.
      * </p>
      * <p>
@@ -377,7 +377,7 @@ public final class JavaScriptEscape {
      *       closing <tt>&lt;script&gt;</tt> tags in HTML. Also, note that <tt>&#92;v</tt>
      *       (<tt>U+000B</tt>) is actually included as a Single Escape
      *       Character in the JavaScript (ECMAScript) specification, but will not be used as it
-     *       is not supported by Microsoft Internet Explorer versions < 9.
+     *       is not supported by Microsoft Internet Explorer versions &lt; 9.
      *   </li>
      *   <li>
      *       Two ranges of non-displayable, control characters (some of which are already part of the
@@ -405,6 +405,7 @@ public final class JavaScriptEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeJavaScriptMinimal(final char[] text, final int offset, final int len, final Writer writer)
                                                throws IOException {
@@ -442,7 +443,7 @@ public final class JavaScriptEscape {
      *               closing <tt>&lt;script&gt;</tt> tags in HTML. Also, note that <tt>&#92;v</tt>
      *               (<tt>U+000B</tt>) is actually included as a Single Escape
      *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
-     *               is not supported by Microsoft Internet Explorer versions < 9.
+     *               is not supported by Microsoft Internet Explorer versions &lt; 9.
      *           </li>
      *           <li>
      *               Two ranges of non-displayable, control characters (some of which are already part of the
@@ -456,7 +457,7 @@ public final class JavaScriptEscape {
      * <p>
      *   This escape will be performed by using the Single Escape Chars whenever possible. For escaped
      *   characters that do not have an associated SEC, default to using <tt>&#92;xFF</tt> Hexadecimal Escapes
-     *   if possible (characters <= <tt>U+00FF</tt>), then default to <tt>&#92;uFFFF</tt>
+     *   if possible (characters &lt;= <tt>U+00FF</tt>), then default to <tt>&#92;uFFFF</tt>
      *   Hexadecimal Escapes. This type of escape <u>produces the smallest escaped string possible</u>.
      * </p>
      * <p>
@@ -479,6 +480,7 @@ public final class JavaScriptEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeJavaScript(final char[] text, final int offset, final int len, final Writer writer)
                                         throws IOException {
@@ -513,6 +515,7 @@ public final class JavaScriptEscape {
      * @param type the type of escape operation to be performed, see
      *             {@link org.unbescape.javascript.JavaScriptEscapeType}.
      * @param level the escape level to be applied, see {@link org.unbescape.javascript.JavaScriptEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeJavaScript(final char[] text, final int offset, final int len, final Writer writer,
                                         final JavaScriptEscapeType type, final JavaScriptEscapeLevel level)
@@ -595,6 +598,7 @@ public final class JavaScriptEscape {
      * @param len the number of characters in <tt>text</tt> that should be unescaped.
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeJavaScript(final char[] text, final int offset, final int len, final Writer writer)
                                           throws IOException{

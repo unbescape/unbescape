@@ -105,7 +105,7 @@ import java.io.Writer;
  *         <ul>
  *           <li><em>Compact</em>: non-zero-padded hexadecimal representation (<tt>&#92;E1 </tt>), followed
  *               by an optional whitespace (<tt>U+0020</tt>), required if after the escaped character comes
- *               a hexadecimal digit (<tt>[0-9A-Fa-f]</tt>) or another whitespace (<tt>&nbps;</tt>).</li>
+ *               a hexadecimal digit (<tt>[0-9A-Fa-f]</tt>) or another whitespace (<tt>&nbsp;</tt>).</li>
  *           <li><em>Six-digit</em>: zero-padded hexadecimal representation (<tt>&#92;0000E1</tt>), followed
  *               by an optional whitespace (<tt>U+0020</tt>), required if after the escaped character comes
  *               another whitespace (<tt>&nbsp;</tt>).</li>
@@ -113,7 +113,7 @@ import java.io.Writer;
  *     </dd>
  *   <dt>Unicode Codepoint</dt>
  *     <dd>Each of the <tt>int</tt> values conforming the Unicode code space.
- *         Normally corresponding to a Java <tt>char</tt> primitive value (codepoint <= <tt>&#92;uFFFF</tt>),
+ *         Normally corresponding to a Java <tt>char</tt> primitive value (codepoint &lt;= <tt>&#92;uFFFF</tt>),
  *         but might be two <tt>char</tt>s for codepoints <tt>&#92;u10000</tt> to <tt>&#92;u10FFFF</tt> if the
  *         first <tt>char</tt> is a high surrogate (<tt>&#92;uD800</tt> to <tt>&#92;uDBFF</tt>) and the
  *         second is a low surrogate (<tt>&#92;uDC00</tt> to <tt>&#92;uDFFF</tt>).</dd>
@@ -335,6 +335,7 @@ public final class CssEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeCssStringMinimal(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
@@ -392,6 +393,7 @@ public final class CssEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeCssString(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
@@ -426,6 +428,7 @@ public final class CssEscape {
      * @param type the type of escape operation to be performed, see
      *             {@link CssStringEscapeType}.
      * @param level the escape level to be applied, see {@link CssStringEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeCssString(final char[] text, final int offset, final int len, final Writer writer,
                                   final CssStringEscapeType type, final CssStringEscapeLevel level)
@@ -762,6 +765,7 @@ public final class CssEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeCssIdentifierMinimal(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
@@ -853,6 +857,7 @@ public final class CssEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeCssIdentifier(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
@@ -887,6 +892,7 @@ public final class CssEscape {
      * @param type the type of escape operation to be performed, see
      *             {@link CssIdentifierEscapeType}.
      * @param level the escape level to be applied, see {@link CssIdentifierEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeCssIdentifier(final char[] text, final int offset, final int len, final Writer writer,
                                        final CssIdentifierEscapeType type, final CssIdentifierEscapeLevel level)
@@ -969,6 +975,7 @@ public final class CssEscape {
      * @param len the number of characters in <tt>text</tt> that should be unescaped.
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeCss(final char[] text, final int offset, final int len, final Writer writer)
                                    throws IOException{

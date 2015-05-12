@@ -73,7 +73,7 @@ package org.unbescape.json;
 public enum JsonEscapeLevel {
 
     /**
-     * Level 1 escape: escape only the basic escape set: Single Escape Chars plus non-displayable control chars.</tt>
+     * Level 1 escape: escape only the basic escape set: Single Escape Chars plus non-displayable control chars.
      */
     LEVEL_1_BASIC_ESCAPE_SET(1),
 

@@ -26,7 +26,7 @@ package org.unbescape.html;
  *
  * <ul>
  *     <li><strong>Level 0</strong>: Escape only markup-significant characters, excluding the apostrophe. Therefore
- *         <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt> and <tt>&quot</tt> will be escaped. This level can be
+ *         <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt> and <tt>&quot;</tt> will be escaped. This level can be
  *         used for escaping texts and also tag attributes that are always surrounded by double quotes, whenever the
  *         apostrophe (<tt>&#39;</tt>) is considered a <em>safe</em> character and the user prefers it not to be
  *         escaped for legibility reasons (e.g. might denote literals in expression languages like OGNL).
@@ -34,7 +34,7 @@ package org.unbescape.html;
  *         in input, and therefore you will still need to correctly manage your input/output character
  *         encoding settings.</li>
  *     <li><strong>Level 1</strong>: Escape only markup-significant characters (including the apostrophe). Therefore
- *         <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot</tt> and <tt>&#39;</tt> will be escaped.
+ *         <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt> will be escaped.
  *         This level is sometimes called <em>XML escape</em> or <strong><em>XML-style escape</em></strong>, though it
  *         is not exactly equivalent to XML due to some HTML specificities. It is equivalent to the JSP escape
  *         configured by the <tt>escapeXml</tt> attribute in JSTL's <tt>&lt;c:out ... /&gt;</tt> tags, and safe
@@ -68,13 +68,13 @@ public enum HtmlEscapeLevel {
 
     /**
      * Level 0 escape: escape only markup-significant characters, excluding the apostrophe:
-     * <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt> and <tt>&quot</tt>
+     * <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt> and <tt>&quot;</tt>
      */
     LEVEL_0_ONLY_MARKUP_SIGNIFICANT_EXCEPT_APOS(0),
 
     /**
      * Level 1 escape (<em>XML-style</em>): escape only markup-significant characters (including the apostrophe):
-     * <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot</tt> and <tt>&#39;</tt>
+     * <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>
      */
     LEVEL_1_ONLY_MARKUP_SIGNIFICANT(1),
 

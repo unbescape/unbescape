@@ -77,7 +77,7 @@ import java.io.Writer;
  *   <li>Use <tt>&#92;n</tt> (<tt>U+000A</tt>, unix-style line breaks) for line breaks inside field values,
  *       even if records are separated with Windows-style line breaks (<tt>&#92;r&#92;n</tt>)
  *       [ EXCEL 2003 compatibility ].</li>
- *   <li>Open CSV files in Excel with <tt>File -> Open...</tt>, not with <tt>Data -> Import...</tt>
+ *   <li>Open CSV files in Excel with <tt>File -&gt; Open...</tt>, not with <tt>Data -&gt; Import...</tt>
  *       The latter option will not correctly understand line breaks inside field values (up to Excel 2010).</li>
  * </ul>
  * <p>
@@ -87,8 +87,8 @@ import java.io.Writer;
  *   will be the responsibility of the application calling unbescape.)</em>
  * </p>
  * <p>
- *   The described format for Excel is also supported by OpenOffice.org Calc (<tt>File -> Open...</tt>) and also
- *   Google Spreadsheets (<tt>File -> Import...</tt>)
+ *   The described format for Excel is also supported by OpenOffice.org Calc (<tt>File -&gt; Open...</tt>) and also
+ *   Google Spreadsheets (<tt>File -&gt; Import...</tt>)
  * </p>
  *
  * <h4><u>References</u></h4>
@@ -150,6 +150,7 @@ public final class CsvEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeCsv(final char[] text, final int offset, final int len, final Writer writer)
                                   throws IOException {
@@ -213,6 +214,7 @@ public final class CsvEscape {
      * @param len the number of characters in <tt>text</tt> that should be unescaped.
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeCsv(final char[] text, final int offset, final int len, final Writer writer)
                                     throws IOException{

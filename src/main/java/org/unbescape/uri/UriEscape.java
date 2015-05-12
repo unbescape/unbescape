@@ -436,6 +436,7 @@ public final class UriEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeUriPath(final char[] text, final int offset, final int len, final Writer writer)
                                        throws IOException {
@@ -473,6 +474,7 @@ public final class UriEscape {
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param encoding the encoding to be used for escaping.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeUriPath(final char[] text, final int offset, final int len, final Writer writer,
                                        final String encoding)
@@ -530,6 +532,7 @@ public final class UriEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeUriPathSegment(final char[] text, final int offset, final int len, final Writer writer)
                                               throws IOException {
@@ -566,6 +569,7 @@ public final class UriEscape {
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param encoding the encoding to be used for escaping.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeUriPathSegment(final char[] text, final int offset, final int len, final Writer writer,
                                               final String encoding)
@@ -623,6 +627,7 @@ public final class UriEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeUriQueryParam(final char[] text, final int offset, final int len, final Writer writer)
                                              throws IOException {
@@ -660,6 +665,7 @@ public final class UriEscape {
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param encoding the encoding to be used for escaping.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeUriQueryParam(final char[] text, final int offset, final int len, final Writer writer,
                                              final String encoding)
@@ -717,6 +723,7 @@ public final class UriEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeUriFragmentId(final char[] text, final int offset, final int len, final Writer writer)
                                              throws IOException {
@@ -754,6 +761,7 @@ public final class UriEscape {
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param encoding the encoding to be used for escaping.
+     * @throws IOException if an input/output exception occurs
      */
     public static void escapeUriFragmentId(final char[] text, final int offset, final int len, final Writer writer,
                                              final String encoding)
@@ -1083,6 +1091,7 @@ public final class UriEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeUriPath(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
@@ -1115,6 +1124,7 @@ public final class UriEscape {
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param encoding the encoding to be used for unescaping.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeUriPath(final char[] text, final int offset, final int len, final Writer writer,
                                      final String encoding)
@@ -1168,6 +1178,7 @@ public final class UriEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeUriPathSegment(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
@@ -1200,6 +1211,7 @@ public final class UriEscape {
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param encoding the encoding to be used for unescaping.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeUriPathSegment(final char[] text, final int offset, final int len, final Writer writer,
                                             final String encoding)
@@ -1252,6 +1264,7 @@ public final class UriEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeUriQueryParam(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
@@ -1284,6 +1297,7 @@ public final class UriEscape {
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param encoding the encoding to be used for unescaping.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeUriQueryParam(final char[] text, final int offset, final int len, final Writer writer,
                                            final String encoding)
@@ -1336,6 +1350,7 @@ public final class UriEscape {
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeUriFragmentId(final char[] text, final int offset, final int len, final Writer writer)
             throws IOException {
@@ -1368,6 +1383,7 @@ public final class UriEscape {
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
      *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
      * @param encoding the encoding to be used for unescaping.
+     * @throws IOException if an input/output exception occurs
      */
     public static void unescapeUriFragmentId(final char[] text, final int offset, final int len, final Writer writer,
                                            final String encoding)

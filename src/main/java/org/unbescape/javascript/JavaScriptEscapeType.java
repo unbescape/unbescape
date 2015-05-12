@@ -29,7 +29,7 @@ package org.unbescape.javascript;
  *         Single Escape Chars whenever possible (depending on the specified
  *         {@link org.unbescape.javascript.JavaScriptEscapeLevel}). For escaped characters that do
  *         not have an associated SEC, default to using <tt>&#92;xFF</tt> Hexadecimal Escapes
- *         if possible (characters <= <tt>U+00FF</tt>), then default to <tt>&#92;uFFFF</tt>
+ *         if possible (characters &lt;= <tt>U+00FF</tt>), then default to <tt>&#92;uFFFF</tt>
  *         Hexadecimal Escapes. This type of escape <u>produces the smallest escaped string
  *         possible</u>.</li>
  *     <li><tt><strong>SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA</strong></tt>: Use
@@ -37,7 +37,7 @@ package org.unbescape.javascript;
  *         {@link org.unbescape.javascript.JavaScriptEscapeLevel}). For escaped characters that do
  *         not have an associated SEC, default to using <tt>&#92;uFFFF</tt> Hexadecimal Escapes.</li>
  *     <li><tt><strong>XHEXA_DEFAULT_TO_UHEXA</strong></tt>: Replace escaped characters with
- *          <tt>&#92;xFF</tt> Hexadecimal Escapes if possible (characters <= <tt>U+00FF</tt>),
+ *          <tt>&#92;xFF</tt> Hexadecimal Escapes if possible (characters &lt;= <tt>U+00FF</tt>),
  *          default to <tt>&#92;uFFFF</tt> Hexadecimal Escapes.</li>
  *     <li><tt><strong>UHEXA</strong></tt>: Replace escaped characters with
  *         <tt>&#92;uFFFF</tt> Hexadecimal Escapes.</li>

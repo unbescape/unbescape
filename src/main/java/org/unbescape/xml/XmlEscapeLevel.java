@@ -26,7 +26,7 @@ package org.unbescape.xml;
  *
  * <ul>
  *     <li><strong>Level 1</strong>: Escape only markup-significant characters (all five <em>XML predefined
- *         entities</em>). Therefore <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot</tt> and
+ *         entities</em>). Therefore <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and
  *         <tt>&#39;</tt> will be escaped. This level is safe for use in texts and also XML tag attributes
  *         (tag attributes are always quoted in XML). Note the result of a level-1 escape operation might
  *         still contain non-ASCII characters if they existed in input, and therefore you will still need
@@ -68,7 +68,7 @@ public enum XmlEscapeLevel {
 
     /**
      * Level 1 escape: escape only markup-significant characters (all five <em>XML predefined entities</em>):
-     * <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot</tt> and <tt>&#39;</tt>
+     * <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>
      */
     LEVEL_1_ONLY_MARKUP_SIGNIFICANT(1),
 
