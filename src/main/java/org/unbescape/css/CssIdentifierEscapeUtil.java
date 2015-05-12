@@ -346,26 +346,7 @@ final class CssIdentifierEscapeUtil {
 
         for (int i = offset; i < max; i++) {
 
-            final char c = text.charAt(i);
-
-
-            /*
-             * Compute the codepoint. This will be used instead of the char for the rest of the process.
-             */
-
-            final int codepoint;
-            if (c < Character.MIN_HIGH_SURROGATE) { // shortcut: U+D800 is the lower limit of high-surrogate chars.
-                codepoint = (int) c;
-            } else if (Character.isHighSurrogate(c) && (i + 1) < max) {
-                final char c1 = text.charAt(i + 1);
-                if (Character.isLowSurrogate(c1)) {
-                    codepoint = Character.toCodePoint(c, c1);
-                } else {
-                    codepoint = (int) c;
-                }
-            } else { // just a normal, single-char, high-valued codepoint.
-                codepoint = (int) c;
-            }
+            final int codepoint = Character.codePointAt(text, i);
 
 
             /*
@@ -523,26 +504,7 @@ final class CssIdentifierEscapeUtil {
 
         for (int i = offset; i < max; i++) {
 
-            final char c = text[i];
-
-
-            /*
-             * Compute the codepoint. This will be used instead of the char for the rest of the process.
-             */
-
-            final int codepoint;
-            if (c < Character.MIN_HIGH_SURROGATE) { // shortcut: U+D800 is the lower limit of high-surrogate chars.
-                codepoint = (int) c;
-            } else if (Character.isHighSurrogate(c) && (i + 1) < max) {
-                final char c1 = text[i + 1];
-                if (Character.isLowSurrogate(c1)) {
-                    codepoint = Character.toCodePoint(c, c1);
-                } else {
-                    codepoint = (int) c;
-                }
-            } else { // just a normal, single-char, high-valued codepoint.
-                codepoint = (int) c;
-            }
+            final int codepoint = Character.codePointAt(text, i);
 
 
             /*
