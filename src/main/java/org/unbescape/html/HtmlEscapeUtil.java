@@ -435,7 +435,14 @@ final class HtmlEscapeUtil {
             case 0x9C: return 0x0153;
             case 0x9E: return 0x017E;
             case 0x9F: return 0x0178;
-            default: return codepoint;
+            default: break;
+        }
+        if (codepoint >= 0xD800 && codepoint <= 0xDFFF) {
+            return 0xFFFD;
+        } else if (codepoint > 0x10FFFF) {
+            return 0xFFFD;
+        } else {
+          return codepoint;
         }
     }
 
@@ -457,7 +464,14 @@ final class HtmlEscapeUtil {
                     break;
                 }
             }
-            result = (radix * result) + n;
+            result *= radix;
+            if (result < 0) {
+                return 0xFFFD;
+            }
+            result += n;
+            if (result < 0) {
+                return 0xFFFD;
+            }
         }
         return result;
     }
@@ -473,7 +487,14 @@ final class HtmlEscapeUtil {
                     break;
                 }
             }
-            result = (radix * result) + n;
+            result *= radix;
+            if (result < 0) {
+                return 0xFFFD;
+            }
+            result += n;
+            if (result < 0) {
+                return 0xFFFD;
+            }
         }
         return result;
     }
