@@ -307,7 +307,7 @@ final class JavaEscapeUtil {
             /*
              * -----------------------------------------------------------------------------------------
              *
-             * Peform the real escape, attending the different combinations of SECs and UHEXA
+             * Perform the real escape, attending the different combinations of SECs and UHEXA
              *
              * -----------------------------------------------------------------------------------------
              */
@@ -433,7 +433,7 @@ final class JavaEscapeUtil {
             /*
              * -----------------------------------------------------------------------------------------
              *
-             * Peform the real escape, attending the different combinations of SECs and UHEXA
+             * Perform the real escape, attending the different combinations of SECs and UHEXA
              *
              * -----------------------------------------------------------------------------------------
              */
@@ -705,7 +705,7 @@ final class JavaEscapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescape
+             * Perform the real unescape
              *
              * --------------------------
              */
@@ -876,7 +876,7 @@ final class JavaEscapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescape
+             * Perform the real unescape
              *
              * --------------------------
              */
@@ -1017,7 +1017,7 @@ final class JavaEscapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescape
+             * Perform the real unescape
              *
              * --------------------------
              */
@@ -1166,7 +1166,7 @@ final class JavaEscapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescape
+             * Perform the real unescape
              *
              * --------------------------
              */

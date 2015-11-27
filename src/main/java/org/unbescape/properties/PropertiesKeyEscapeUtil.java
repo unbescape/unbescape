@@ -281,7 +281,7 @@ final class PropertiesKeyEscapeUtil {
             /*
              * -----------------------------------------------------------------------------------------
              *
-             * Peform the real escape, attending the different combinations of SECs and UHEXA
+             * Perform the real escape, attending the different combinations of SECs and UHEXA
              *
              * -----------------------------------------------------------------------------------------
              */
@@ -407,7 +407,7 @@ final class PropertiesKeyEscapeUtil {
             /*
              * -----------------------------------------------------------------------------------------
              *
-             * Peform the real escape, attending the different combinations of SECs and UHEXA
+             * Perform the real escape, attending the different combinations of SECs and UHEXA
              *
              * -----------------------------------------------------------------------------------------
              */

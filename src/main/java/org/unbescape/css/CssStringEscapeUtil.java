@@ -334,7 +334,7 @@ final class CssStringEscapeUtil {
             /*
              * ------------------------------------------------------------------------------------------
              *
-             * Peform the real escape, attending the different combinations of BACKSLASH and HEXA escapes
+             * Perform the real escape, attending the different combinations of BACKSLASH and HEXA escapes
              *
              * ------------------------------------------------------------------------------------------
              */
@@ -463,7 +463,7 @@ final class CssStringEscapeUtil {
             /*
              * ------------------------------------------------------------------------------------------
              *
-             * Peform the real escape, attending the different combinations of BACKSLASH and HEXA escapes
+             * Perform the real escape, attending the different combinations of BACKSLASH and HEXA escapes
              *
              * ------------------------------------------------------------------------------------------
              */

@@ -253,7 +253,7 @@ final class PropertiesUnescapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescape
+             * Perform the real unescape
              *
              * --------------------------
              */
@@ -391,7 +391,7 @@ final class PropertiesUnescapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescape
+             * Perform the real unescape
              *
              * --------------------------
              */

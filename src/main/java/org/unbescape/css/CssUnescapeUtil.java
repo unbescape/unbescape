@@ -305,7 +305,7 @@ final class CssUnescapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescape
+             * Perform the real unescape
              *
              * --------------------------
              */
@@ -479,7 +479,7 @@ final class CssUnescapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescape
+             * Perform the real unescape
              *
              * --------------------------
              */

@@ -304,7 +304,7 @@ final class JavaScriptEscapeUtil {
             /*
              * -----------------------------------------------------------------------------------------
              *
-             * Peform the real escape, attending the different combinations of SECs, XHEXA and UHEXA
+             * Perform the real escape, attending the different combinations of SECs, XHEXA and UHEXA
              *
              * -----------------------------------------------------------------------------------------
              */
@@ -450,7 +450,7 @@ final class JavaScriptEscapeUtil {
             /*
              * -----------------------------------------------------------------------------------------
              *
-             * Peform the real escape, attending the different combinations of SECs, XHEXA and UHEXA
+             * Perform the real escape, attending the different combinations of SECs, XHEXA and UHEXA
              *
              * -----------------------------------------------------------------------------------------
              */
@@ -798,7 +798,7 @@ final class JavaScriptEscapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescape
+             * Perform the real unescape
              *
              * --------------------------
              */
@@ -999,7 +999,7 @@ final class JavaScriptEscapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescape
+             * Perform the real unescape
              *
              * --------------------------
              */

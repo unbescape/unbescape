@@ -189,7 +189,7 @@ final class XmlEscapeUtil {
             /*
              * -----------------------------------------------------------------------------------------
              *
-             * Peform the real escape, attending the different combinations of NCR, DCR and HCR needs.
+             * Perform the real escape, attending the different combinations of NCR, DCR and HCR needs.
              *
              * -----------------------------------------------------------------------------------------
              */
@@ -332,7 +332,7 @@ final class XmlEscapeUtil {
             /*
              * -----------------------------------------------------------------------------------------
              *
-             * Peform the real escape, attending the different combinations of NCR, DCR and HCR needs.
+             * Perform the real escape, attending the different combinations of NCR, DCR and HCR needs.
              *
              * -----------------------------------------------------------------------------------------
              */
@@ -604,7 +604,7 @@ final class XmlEscapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescape
+             * Perform the real unescape
              *
              * --------------------------
              */
@@ -808,7 +808,7 @@ final class XmlEscapeUtil {
             /*
              * --------------------------
              *
-             * Peform the real unescape
+             * Perform the real unescape
              *
              * --------------------------
              */
