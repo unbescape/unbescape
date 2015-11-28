@@ -20,6 +20,7 @@
 package org.unbescape.html;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 
 /**
@@ -231,6 +232,132 @@ final class HtmlEscapeUtil {
         }
 
         return strBuilder.toString();
+
+    }
+
+
+
+
+
+    /*
+     * Perform an escape operation, based on a Reader, according to the specified level and type and writing the
+     * result to a Writer.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void escape(
+            final Reader reader, final Writer writer, final HtmlEscapeType escapeType, final HtmlEscapeLevel escapeLevel)
+            throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        final int level = escapeLevel.getEscapeLevel();
+        final boolean useHtml5 = escapeType.getUseHtml5();
+        final boolean useNCRs = escapeType.getUseNCRs();
+        final boolean useHexa = escapeType.getUseHexa();
+
+        final HtmlEscapeSymbols symbols =
+                (useHtml5? HtmlEscapeSymbols.HTML5_SYMBOLS : HtmlEscapeSymbols.HTML4_SYMBOLS);
+
+        int c1, c2; // c1: current char, c2: next char
+
+        c2 = reader.read();
+
+        while (c2 >= 0) {
+
+            c1 = c2;
+            c2 = reader.read();
+
+
+            /*
+             * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
+             * all for them
+             */
+            if (c1 <= HtmlEscapeSymbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[c1]) {
+                writer.write(c1);
+                continue;
+            }
+
+
+            /*
+             * Shortcut: we might not want to escape non-ASCII chars at all either.
+             */
+            if (c1 > HtmlEscapeSymbols.MAX_ASCII_CHAR
+                    && level < symbols.ESCAPE_LEVELS[HtmlEscapeSymbols.MAX_ASCII_CHAR + 1]) {
+                writer.write(c1);
+                continue;
+            }
+
+
+            /*
+             * Compute the codepoint. This will be used instead of the char for the rest of the process.
+             */
+            final int codepoint = codePointAt((char)c1, (char)c2);
+
+
+            /*
+             * We know we need to escape, so from here on we will only work with the codepoint -- we can advance
+             * the chars.
+             */
+
+            if (Character.charCount(codepoint) > 1) {
+                // This is to compensate that we are actually reading two char positions with a single codepoint.
+                c1 = c2;
+                c2 = reader.read();
+            }
+
+
+            /*
+             * -----------------------------------------------------------------------------------------
+             *
+             * Perform the real escape, attending the different combinations of NCR, DCR and HCR needs.
+             *
+             * -----------------------------------------------------------------------------------------
+             */
+
+            if (useNCRs) {
+                // We will try to use an NCR
+
+                if (codepoint < symbols.NCRS_BY_CODEPOINT_LEN) {
+                    // codepoint < 0x2fff - all HTML4, most HTML5
+
+                    final short ncrIndex = symbols.NCRS_BY_CODEPOINT[codepoint];
+                    if (ncrIndex != symbols.NO_NCR) {
+                        // There is an NCR for this codepoint!
+                        writer.write(symbols.SORTED_NCRS[ncrIndex]);
+                        continue;
+                    } // else, just let it exit the block and let decimal/hexa escape do its job
+
+                } else if (symbols.NCRS_BY_CODEPOINT_OVERFLOW != null) {
+                    // codepoint >= 0x2fff. NCR, if exists, will live at the overflow map (if there is one).
+
+                    final Short ncrIndex = symbols.NCRS_BY_CODEPOINT_OVERFLOW.get(Integer.valueOf(codepoint));
+                    if (ncrIndex != null) {
+                        writer.write(symbols.SORTED_NCRS[ncrIndex.shortValue()]);
+                        continue;
+                    } // else, just let it exit the block and let decimal/hexa escape do its job
+
+                }
+
+            }
+
+            /*
+             * No NCR-escape was possible (or allowed), so we need decimal/hexa escape.
+             */
+
+            if (useHexa) {
+                writer.write(REFERENCE_HEXA_PREFIX);
+                writer.write(Integer.toHexString(codepoint));
+            } else {
+                writer.write(REFERENCE_DECIMAL_PREFIX);
+                writer.write(String.valueOf(codepoint));
+            }
+            writer.write(REFERENCE_SUFFIX);
+
+        }
 
     }
 
@@ -932,6 +1059,20 @@ final class HtmlEscapeUtil {
             writer.write(text, readOffset, (max - readOffset));
         }
 
+    }
+
+
+
+
+    private static int codePointAt(final char c1, final char c2) {
+        if (Character.isHighSurrogate(c1)) {
+            if (c2 >= 0) {
+                if (Character.isLowSurrogate(c2)) {
+                    return Character.toCodePoint(c1, c2);
+                }
+            }
+        }
+        return c1;
     }
 
 

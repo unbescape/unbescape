@@ -20,6 +20,7 @@
 package org.unbescape.css;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.Arrays;
 
@@ -481,6 +482,154 @@ final class CssIdentifierEscapeUtil {
 
 
 
+    /*
+     * Perform an escape operation, based on a Reader, according to the specified level and type and writing the
+     * result to a Writer.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void escape(
+            final Reader reader, final Writer writer, final CssIdentifierEscapeType escapeType, final CssIdentifierEscapeLevel escapeLevel)
+            throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        final int level = escapeLevel.getEscapeLevel();
+        final boolean useBackslashEscapes = escapeType.getUseBackslashEscapes();
+        final boolean useCompactHexa = escapeType.getUseCompactHexa();
+
+        int c0, c1, c2; // c0: last char, c1: current char, c2: next char
+
+        c1 = -1;
+        c2 = reader.read();
+
+        while (c2 >= 0) {
+
+            c0 = c1;
+            c1 = c2;
+            c2 = reader.read();
+
+            final int codepoint = codePointAt((char)c1, (char)c2);
+
+
+            /*
+             * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
+             * all for them
+             */
+            if (codepoint <= (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[codepoint] &&
+                    (c0 >= 0 || codepoint < '0' || codepoint > '9')) {
+                // Note how we check whether the first char is a decimal number, in which case we have to escape it
+                writer.write(c1);
+                continue;
+            }
+
+
+            /*
+             * Hyphen check: only escape when it's the first char and it's followed by '-' or a digit.
+             */
+            if (codepoint == '-' && level < 3) {
+                if (c0 >= 0 || c2 < 0) { // not first or last
+                    writer.write(c1);
+                    continue;
+                }
+                if (c2 != '-' && (c2 < '0' || c2 > '9')) {
+                    writer.write(c1);
+                    continue;
+                }
+            }
+
+
+            /*
+             * Underscore check: only escape when it's the first char.
+             */
+            if (codepoint == '_' && level < 3 && c0 >= 0) {
+                writer.write(c1);
+                continue;
+            }
+
+
+            /*
+             * Shortcut: we might not want to escape non-ASCII chars at all either.
+             */
+            if (codepoint > (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[ESCAPE_LEVELS_LEN - 1]) {
+
+                writer.write(c1);
+
+                if (Character.charCount(codepoint) > 1) {
+                    // This is to compensate that we are actually escaping two char[] positions with a single codepoint.
+
+                    writer.write(c2);
+
+                    c0 = c1;
+                    c1 = c2;
+                    c2 = reader.read();
+
+                }
+
+                continue;
+
+            }
+
+
+            /*
+             * We know we need to escape, so from here on we will only work with the codepoint -- we can advance
+             * the chars.
+             */
+
+            if (Character.charCount(codepoint) > 1) {
+                // This is to compensate that we are actually reading two char positions with a single codepoint.
+                c0 = c1;
+                c1 = c2;
+                c2 = reader.read();
+            }
+
+
+            /*
+             * ------------------------------------------------------------------------------------------
+             *
+             * Perform the real escape, attending the different combinations of BACKSLASH and HEXA escapes
+             *
+             * ------------------------------------------------------------------------------------------
+             */
+
+            if (useBackslashEscapes && codepoint < BACKSLASH_CHARS_LEN) {
+                // We will try to use a BACKSLASH ESCAPE
+
+                final char escape = BACKSLASH_CHARS[codepoint];
+
+                if (escape != BACKSLASH_CHARS_NO_ESCAPE) {
+                    // Escape found! just write it and go for the next char
+                    writer.write(ESCAPE_PREFIX);
+                    writer.write(escape);
+                    continue;
+                }
+
+            }
+
+            /*
+             * No escape was possible, so we need hexa escape (compact or 6-digit).
+             */
+
+            final char next = (c2 >= 0 ? (char) c2 : (char) 0x0);
+
+            if (useCompactHexa) {
+                writer.write(ESCAPE_PREFIX);
+                writer.write(toCompactHexa(codepoint, next, level));
+                continue;
+            }
+
+            writer.write(ESCAPE_PREFIX);
+            writer.write(toSixDigitHexa(codepoint, next, level));
+
+        }
+
+    }
+
+
+
 
 
     /*
@@ -623,6 +772,20 @@ final class CssIdentifierEscapeUtil {
             writer.write(text, readOffset, (max - readOffset));
         }
 
+    }
+
+
+
+
+    private static int codePointAt(final char c1, final char c2) {
+        if (Character.isHighSurrogate(c1)) {
+            if (c2 >= 0) {
+                if (Character.isLowSurrogate(c2)) {
+                    return Character.toCodePoint(c1, c2);
+                }
+            }
+        }
+        return c1;
     }
 
 

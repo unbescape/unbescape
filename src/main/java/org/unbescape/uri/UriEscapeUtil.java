@@ -20,6 +20,7 @@
 package org.unbescape.uri;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
@@ -350,6 +351,91 @@ final class UriEscapeUtil {
 
 
     /*
+     * Perform an escape operation, based on a Reader, according to the specified type and writing the
+     * result to a Writer.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void escape(
+            final Reader reader, final Writer writer, final UriEscapeType escapeType, final String encoding)
+            throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        int c1, c2; // c0: last char, c1: current char, c2: next char
+
+        c2 = reader.read();
+
+        while (c2 >= 0) {
+
+            c1 = c2;
+            c2 = reader.read();
+
+            final int codepoint = codePointAt((char)c1, (char)c2);
+
+            /*
+             * Shortcut: most characters will be alphabetic, and we won't need to do anything at
+             * all for them. No need to use the complete UriEscapeType check system at all.
+             */
+            if (UriEscapeType.isAlpha(codepoint)) {
+                writer.write(c1);
+                continue;
+            }
+
+            /*
+             * Check whether the character is allowed or not
+             */
+            if (escapeType.isAllowed(codepoint)) {
+                writer.write(c1);
+                continue;
+            }
+
+
+            /*
+             * We know we need to escape, so from here on we will only work with the codepoint -- we can advance
+             * the chars.
+             */
+
+            if (Character.charCount(codepoint) > 1) {
+                // This is to compensate that we are actually reading two char positions with a single codepoint.
+                c1 = c2;
+                c2 = reader.read();
+            }
+
+
+            /*
+             * -----------------------------------------------------------------------------------------
+             *
+             * Perform the real escape
+             *
+             * -----------------------------------------------------------------------------------------
+             */
+
+            final byte[] charAsBytes;
+            try {
+                charAsBytes = new String(Character.toChars(codepoint)).getBytes(encoding);
+            } catch (final UnsupportedEncodingException e) {
+                throw new IllegalArgumentException("Exception while escaping URI: Bad encoding '" + encoding + "'", e);
+            }
+            for (final byte b : charAsBytes) {
+                writer.write('%');
+                writer.write(printHexa(b));
+            }
+
+
+        }
+
+    }
+
+
+
+
+
+
+    /*
      * Perform an escape operation, based on char[], according to the specified type
      */
     static void escape(final char[] text, final int offset, final int len, final Writer writer,
@@ -665,6 +751,20 @@ final class UriEscapeUtil {
             writer.write(text, readOffset, (max - readOffset));
         }
 
+    }
+
+
+
+
+    private static int codePointAt(final char c1, final char c2) {
+        if (Character.isHighSurrogate(c1)) {
+            if (c2 >= 0) {
+                if (Character.isLowSurrogate(c2)) {
+                    return Character.toCodePoint(c1, c2);
+                }
+            }
+        }
+        return c1;
     }
 
 

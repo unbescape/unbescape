@@ -20,6 +20,7 @@
 package org.unbescape.properties;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.Arrays;
 
@@ -343,6 +344,124 @@ final class PropertiesKeyEscapeUtil {
 
 
     /*
+     * Perform an escape operation, based on a Reader, according to the specified level and type and writing the
+     * result to a Writer.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void escape(
+            final Reader reader, final Writer writer, final PropertiesKeyEscapeLevel escapeLevel)
+            throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        final int level = escapeLevel.getEscapeLevel();
+
+        int c1, c2; // c0: last char, c1: current char, c2: next char
+
+        c2 = reader.read();
+
+        while (c2 >= 0) {
+
+            c1 = c2;
+            c2 = reader.read();
+
+            final int codepoint = codePointAt((char)c1, (char)c2);
+
+
+            /*
+             * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
+             * all for them
+             */
+            if (codepoint <= (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[codepoint]) {
+                writer.write(c1);
+                continue;
+            }
+
+            /*
+             * Shortcut: we might not want to escape non-ASCII chars at all either.
+             */
+            if (codepoint > (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[ESCAPE_LEVELS_LEN - 1]) {
+
+                writer.write(c1);
+
+                if (Character.charCount(codepoint) > 1) {
+                    // This is to compensate that we are actually escaping two char[] positions with a single codepoint.
+
+                    writer.write(c2);
+
+                    c1 = c2;
+                    c2 = reader.read();
+
+                }
+
+                continue;
+
+            }
+
+
+            /*
+             * We know we need to escape, so from here on we will only work with the codepoint -- we can advance
+             * the chars.
+             */
+
+            if (Character.charCount(codepoint) > 1) {
+                // This is to compensate that we are actually reading two char positions with a single codepoint.
+                c1 = c2;
+                c2 = reader.read();
+            }
+
+
+            /*
+             * -----------------------------------------------------------------------------------------
+             *
+             * Perform the real escape, attending the different combinations of SECs and UHEXA
+             *
+             * -----------------------------------------------------------------------------------------
+             */
+
+            if (codepoint < SEC_CHARS_LEN) {
+                // We will try to use a SEC
+
+                final char sec = SEC_CHARS[codepoint];
+
+                if (sec != SEC_CHARS_NO_SEC) {
+                    // SEC found! just write it and go for the next char
+                    writer.write(ESCAPE_PREFIX);
+                    writer.write(sec);
+                    continue;
+                }
+
+            }
+
+            /*
+             * No SEC-escape was possible, so we need uhexa escape.
+             */
+
+            if (Character.charCount(codepoint) > 1) {
+                final char[] codepointChars = Character.toChars(codepoint);
+                writer.write(ESCAPE_UHEXA_PREFIX);
+                writer.write(toUHexa(codepointChars[0]));
+                writer.write(ESCAPE_UHEXA_PREFIX);
+                writer.write(toUHexa(codepointChars[1]));
+                continue;
+            }
+
+            writer.write(ESCAPE_UHEXA_PREFIX);
+            writer.write(toUHexa(codepoint));
+
+        }
+
+    }
+
+
+
+
+
+    /*
      * Perform an escape operation, based on char[], according to the specified level.
      */
     static void escape(final char[] text, final int offset, final int len, final Writer writer,
@@ -455,6 +574,20 @@ final class PropertiesKeyEscapeUtil {
             writer.write(text, readOffset, (max - readOffset));
         }
 
+    }
+
+
+
+
+    private static int codePointAt(final char c1, final char c2) {
+        if (Character.isHighSurrogate(c1)) {
+            if (c2 >= 0) {
+                if (Character.isLowSurrogate(c2)) {
+                    return Character.toCodePoint(c1, c2);
+                }
+            }
+        }
+        return c1;
     }
 
 

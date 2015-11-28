@@ -71,6 +71,21 @@ final class CsvEscapeUtil {
 
 
 
+    /*
+     * ------------------------------------------------------------------------------------------------------
+     * NOTE there are NO STREAM-BASED (Reader/Writer) versions of escape/unescape operations for CSV.
+     *
+     * The reason is CSV-escaped values will be enclosed in double-quotes if they contain any
+     * non-alphanumeric characters, which is something that can only be known once we have reached such
+     * characters in the reader. This means we would have to either use a buffer that could potentially
+     * contain all the read chars (thus invalidating any benefits from the streamed operation) or simply
+     * enclose EVERY value in double-quotes, which besides not being a good practice would mean the library
+     * would produce different results depending on whether input is String, char[] or a Reader.
+     * ------------------------------------------------------------------------------------------------------
+     */
+
+
+
     private static final char DOUBLE_QUOTE = '"';
     private static final char[] TWO_DOUBLE_QUOTES = "\"\"".toCharArray();
 
