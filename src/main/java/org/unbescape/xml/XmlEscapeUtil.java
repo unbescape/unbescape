@@ -268,14 +268,12 @@ final class XmlEscapeUtil {
         final boolean useCERs = escapeType.getUseCERs();
         final boolean useHexa = escapeType.getUseHexa();
 
-        int c0, c1, c2; // c0: last char, c1: current char, c2: next char
+        int c1, c2; // c0: last char, c1: current char, c2: next char
 
-        c1 = -1;
         c2 = reader.read();
 
         while (c2 >= 0) {
 
-            c0 = c1;
             c1 = c2;
             c2 = reader.read();
 
@@ -311,7 +309,6 @@ final class XmlEscapeUtil {
 
                     writer.write(c2);
 
-                    c0 = c1;
                     c1 = c2;
                     c2 = reader.read();
 
@@ -329,7 +326,6 @@ final class XmlEscapeUtil {
 
             if (Character.charCount(codepoint) > 1) {
                 // This is to compensate that we are actually reading two char positions with a single codepoint.
-                c0 = c1;
                 c1 = c2;
                 c2 = reader.read();
             }

@@ -391,8 +391,6 @@ final class JavaScriptEscapeUtil {
         final boolean useSECs = escapeType.getUseSECs();
         final boolean useXHexa = escapeType.getUseXHexa();
 
-        StringBuilder strBuilder = null;
-
         int c0, c1, c2; // c0: last char, c1: current char, c2: next char
 
         c1 = -1;
