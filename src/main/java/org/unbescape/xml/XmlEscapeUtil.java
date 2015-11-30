@@ -605,11 +605,11 @@ final class XmlEscapeUtil {
                 final char c1 = text.charAt(i + 1);
 
                 if (c1 == '\u0020' || // SPACE
-                    c1 == '\n' ||     // LF
-                    c1 == '\u0009' || // TAB
-                    c1 == '\u000C' || // FF
-                    c1 == '\u003C' || // LES-THAN SIGN
-                    c1 == '\u0026') { // AMPERSAND
+                        c1 == '\n' ||     // LF
+                        c1 == '\u0009' || // TAB
+                        c1 == '\u000C' || // FF
+                        c1 == '\u003C' || // LES-THAN SIGN
+                        c1 == '\u0026') { // AMPERSAND
                     // Not a character references. No characters are consumed, and nothing is returned.
                     continue;
 
@@ -771,6 +771,252 @@ final class XmlEscapeUtil {
         }
 
         return strBuilder.toString();
+
+    }
+
+
+
+
+
+
+    /*
+     * Perform an unescape operation based on a Reader, writing the results to a Writer.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void unescape(final Reader reader, final Writer writer, final XmlEscapeSymbols symbols) throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        char[] escapes = new char[10];
+        int escapei = 0;
+
+        int c1, c2, ce; // c1: current char, c2: next char, ce: current escaped char
+
+        c2 = reader.read();
+
+        while (c2 >= 0) {
+
+            c1 = c2;
+            c2 = reader.read();
+
+            escapei = 0;
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if (c1 != REFERENCE_PREFIX || c2 < 0) {
+                writer.write(c1);
+                continue;
+            }
+
+            int codepoint = 0;
+
+            if (c1 == REFERENCE_PREFIX) {
+
+                if (c2 == '\u0020' || // SPACE
+                        c2 == '\n' ||     // LF
+                        c2 == '\u0009' || // TAB
+                        c2 == '\u000C' || // FF
+                        c2 == '\u003C' || // LES-THAN SIGN
+                        c2 == '\u0026') { // AMPERSAND
+                    // Not a character references. No characters are consumed, and nothing is returned.
+                    writer.write(c1);
+                    continue;
+
+                } else if (c2 == REFERENCE_NUMERIC_PREFIX2) {
+
+                    final int c3 = reader.read();
+
+                    if (c3 < 0) {
+                        // No reference possible
+                        writer.write(c1);
+                        writer.write(c2);
+                        c1 = c2;
+                        c2 = c3;
+                        continue;
+                    }
+
+                    if (c3 == REFERENCE_HEXA_PREFIX3) {
+                        // This is a hexadecimal reference
+
+                        ce = reader.read();
+                        while (ce >= 0) {
+                            if (!((ce >= '0' && ce <= '9') || (ce >= 'A' && ce <= 'F') || (ce >= 'a' && ce <= 'f'))) {
+                                break;
+                            }
+                            if (escapei == escapes.length) {
+                                // too many escape chars for our array: grow it!
+                                final char[] newEscapes = new char[escapes.length + 4];
+                                System.arraycopy(escapes, 0, newEscapes, 0, escapes.length);
+                                escapes = newEscapes;
+                            }
+                            escapes[escapei] = (char) ce;
+                            ce = reader.read();
+                            escapei++;
+                        }
+
+                        if (escapei == 0) {
+                            // We weren't able to consume any hexa chars
+                            writer.write(c1);
+                            writer.write(c2);
+                            writer.write(c3);
+                            c1 = c3;
+                            c2 = ce;
+                            continue;
+                        }
+
+                        if (ce != REFERENCE_SUFFIX) {
+                            // If the reference does not end in a ';', it's not a valid reference
+                            writer.write(c1);
+                            writer.write(c2);
+                            writer.write(c3);
+                            writer.write(escapes, 0, escapei);
+                            c1 = escapes[escapei - 1];
+                            c2 = ce;
+                            continue;
+                        }
+
+                        c1 = ce;
+                        c2 = reader.read();
+
+                        codepoint = parseIntFromReference(escapes, 0, escapei, 16);
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else if (c3 >= '0' && c3 <= '9') {
+                        // This is a decimal reference
+
+                        ce = c3;
+                        while (ce >= 0) {
+                            if (!(ce >= '0' && ce <= '9')) {
+                                break;
+                            }
+                            if (escapei == escapes.length) {
+                                // too many escape chars for our array: grow it!
+                                final char[] newEscapes = new char[escapes.length + 4];
+                                System.arraycopy(escapes, 0, newEscapes, 0, escapes.length);
+                                escapes = newEscapes;
+                            }
+                            escapes[escapei] = (char) ce;
+                            ce = reader.read();
+                            escapei++;
+                        }
+
+                        if (escapei == 0) {
+                            // We weren't able to consume any decimal chars
+                            writer.write(c1);
+                            writer.write(c2);
+                            c1 = c2;
+                            c2 = c3;
+                            continue;
+                        }
+
+                        if (ce != REFERENCE_SUFFIX) {
+                            // If the reference does not end in a ';', it's not a valid reference
+                            writer.write(c1);
+                            writer.write(c2);
+                            writer.write(escapes, 0, escapei);
+                            c1 = escapes[escapei - 1];
+                            c2 = ce;
+                            continue;
+                        }
+
+                        c1 = ce;
+                        c2 = reader.read();
+
+                        codepoint = parseIntFromReference(escapes, 0, escapei, 10);
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else {
+                        // This is not a valid reference, just discard
+                        writer.write(c1);
+                        writer.write(c2);
+                        c1 = c2;
+                        c2 = c3;
+                        continue;
+                    }
+
+
+                } else {
+
+                    // This is a named reference, must be comprised only of ALPHABETIC chars
+
+                    ce = c2;
+                    while (ce >= 0) {
+                        if (!((ce >= '0' && ce <= '9') || (ce >= 'A' && ce <= 'Z') || (ce >= 'a' && ce <= 'z'))) {
+                            break;
+                        }
+                        if (escapei == escapes.length) {
+                            // too many escape chars for our array: grow it!
+                            final char[] newEscapes = new char[escapes.length + 4];
+                            System.arraycopy(escapes, 0, newEscapes, 0, escapes.length);
+                            escapes = newEscapes;
+                        }
+                        escapes[escapei] = (char) ce;
+                        ce = reader.read();
+                        escapei++;
+                    }
+
+                    if (escapei == 0) {
+                        // We weren't able to consume any decimal chars
+                        writer.write(c1);
+                        continue;
+                    }
+
+                    if (escapei + 2 >= escapes.length) {
+                        // the entire escape sequence does not fit: grow it!
+                        final char[] newEscapes = new char[escapes.length + 4];
+                        System.arraycopy(escapes, 0, newEscapes, 0, escapes.length);
+                        escapes = newEscapes;
+                    }
+
+                    System.arraycopy(escapes, 0, escapes, 1, escapei);
+                    escapes[0] = (char) c1;
+                    escapei++;
+
+                    if (ce == REFERENCE_SUFFIX) {
+                        // If the reference ends in a ';', just consume it
+                        escapes[escapei++] = (char) ce;
+                        ce = reader.read();
+                    }
+
+                    c1 = escapes[escapei - 1];
+                    c2 = ce;
+
+                    final int ncrPosition = XmlEscapeSymbols.binarySearch(symbols.SORTED_CERS, escapes, 0, escapei);
+                    if (ncrPosition >= 0) {
+                        codepoint = symbols.SORTED_CODEPOINTS_BY_CER[ncrPosition];
+                    } else {
+                        // Not found! Just ignore our efforts to find a match.
+                        writer.write(escapes, 0, escapei);
+                        continue;
+                    }
+
+                }
+
+            }
+
+            /*
+             * --------------------------
+             *
+             * Perform the real unescape
+             *
+             * --------------------------
+             */
+
+            if (codepoint > '\uFFFF') {
+                writer.write(Character.toChars(codepoint));
+            } else {
+                writer.write((char)codepoint);
+            }
+
+        }
 
     }
 

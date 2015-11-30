@@ -845,6 +845,293 @@ final class HtmlEscapeUtil {
 
 
     /*
+     * Perform an unescape operation based on a Reader, writing the results to a Writer. Unescape operations are
+     * always based on the HTML5 symbol set. Unescape operations will be performed in the most similar way
+     * possible to the process a browser follows for showing HTML5 escaped code.
+     * See: http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void unescape(final Reader reader, final Writer writer) throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        // Unescape will always cover the full HTML5 spectrum.
+        final HtmlEscapeSymbols symbols = HtmlEscapeSymbols.HTML5_SYMBOLS;
+
+        char[] escapes = new char[10];
+        int escapei = 0;
+
+        int c1, c2, ce; // c1: current char, c2: next char, ce: current escaped char
+
+        c2 = reader.read();
+
+        while (c2 >= 0) {
+
+            c1 = c2;
+            c2 = reader.read();
+
+            escapei = 0;
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if (c1 != REFERENCE_PREFIX || c2 < 0) {
+                writer.write(c1);
+                continue;
+            }
+
+            int codepoint = 0;
+
+            if (c1 == REFERENCE_PREFIX) {
+
+                if (c2 == '\u0020' || // SPACE
+                        c2 == '\n' ||     // LF
+                        c2 == '\u0009' || // TAB
+                        c2 == '\u000C' || // FF
+                        c2 == '\u003C' || // LES-THAN SIGN
+                        c2 == '\u0026') { // AMPERSAND
+                    // Not a character references. No characters are consumed, and nothing is returned.
+                    writer.write(c1);
+                    continue;
+
+                } else if (c2 == REFERENCE_NUMERIC_PREFIX2) {
+
+                    final int c3 = reader.read();
+
+                    if (c3 < 0) {
+                        // No reference possible
+                        writer.write(c1);
+                        writer.write(c2);
+                        c1 = c2;
+                        c2 = c3;
+                        continue;
+                    }
+
+                    if ((c3 == REFERENCE_HEXA_PREFIX3_LOWER || c3 == REFERENCE_HEXA_PREFIX3_UPPER)) {
+                        // This is a hexadecimal reference
+
+                        ce = reader.read();
+                        while (ce >= 0) {
+                            if (!((ce >= '0' && ce <= '9') || (ce >= 'A' && ce <= 'F') || (ce >= 'a' && ce <= 'f'))) {
+                                break;
+                            }
+                            if (escapei == escapes.length) {
+                                // too many escape chars for our array: grow it!
+                                final char[] newEscapes = new char[escapes.length + 4];
+                                System.arraycopy(escapes, 0, newEscapes, 0, escapes.length);
+                                escapes = newEscapes;
+                            }
+                            escapes[escapei] = (char) ce;
+                            ce = reader.read();
+                            escapei++;
+                        }
+
+                        if (escapei == 0) {
+                            // We weren't able to consume any hexa chars
+                            writer.write(c1);
+                            writer.write(c2);
+                            writer.write(c3);
+                            c1 = c3;
+                            c2 = ce;
+                            continue;
+                        }
+
+                        c1 = escapes[escapei - 1];
+                        c2 = ce;
+
+                        codepoint = parseIntFromReference(escapes, 0, escapei, 16);
+
+                        if (c2 == REFERENCE_SUFFIX) {
+                            // If the reference ends in a ';', just consume it
+                            c1 = c2;
+                            c2 = reader.read();
+                        }
+
+                        codepoint = translateIllFormedCodepoint(codepoint);
+
+                        escapei = 0;
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else if (c3 >= '0' && c3 <= '9') {
+                        // This is a decimal reference
+
+                        ce = c3;
+                        while (ce >= 0) {
+                            if (!(ce >= '0' && ce <= '9')) {
+                                break;
+                            }
+                            if (escapei == escapes.length) {
+                                // too many escape chars for our array: grow it!
+                                final char[] newEscapes = new char[escapes.length + 4];
+                                System.arraycopy(escapes, 0, newEscapes, 0, escapes.length);
+                                escapes = newEscapes;
+                            }
+                            escapes[escapei] = (char) ce;
+                            ce = reader.read();
+                            escapei++;
+                        }
+
+                        if (escapei == 0) {
+                            // We weren't able to consume any decimal chars
+                            writer.write(c1);
+                            writer.write(c2);
+                            c1 = c2;
+                            c2 = c3;
+                            continue;
+                        }
+
+                        c1 = escapes[escapei - 1];
+                        c2 = ce;
+
+                        codepoint = parseIntFromReference(escapes, 0, escapei, 10);
+
+                        if (c2 == REFERENCE_SUFFIX) {
+                            // If the reference ends in a ';', just consume it
+                            c1 = c2;
+                            c2 = reader.read();
+                        }
+
+                        codepoint = translateIllFormedCodepoint(codepoint);
+
+                        escapei = 0;
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else {
+                        // This is not a valid reference, just discard
+                        writer.write(c1);
+                        writer.write(c2);
+                        c1 = c2;
+                        c2 = c3;
+                        continue;
+                    }
+
+
+                } else {
+
+                    // This is a named reference, must be comprised only of ALPHABETIC chars
+
+                    ce = c2;
+                    while (ce >= 0) {
+                        if (!((ce >= '0' && ce <= '9') || (ce >= 'A' && ce <= 'Z') || (ce >= 'a' && ce <= 'z'))) {
+                            break;
+                        }
+                        if (escapei == escapes.length) {
+                            // too many escape chars for our array: grow it!
+                            final char[] newEscapes = new char[escapes.length + 4];
+                            System.arraycopy(escapes, 0, newEscapes, 0, escapes.length);
+                            escapes = newEscapes;
+                        }
+                        escapes[escapei] = (char) ce;
+                        ce = reader.read();
+                        escapei++;
+                    }
+
+                    if (escapei == 0) {
+                        // We weren't able to consume any decimal chars
+                        writer.write(c1);
+                        continue;
+                    }
+
+                    if (escapei + 2 >= escapes.length) {
+                        // the entire escape sequence does not fit: grow it!
+                        final char[] newEscapes = new char[escapes.length + 4];
+                        System.arraycopy(escapes, 0, newEscapes, 0, escapes.length);
+                        escapes = newEscapes;
+                    }
+
+                    System.arraycopy(escapes, 0, escapes, 1, escapei);
+                    escapes[0] = (char) c1;
+                    escapei++;
+
+                    if (ce == REFERENCE_SUFFIX) {
+                        // If the reference ends in a ';', just consume it
+                        escapes[escapei++] = (char) ce;
+                        ce = reader.read();
+                    }
+
+                    c1 = escapes[escapei - 1];
+                    c2 = ce;
+
+                    final int ncrPosition = HtmlEscapeSymbols.binarySearch(symbols.SORTED_NCRS, escapes, 0, escapei);
+                    if (ncrPosition >= 0) {
+                        codepoint = symbols.SORTED_CODEPOINTS[ncrPosition];
+                        escapei = 0;
+                    } else if (ncrPosition == Integer.MIN_VALUE) {
+                        // Not found! Just ignore our efforts to find a match.
+                        writer.write(escapes, 0, escapei);
+                        continue;
+                    } else if (ncrPosition < -10) {
+                        // Found but partial!
+                        final int partialIndex = (-1) * (ncrPosition + 10);
+                        final char[] partialMatch = symbols.SORTED_NCRS[partialIndex];
+                        codepoint = symbols.SORTED_CODEPOINTS[partialIndex];
+                        System.arraycopy(escapes, partialMatch.length, escapes, 0, (escapei - partialMatch.length));
+                        escapei -= partialMatch.length; // so that we know we have to output the rest of 'escapes'
+                    } else {
+                        // Should never happen!
+                        throw new RuntimeException("Invalid unescape codepoint after search: " + ncrPosition);
+                    }
+
+                }
+
+            }
+
+            /*
+             * --------------------------
+             *
+             * Perform the real unescape
+             *
+             * --------------------------
+             */
+
+            if (codepoint > '\uFFFF') {
+                writer.write(Character.toChars(codepoint));
+            } else if (codepoint < 0) {
+                // This is a double-codepoint unescape operation
+                final int[] codepoints = symbols.DOUBLE_CODEPOINTS[((-1) * codepoint) - 1];
+                if (codepoints[0] > '\uFFFF') {
+                    writer.write(Character.toChars(codepoints[0]));
+                } else {
+                    writer.write((char) codepoints[0]);
+                }
+                if (codepoints[1] > '\uFFFF') {
+                    writer.write(Character.toChars(codepoints[1]));
+                } else {
+                    writer.write((char) codepoints[1]);
+                }
+            } else {
+                writer.write((char)codepoint);
+            }
+
+            /*
+             * ----------------------------------------
+             * Cleanup, in case we had a partial match
+             * ----------------------------------------
+             */
+
+            if (escapei > 0) {
+                writer.write(escapes, 0, escapei);
+                escapei = 0;
+            }
+
+
+        }
+
+    }
+
+
+
+
+
+
+    /*
      * Perform an unescape operation based on char[]. Unescape operations are always based on the HTML5 symbol set.
      * Unescape operations will be performed in the most similar way possible to the process a browser follows for
      * showing HTML5 escaped code. See: http://www.w3.org/TR/html5/syntax.html#consume-a-character-reference
