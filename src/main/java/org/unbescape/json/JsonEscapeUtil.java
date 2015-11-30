@@ -648,6 +648,22 @@ final class JsonEscapeUtil {
         return result;
     }
 
+    static int parseIntFromReference(final int[] text, final int start, final int end, final int radix) {
+        int result = 0;
+        for (int i = start; i < end; i++) {
+            final char c = (char) text[i];
+            int n = -1;
+            for (int j = 0; j < HEXA_CHARS_UPPER.length; j++) {
+                if (c == HEXA_CHARS_UPPER[j] || c == HEXA_CHARS_LOWER[j]) {
+                    n = j;
+                    break;
+                }
+            }
+            result = (radix * result) + n;
+        }
+        return result;
+    }
+
 
 
 
@@ -790,6 +806,131 @@ final class JsonEscapeUtil {
         }
 
         return strBuilder.toString();
+
+    }
+
+
+
+
+
+    /*
+     * Perform an unescape operation based on a Reader, writing the result to a Writer.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void unescape(final Reader reader, final Writer writer) throws IOException  {
+
+        if (reader == null) {
+            return;
+        }
+
+        final int[] escapes = new int[4];
+        int c1, c2; // c0: last char, c1: current char, c2: next char
+
+        c2 = reader.read();
+
+        while (c2 >= 0) {
+
+            c1 = c2;
+            c2 = reader.read();
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if (c1 != ESCAPE_PREFIX || c2 < 0) {
+                writer.write(c1);
+                continue;
+            }
+
+            int codepoint = -1;
+
+            if (c1 == ESCAPE_PREFIX) {
+
+                switch (c2) {
+                    case 'b': codepoint = 0x08; c1 = c2; c2 = reader.read(); break;
+                    case 't': codepoint = 0x09; c1 = c2; c2 = reader.read(); break;
+                    case 'n': codepoint = 0x0A; c1 = c2; c2 = reader.read(); break;
+                    case 'f': codepoint = 0x0C; c1 = c2; c2 = reader.read(); break;
+                    case 'r': codepoint = 0x0D; c1 = c2; c2 = reader.read(); break;
+                    case '"': codepoint = 0x22; c1 = c2; c2 = reader.read(); break;
+                    case '\\': codepoint = 0x5C; c1 = c2; c2 = reader.read(); break;
+                    case '/': codepoint = 0x2F; c1 = c2; c2 = reader.read(); break;
+                }
+
+                if (codepoint == -1) {
+
+                    if (c2 == ESCAPE_UHEXA_PREFIX2) {
+                        // This can be a uhexa escape, we need exactly four more characters
+
+                        int escapei = 0;
+                        int ce = reader.read();
+                        while (ce >= 0 && escapei < 4) {
+                            if (!((ce >= '0' && ce <= '9') || (ce >= 'A' && ce <= 'F') || (ce >= 'a' && ce <= 'f'))) {
+                                break;
+                            }
+                            escapes[escapei] = ce;
+                            ce = reader.read();
+                            escapei++;
+                        }
+
+                        if (escapei < 4) {
+                            // We weren't able to consume the required four hexa chars, leave it as slash+'u', which
+                            // is invalid, and let the corresponding JSON parser fail.
+                            writer.write(c1);
+                            writer.write(c2);
+                            for (int i = 0; i < escapei; i++) {
+                                c1 = c2;
+                                c2 = escapes[i];
+                                writer.write(c2);
+                            }
+                            c1 = c2;
+                            c2 = ce;
+                            continue;
+                        }
+
+                        c1 = escapes[3];
+                        c2 = ce;
+
+                        codepoint = parseIntFromReference(escapes, 0, 4, 16);
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else {
+
+                        // Other escape sequences are not allowed by JSON. So we leave it as is
+                        // and expect the corresponding JSON parser to fail.
+                        writer.write(c1);
+                        writer.write(c2);
+
+                        c1 = c2;
+                        c2 = reader.read();
+
+                        continue;
+
+                    }
+
+                }
+
+            }
+
+
+            /*
+             * --------------------------
+             *
+             * Perform the real unescape
+             *
+             * --------------------------
+             */
+
+            if (codepoint > '\uFFFF') {
+                writer.write(Character.toChars(codepoint));
+            } else {
+                writer.write((char)codepoint);
+            }
+
+        }
 
     }
 
