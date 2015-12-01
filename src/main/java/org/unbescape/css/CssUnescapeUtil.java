@@ -20,6 +20,7 @@
 package org.unbescape.css;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 
 /**
@@ -211,11 +212,11 @@ final class CssUnescapeUtil {
                     case '*':
                     case '+':
                     case ',':
-                    // hyphen: will only be escaped when identifer starts with '--' or '-{digit}'
+                        // hyphen: will only be escaped when identifer starts with '--' or '-{digit}'
                     case '-':
                     case '.':
                     case '/':
-                    // colon: will not be used for escaping: not recognized by IE < 8
+                        // colon: will not be used for escaping: not recognized by IE < 8
                     case ':':
                     case ';':
                     case '<':
@@ -227,7 +228,7 @@ final class CssUnescapeUtil {
                     case '\\':
                     case ']':
                     case '^':
-                    // underscore: will only be escaped at the beginning of an identifier (in order to avoid issues in IE6)
+                        // underscore: will only be escaped at the beginning of an identifier (in order to avoid issues in IE6)
                     case '_':
                     case '`':
                     case '{':
@@ -335,6 +336,157 @@ final class CssUnescapeUtil {
         }
 
         return strBuilder.toString();
+
+    }
+
+
+
+
+
+
+    /*
+     * Perform an unescape operation based on a Reader, writing the results to a Writer.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void unescape(final Reader reader, final Writer writer) throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        int escapei = 0;
+        final char[] escapes = new char[6];
+        int c1, c2, ce; // c1: current char, c2: next char, ce: current escape char
+
+        c2 = reader.read();
+
+        while (c2 >= 0) {
+
+            c1 = c2;
+            c2 = reader.read();
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if (c1 != ESCAPE_PREFIX || c2 < 0) {
+                writer.write(c1);
+                continue;
+            }
+
+            int codepoint = -1;
+
+            if (c1 == ESCAPE_PREFIX) {
+
+                switch (c2) {
+                    case ' ':
+                    case '!':
+                    case '"':
+                    case '#':
+                    case '$':
+                    case '%':
+                    case '&':
+                    case '\'':
+                    case '(':
+                    case ')':
+                    case '*':
+                    case '+':
+                    case ',':
+                        // hyphen: will only be escaped when identifer starts with '--' or '-{digit}'
+                    case '-':
+                    case '.':
+                    case '/':
+                        // colon: will not be used for escaping: not recognized by IE < 8
+                    case ':':
+                    case ';':
+                    case '<':
+                    case '=':
+                    case '>':
+                    case '?':
+                    case '@':
+                    case '[':
+                    case '\\':
+                    case ']':
+                    case '^':
+                        // underscore: will only be escaped at the beginning of an identifier (in order to avoid issues in IE6)
+                    case '_':
+                    case '`':
+                    case '{':
+                    case '|':
+                    case '}':
+                    case '~': codepoint = c2; c1 = c2; c2 = reader.read(); break;
+                }
+
+                if (codepoint == -1) {
+
+                    if ((c2 >= '0' && c2 <= '9') || (c2 >= 'A' && c2 <= 'F') || (c2 >= 'a' && c2 <= 'f')) {
+                        // This is a hexa escape
+
+                        escapei = 0;
+                        ce = c2;
+                        while (ce >= 0 && escapei < 6) {
+                            if (!((ce >= '0' && ce <= '9') || (ce >= 'A' && ce <= 'F') || (ce >= 'a' && ce <= 'f'))) {
+                                break;
+                            }
+                            escapes[escapei] = (char) ce;
+                            ce = reader.read();
+                            escapei++;
+                        }
+
+                        c1 = escapes[5];
+                        c2 = ce;
+
+                        codepoint = parseIntFromReference(escapes, 0, escapei, 16);
+
+                        // If there is a whitespace after the escape, just ignore it.
+                        if (c2 == ' ') {
+                            c1 = c2;
+                            c2 = reader.read();
+                        }
+
+                        // Don't continue here, just let the unescape code below do its job
+
+
+                    } else if (c2 == '\n' || c2 == '\r' || c2 == '\f') {
+
+                        // The only characters that cannot be escaped by means of a backslash are line feed,
+                        // carriage return and form feed (besides hexadecimal digits).
+                        writer.write(c1);
+                        continue;
+
+                    } else {
+
+                        // We weren't able to consume any valid escape chars, just consider it a normal char,
+                        // which is allowed by the CSS escape syntax.
+
+                        codepoint = c2;
+
+                        c1 = c2;
+                        c2 = reader.read();
+
+                    }
+
+                }
+
+            }
+
+            /*
+             * --------------------------
+             *
+             * Perform the real unescape
+             *
+             * --------------------------
+             */
+
+            if (codepoint > '\uFFFF') {
+                writer.write(Character.toChars(codepoint));
+            } else {
+                writer.write((char)codepoint);
+            }
+
+        }
 
     }
 

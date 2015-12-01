@@ -654,6 +654,101 @@ final class UriEscapeUtil {
 
 
     /*
+     * Perform an unescape operation based on a Reader, writing the results to a Writer.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void unescape(final Reader reader, final Writer writer, final UriEscapeType escapeType, final String encoding) throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        byte[] escapes = new byte[4];
+        int c1, c2, ce0, ce1, ce2; // c1: current char, c2: next char, ce0, ce1, ce2: current escape chars
+
+        c2 = reader.read();
+
+        while (c2 >= 0) {
+
+            c1 = c2;
+            c2 = reader.read();
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if ((c1 != ESCAPE_PREFIX || c2 < 0) && (c1 != '+' || !escapeType.canPlusEscapeWhitespace())) {
+                writer.write(c1);
+                continue;
+            }
+
+
+            /*
+             * Deal with possible '+'-escaped whitespace (application/x-www-form-urlencoded)
+             */
+            if (c1 == '+') {
+                // if we reached this point with c == '+', it's escaping a whitespace
+                writer.write(' ');
+                continue;
+            }
+
+
+            /*
+             * ESCAPE PROCESS
+             * --------------
+             * If there are more than one percent-encoded/escaped sequences together, we will
+             * need to unescape them all at once (because they might be bytes --up to 4-- of
+             * the same char).
+             */
+
+            int pos = 0;
+
+            ce0 = c1;
+            ce1 = c2;
+            ce2 = reader.read();
+
+            while (ce0 == ESCAPE_PREFIX && ce1 >= 0 && ce2 >= 0) {
+
+                if (pos == escapes.length) {
+                    // we need to grow!
+                    byte[] newEscapes = new byte[escapes.length + 4];
+                    System.arraycopy(escapes, 0, newEscapes, 0, escapes.length);
+                    escapes = newEscapes;
+                }
+
+                escapes[pos++] = parseHexa((char) ce1, (char) ce2);
+
+                ce0 = reader.read();
+                ce1 = ce0 < 0 ? ce0 : ce0 != ESCAPE_PREFIX ? 0x0 : reader.read();
+                ce2 = ce1 < 0 ? ce1 : ce0 != ESCAPE_PREFIX ? 0x0 : reader.read();
+
+            }
+
+            if (ce0 == ESCAPE_PREFIX) {
+                // Incomplete escape sequence!
+                throw new IllegalArgumentException("Incomplete escaping sequence in input");
+            }
+
+            c2 = ce0;
+
+            try {
+                writer.write(new String(escapes, 0, pos, encoding));
+            } catch (final UnsupportedEncodingException e) {
+                throw new IllegalArgumentException("Exception while escaping URI: Bad encoding '" + encoding + "'", e);
+            }
+
+        }
+
+    }
+
+
+
+
+
+
+    /*
      * Perform an unescape operation based on char[].
      */
     static void unescape(final char[] text, final int offset, final int len, final Writer writer,

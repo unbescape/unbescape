@@ -20,6 +20,7 @@
 package org.unbescape.properties;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 
 
@@ -283,6 +284,126 @@ final class PropertiesUnescapeUtil {
         }
 
         return strBuilder.toString();
+
+    }
+
+
+
+
+
+
+    /*
+     * Perform an unescape operation based on a Reader, writing the results to a String.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void unescape(final Reader reader, final Writer writer) throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        final char[] escapes = new char[4];
+        int c1, c2, ce; // c1: current char, c2: next char, ce: current escape char
+
+        c2 = reader.read();
+
+        while (c2 >= 0) {
+
+            c1 = c2;
+            c2 = reader.read();
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if (c1 != ESCAPE_PREFIX || c2 < 0) {
+                writer.write(c1);
+                continue;
+            }
+
+            int codepoint = -1;
+
+            if (c1 == ESCAPE_PREFIX) {
+
+                switch (c2) {
+                    case 't': codepoint = 0x09; c1 = c2; c2 = reader.read(); break;
+                    case 'n': codepoint = 0x0A; c1 = c2; c2 = reader.read(); break;
+                    case 'f': codepoint = 0x0C; c1 = c2; c2 = reader.read(); break;
+                    case 'r': codepoint = 0x0D; c1 = c2; c2 = reader.read(); break;
+                    case '\\': codepoint = 0x5C; c1 = c2; c2 = reader.read(); break;
+                }
+
+                if (codepoint == -1) {
+
+                    if (c2 == ESCAPE_UHEXA_PREFIX2) {
+                        // This can be a uhexa escape, we need exactly four more characters
+
+                        int escapei = 0;
+                        ce = reader.read();
+                        while (ce >= 0 && escapei < 4) {
+                            if (!((ce >= '0' && ce <= '9') || (ce >= 'A' && ce <= 'F') || (ce >= 'a' && ce <= 'f'))) {
+                                break;
+                            }
+                            escapes[escapei] = (char) ce;
+                            ce = reader.read();
+                            escapei++;
+                        }
+
+                        if (escapei < 4) {
+                            // We weren't able to consume the required four hexa chars, leave it as slash+'u', which
+                            // is invalid, and let the corresponding JavaScript parser fail.
+                            writer.write(c1);
+                            writer.write(c2);
+                            for (int i = 0; i < escapei; i++) {
+                                c1 = c2;
+                                c2 = escapes[i];
+                                writer.write(c2);
+                            }
+                            c1 = c2;
+                            c2 = ce;
+                            continue;
+                        }
+
+                        c1 = escapes[3];
+                        c2 = ce;
+
+                        codepoint = parseIntFromReference(escapes, 0, 4, 16);
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else {
+
+                        // We weren't able to consume any valid escape chars, just consider it a normal char,
+                        // which is allowed by the Java Properties specification
+
+                        codepoint = (int) c2;
+
+                        c1 = c2;
+                        c2 = reader.read();
+
+                    }
+
+                }
+
+            }
+
+            /*
+             * --------------------------
+             *
+             * Perform the real unescape
+             *
+             * --------------------------
+             */
+
+            if (codepoint > '\uFFFF') {
+                writer.write(Character.toChars(codepoint));
+            } else {
+                writer.write((char)codepoint);
+            }
+
+        }
 
     }
 

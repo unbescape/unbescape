@@ -695,6 +695,22 @@ final class JavaScriptEscapeUtil {
         return result;
     }
 
+    static int parseIntFromReference(final int[] text, final int start, final int end, final int radix) {
+        int result = 0;
+        for (int i = start; i < end; i++) {
+            final char c = (char) text[i];
+            int n = -1;
+            for (int j = 0; j < HEXA_CHARS_UPPER.length; j++) {
+                if (c == HEXA_CHARS_UPPER[j] || c == HEXA_CHARS_LOWER[j]) {
+                    n = j;
+                    break;
+                }
+            }
+            result = (radix * result) + n;
+        }
+        return result;
+    }
+
 
 
 
@@ -970,6 +986,238 @@ final class JavaScriptEscapeUtil {
         }
 
         return strBuilder.toString();
+
+    }
+
+
+
+
+
+
+    /*
+     * Perform an unescape operation based on a Reader, writing the results to a Writer.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void unescape(final Reader reader, final Writer writer) throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        int escapei = 0;
+        final char[] escapes = new char[4];
+        int c1, c2, ce; // c1: current char, c2: next char, ce: current escape char
+
+        c2 = reader.read();
+
+        while (c2 >= 0) {
+
+            c1 = c2;
+            c2 = reader.read();
+
+            escapei = 0;
+
+            /*
+             * Check the need for an unescape operation at this point
+             */
+
+            if (c1 != ESCAPE_PREFIX || c2 < 0) {
+                writer.write(c1);
+                continue;
+            }
+
+            int codepoint = -1;
+
+            if (c1 == ESCAPE_PREFIX) {
+
+                switch (c2) {
+                    case 'b': codepoint = 0x08; c1 = c2; c2 = reader.read(); break;
+                    case 't': codepoint = 0x09; c1 = c2; c2 = reader.read(); break;
+                    case 'n': codepoint = 0x0A; c1 = c2; c2 = reader.read(); break;
+                    case 'v': codepoint = 0x0B; c1 = c2; c2 = reader.read(); break;
+                    case 'f': codepoint = 0x0C; c1 = c2; c2 = reader.read(); break;
+                    case 'r': codepoint = 0x0D; c1 = c2; c2 = reader.read(); break;
+                    case '"': codepoint = 0x22; c1 = c2; c2 = reader.read(); break;
+                    case '\'': codepoint = 0x27; c1 = c2; c2 = reader.read(); break;
+                    case '\\': codepoint = 0x5C; c1 = c2; c2 = reader.read(); break;
+                    case '/': codepoint = 0x2F; c1 = c2; c2 = reader.read(); break;
+                }
+
+                if (codepoint == -1) {
+
+                    if (c2 == ESCAPE_XHEXA_PREFIX2) {
+                        // This can be a xhexa escape, we need exactly two more characters
+
+                        escapei = 0;
+                        ce = reader.read();
+                        while (ce >= 0 && escapei < 2) {
+                            if (!((ce >= '0' && ce <= '9') || (ce >= 'A' && ce <= 'F') || (ce >= 'a' && ce <= 'f'))) {
+                                break;
+                            }
+                            escapes[escapei] = (char) ce;
+                            ce = reader.read();
+                            escapei++;
+                        }
+
+                        if (escapei < 2) {
+                            // We weren't able to consume the required four hexa chars, leave it as slash+'u', which
+                            // is invalid, and let the corresponding JavaScript parser fail.
+                            writer.write(c1);
+                            writer.write(c2);
+                            for (int i = 0; i < escapei; i++) {
+                                c1 = c2;
+                                c2 = escapes[i];
+                                writer.write(c2);
+                            }
+                            c1 = c2;
+                            c2 = ce;
+                            continue;
+                        }
+
+                        c1 = escapes[3];
+                        c2 = ce;
+
+                        codepoint = parseIntFromReference(escapes, 0, 2, 16);
+
+                        escapei = 0;
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else if (c2 == ESCAPE_UHEXA_PREFIX2) {
+                        // This can be a uhexa escape, we need exactly four more characters
+
+                        escapei = 0;
+                        ce = reader.read();
+                        while (ce >= 0 && escapei < 4) {
+                            if (!((ce >= '0' && ce <= '9') || (ce >= 'A' && ce <= 'F') || (ce >= 'a' && ce <= 'f'))) {
+                                break;
+                            }
+                            escapes[escapei] = (char) ce;
+                            ce = reader.read();
+                            escapei++;
+                        }
+
+                        if (escapei < 4) {
+                            // We weren't able to consume the required four hexa chars, leave it as slash+'u', which
+                            // is invalid, and let the corresponding JavaScript parser fail.
+                            writer.write(c1);
+                            writer.write(c2);
+                            for (int i = 0; i < escapei; i++) {
+                                c1 = c2;
+                                c2 = escapes[i];
+                                writer.write(c2);
+                            }
+                            c1 = c2;
+                            c2 = ce;
+                            continue;
+                        }
+
+                        c1 = escapes[3];
+                        c2 = ce;
+
+                        codepoint = parseIntFromReference(escapes, 0, 4, 16);
+
+                        escapei = 0;
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else if (c2 >= '0' && c2 <= '7') {
+                        // This can be a octal escape, we need at least 1 more char, and up to 3 more.
+
+                        //  case '0': if (!isOctalEscape(text,i + 1,max)) { codepoint = 0x00; referenceOffset = i + 1; }; break;
+
+                        escapei = 0;
+                        ce = c2;
+                        while (ce >= 0 && escapei < 3) {
+                            if (!(ce >= '0' && ce <= '7')) {
+                                break;
+                            }
+                            escapes[escapei] = (char) ce;
+                            ce = reader.read();
+                            escapei++;
+                        }
+
+                        c1 = escapes[escapei - 1];
+                        c2 = ce;
+
+                        codepoint = parseIntFromReference(escapes, 0, escapei, 8);
+
+                        if (codepoint > 0xFF) {
+                            // Maximum octal escape char is FF. Ignore the last digit
+                            codepoint = parseIntFromReference(escapes, 0, escapei - 1, 8);
+                            System.arraycopy(escapes, escapei - 2, escapes, 0, 1);
+                            escapei = 1;
+                        } else if (codepoint == 0x0 && escapei > 1) {
+                            // In the case of '\000' , we will only consider the first '\0' as it is an escape on its
+                            // own, and the rest of the '00' will have to be output. So we save them at the escapes array
+                            System.arraycopy(escapes, 1, escapes, 0, escapei - 1);
+                            escapei--;
+                        } else {
+                            escapei = 0;
+                        }
+
+                        // Don't continue here, just let the unescape code below do its job
+
+                    } else if (c2 == '8' || c2 == '9' || c2 == '\n' || c2 == '\r' || c2 == '\u2028' || c2 == '\u2029') {
+
+                        // '8' and '9' are not valid octal escape sequences, and the other four characters
+                        // are LineTerminators, which are not allowed as escape sequences. So we leave it as is
+                        // and expect the corresponding JavaScript engine to fail (except in the case of slash + '\n',
+                        // which is considered a LineContinuator).
+                        writer.write(c1);
+                        writer.write(c2);
+
+                        c1 = c2;
+                        c2 = reader.read();
+
+                        continue;
+
+                    } else {
+
+                        // We weren't able to consume any valid escape chars, just consider it a normal char,
+                        // which is allowed by the JavaScript specification (NonEscapeCharacter)
+
+                        codepoint = c2;
+
+                        c1 = c2;
+                        c2 = reader.read();
+
+                        escapei = 0;
+
+                    }
+
+                }
+
+            }
+
+            /*
+             * --------------------------
+             *
+             * Perform the real unescape
+             *
+             * --------------------------
+             */
+
+            if (codepoint > '\uFFFF') {
+                writer.write(Character.toChars(codepoint));
+            } else {
+                writer.write((char)codepoint);
+            }
+
+            /*
+             * ----------------------------------------
+             * Cleanup, in case we had a partial match
+             * ----------------------------------------
+             */
+
+            if (escapei > 0) {
+                writer.write(escapes, 0, escapei);
+                escapei = 0;
+            }
+
+        }
 
     }
 
