@@ -826,7 +826,7 @@ final class JsonEscapeUtil {
         }
 
         final int[] escapes = new int[4];
-        int c1, c2; // c0: last char, c1: current char, c2: next char
+        int c1, c2; // c1: current char, c2: next char
 
         c2 = reader.read();
 
