@@ -20,6 +20,7 @@
 package org.unbescape.csv;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 
 /**
@@ -67,21 +68,6 @@ final class CsvEscapeUtil {
      *         Google Spreadsheets (File -> Import...)
      *   ---------------------------------------------------------------------------------------------------------------
      *
-     */
-
-
-
-    /*
-     * ------------------------------------------------------------------------------------------------------
-     * NOTE there are NO STREAM-BASED (Reader/Writer) versions of escape/unescape operations for CSV.
-     *
-     * The reason is CSV-escaped values will be enclosed in double-quotes if they contain any
-     * non-alphanumeric characters, which is something that can only be known once we have reached such
-     * characters in the reader. This means we would have to either use a buffer that could potentially
-     * contain all the read chars (thus invalidating any benefits from the streamed operation) or simply
-     * enclose EVERY value in double-quotes, which besides not being a good practice would mean the library
-     * would produce different results depending on whether input is String, char[] or a Reader.
-     * ------------------------------------------------------------------------------------------------------
      */
 
 
@@ -182,6 +168,140 @@ final class CsvEscapeUtil {
         strBuilder.append(DOUBLE_QUOTE);
 
         return strBuilder.toString();
+
+    }
+
+
+
+
+
+    /*
+     * Perform an escape operation, based on a Reader, writing the results to a Writer.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void escape(final Reader reader, final Writer writer) throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        /*
+         * Escape in CSV requires using buffers because CSV escaped text might be surrounded by quotes or not
+         * depending on whether they contain any non-alphanumeric chars or not, which is something we cannot
+         * know until we find any.
+         */
+
+        int doQuote = -1;
+
+        int bufferSize = 0;
+        char[] buffer = new char[10];
+
+        int read = reader.read(buffer, 0, buffer.length);
+        if (read < 0) {
+            return;
+        }
+
+        char cq;
+        while (doQuote < 0 && read >= 0) {
+
+            int i = bufferSize;
+            bufferSize += read;
+
+            while (doQuote < 0 && i < bufferSize) {
+                cq = buffer[i++];
+                if (!((cq >= 'a' && cq <= 'z') || (cq >= 'A' && cq <= 'Z') || (cq >= '0' && cq <= '9'))) {
+                    doQuote = 1; // We must add quotes!
+                    break;
+                }
+            }
+
+            if (doQuote < 0 && read >= 0) {
+
+                if (bufferSize == buffer.length) {
+                    // Actually, there is no room for reading more, so let's grow the buffer
+                    final char[] newBuffer = new char[buffer.length + (buffer.length / 2)];
+                    System.arraycopy(buffer, 0, newBuffer, 0, buffer.length);
+                    buffer = newBuffer;
+                }
+
+                read = reader.read(buffer, bufferSize, (buffer.length - bufferSize));
+
+            }
+
+        }
+
+        doQuote = Math.max(doQuote, 0); // 0 = no quote, 1 = quote
+
+
+        /*
+         * Output initial quotes, if needed
+         */
+        if (doQuote == 1) {
+            writer.write('"');
+        }
+
+
+        /*
+         * First we will output the already-checked buffer, escaping quotes as needed
+         */
+        if (bufferSize > 0) {
+
+            char c;
+            for (int i = 0; i < bufferSize; i++) {
+
+                c = buffer[i];
+
+                /*
+                 * Check whether the character is a double-quote (in which case, we escape it)
+                 */
+                if (c == DOUBLE_QUOTE) {
+                    writer.write(TWO_DOUBLE_QUOTES);
+                } else {
+                    writer.write(c);
+                }
+
+            }
+
+        }
+
+
+        /*
+         * Once the buffer has been processed, we will process the rest of the input by reading it on-the-fly
+         */
+        if (read >= 0) {
+
+            int c1, c2; // c1: current char, c2: next char
+
+            c1 = -1;
+            c2 = reader.read();
+
+            while (c2 >= 0) {
+
+                c1 = c2;
+                c2 = reader.read();
+
+                /*
+                 * Check whether the character is a double-quote (in which case, we escape it)
+                 */
+                if (c1 == DOUBLE_QUOTE) {
+                    writer.write(TWO_DOUBLE_QUOTES);
+                } else {
+                    writer.write(c1);
+                }
+
+            }
+
+        }
+
+
+        /*
+         * Output ending quotes, if needed
+         */
+        if (doQuote == 1) {
+            writer.write('"');
+        }
 
     }
 
@@ -410,6 +530,86 @@ final class CsvEscapeUtil {
         }
 
         return strBuilder.toString();
+
+    }
+
+
+
+
+
+
+    /*
+     * Perform an unescape operation based on a Reader, writing the results to a Writer.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void unescape(final Reader reader, final Writer writer) throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        boolean isQuoted = false;
+
+        int c1, c2; // c1: current char, c2: next char
+
+        c2 = reader.read();
+
+        if (c2 < 0) {
+            // Nothing to output
+            return;
+        } else if (c2 == DOUBLE_QUOTE) {
+            c1 = c2;
+            c2 = reader.read();
+            if (c2 < 0) {
+                // Output is just a double-quote symbol
+                // (...which by the way is not a valid CSV value, as a " is non-alphanumeric)
+                writer.write(c1);
+                return;
+            } else {
+                isQuoted = true;
+            }
+        }
+
+        while (c2 >= 0) {
+
+            c1 = c2;
+            c2 = reader.read();
+
+            /*
+             * Shortcut: from an unescape point of view, we will ignore most characters
+             */
+            if (c1 != DOUBLE_QUOTE) {
+                writer.write(c1);
+                continue;
+            }
+
+            if (c2 < 0) {
+
+                if (!isQuoted) {
+                    // Last char is double-quote. If last and value is quoted, ignore - if not, write.
+                    writer.write(c1);
+                }
+                continue;
+
+            } else if (c2 == DOUBLE_QUOTE) {
+
+                // This is an escaped double quote
+
+                writer.write(DOUBLE_QUOTE);
+                c1 = c2;
+                c2 = reader.read();
+
+            } else {
+                // This is a non-escaped quote, which should only happen at the end, so this is actually
+                // non-valid CSV... but anyway, we will be lenient and just write it
+
+                writer.write(DOUBLE_QUOTE);
+
+            }
+
+        }
 
     }
 

@@ -1172,6 +1172,94 @@ final class JavaEscapeUtil {
 
 
     /*
+     * Perform an unescape operation based on a Reader, writing the results to a Writer.
+     *
+     * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
+     * is an inconvenience for the specific Reader implementation.
+     */
+    static void unescape(final Reader reader, final Writer writer) throws IOException {
+
+        if (reader == null) {
+            return;
+        }
+
+        /*
+         * Unescape in Java is a bit different because two different escape systems might have been applied one on
+         * top of the other: Octal escapes (\041) are supported at runtime, whereas unicode escapes (\u00E1) are
+         * applied at parse time. So it is technically possible to have an unicode-escaped octal escape. That means
+         * one output char would be represented in input by 4 * 6 = 24 chars, corresponding to the 6 chars of each
+         * of the unicode-escapes for each of the max-4 chars of the octal escape.
+         *
+         * This means that we will have to use a buffer and that, each time we fill the buffer, we will have to
+         * check that at least the last 8 characters are not a '\', which will mean we can be sure that we are not
+         * interrupting any escape sequence. That number (8) is so because that is the largest amount of non-\ chars
+         * that can happen being involved in an escape sequence, combining both escape methods: "\u005C777"
+         */
+
+        char[] buffer = new char[20];
+
+        int read = reader.read(buffer, 0, buffer.length);
+        if (read < 0) {
+            return;
+        }
+
+        int bufferSize = read;
+
+        while (bufferSize > 0 || read >= 0) {
+
+            int nonEscCounter = 0;
+
+            int n = bufferSize;
+            while (nonEscCounter < 8 && n-- != 0) {
+                if (buffer[n] == '\\') {
+                    nonEscCounter = 0;
+                    continue;
+                }
+                nonEscCounter++;
+            }
+
+            if (nonEscCounter < 8 && read >= 0) {
+                // not found an 8-char non-escape sequence in the whole buffer, will need to read more buffer
+
+                if (bufferSize == buffer.length) {
+                    // Actually, there is no room for reading more, so let's grow the buffer
+                    final char[] newBuffer = new char[buffer.length + (buffer.length / 2)];
+                    System.arraycopy(buffer, 0, newBuffer, 0, buffer.length);
+                    buffer = newBuffer;
+                }
+
+                read = reader.read(buffer, bufferSize, (buffer.length - bufferSize));
+                if (read >= 0) {
+                    bufferSize += read;
+                }
+
+                continue;
+
+            }
+
+            n = (n < 0? bufferSize : n + nonEscCounter);
+
+            // Once we have defined a 'safe' buffer, just call the char[]-based method
+            unescape(buffer, 0, n, writer);
+
+            System.arraycopy(buffer, n, buffer, 0, (bufferSize - n));
+            bufferSize -= n;
+
+            read = reader.read(buffer, bufferSize, (buffer.length - bufferSize));
+            if (read >= 0) {
+                bufferSize += read;
+            }
+
+        }
+
+    }
+
+
+
+
+
+
+    /*
      * Perform an unescape operation based on char[].
      */
     static void unescape(final char[] text, final int offset, final int len, final Writer writer)
