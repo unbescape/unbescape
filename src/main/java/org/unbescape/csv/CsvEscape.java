@@ -20,6 +20,7 @@
 package org.unbescape.csv;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 
 
@@ -43,13 +44,17 @@ import java.io.Writer;
  * <strong><u>Input/Output</u></strong>
  *
  * <p>
- *   There are two different input/output modes that can be used in escape/unescape operations:
+ *   There are four different input/output modes that can be used in escape/unescape operations:
  * </p>
  * <ul>
  *   <li><em><tt>String</tt> input, <tt>String</tt> output</em>: Input is specified as a <tt>String</tt> object
  *       and output is returned as another. In order to improve memory performance, all escape and unescape
  *       operations <u>will return the exact same input object as output if no escape/unescape modifications
  *       are required</u>.</li>
+ *   <li><em><tt>String</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a String
+ *       and output will be written into the specified <tt>java.io.Writer</tt>.</li>
+ *   <li><em><tt>java.io.Reader</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a Reader
+ *       and output will be written into the specified <tt>java.io.Writer</tt>.</li>
  *   <li><em><tt>char[]</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a char array
  *       (<tt>char[]</tt>) and output will be written into the specified <tt>java.io.Writer</tt>.
  *       Two <tt>int</tt> arguments called <tt>offset</tt> and <tt>len</tt> will be
@@ -126,15 +131,65 @@ public final class CsvEscape {
      * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String escapeCsv(final String text) {
         return CsvEscapeUtil.escape(text);
     }
 
 
+    /**
+     * <p>
+     *   Perform a CSV <strong>escape</strong> operation on a <tt>String</tt> input, writing results to
+     *   a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCsv(final String text, final Writer writer)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        CsvEscapeUtil.escape(new InternalStringReader(text), writer);
+    }
 
 
+    /**
+     * <p>
+     *   Perform a CSV <strong>escape</strong> operation on a <tt>Reader</tt> input, writing results to
+     *   a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCsv(final Reader reader, final Writer writer)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        CsvEscapeUtil.escape(reader, writer);
+    }
 
 
     /**
@@ -149,7 +204,7 @@ public final class CsvEscape {
      * @param offset the position in <tt>text</tt> at which the escape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeCsv(final char[] text, final int offset, final int len, final Writer writer)
@@ -194,10 +249,66 @@ public final class CsvEscape {
      * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String unescapeCsv(final String text) {
         return CsvEscapeUtil.unescape(text);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a CSV <strong>unescape</strong> operation on a <tt>String</tt> input, writing results
+     *   to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be unescaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void unescapeCsv(final String text, final Writer writer)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        CsvEscapeUtil.unescape(new InternalStringReader(text), writer);
+
+    }
+
+
+    /**
+     * <p>
+     *   Perform a CSV <strong>unescape</strong> operation on a <tt>Reader</tt> input, writing results
+     *   to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be unescaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void unescapeCsv(final Reader reader, final Writer writer)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        CsvEscapeUtil.unescape(reader, writer);
+
     }
 
 
@@ -213,11 +324,12 @@ public final class CsvEscape {
      * @param offset the position in <tt>text</tt> at which the unescape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be unescaped.
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @throws IOException if an input/output exception occurs
      */
     public static void unescapeCsv(final char[] text, final int offset, final int len, final Writer writer)
                                     throws IOException{
+
         if (writer == null) {
             throw new IllegalArgumentException("Argument 'writer' cannot be null");
         }
@@ -243,6 +355,59 @@ public final class CsvEscape {
 
     private CsvEscape() {
         super();
+    }
+
+
+
+    /*
+     * This is basically a very simplified, thread-unsafe version of StringReader that should
+     * perform better than the original StringReader by removing all synchronization structures.
+     *
+     * Note the only implemented methods are those that we know are really used from within the
+     * stream-based escape/unescape operations.
+     */
+    private static final class InternalStringReader extends Reader {
+
+        private String str;
+        private int length;
+        private int next = 0;
+
+        public InternalStringReader(final String s) {
+            super();
+            this.str = s;
+            this.length = s.length();
+        }
+
+        @Override
+        public int read() throws IOException {
+            if (this.next >= length) {
+                return -1;
+            }
+            return this.str.charAt(this.next++);
+        }
+
+        @Override
+        public int read(final char[] cbuf, final int off, final int len) throws IOException {
+            if ((off < 0) || (off > cbuf.length) || (len < 0) ||
+                    ((off + len) > cbuf.length) || ((off + len) < 0)) {
+                throw new IndexOutOfBoundsException();
+            } else if (len == 0) {
+                return 0;
+            }
+            if (this.next >= this.length) {
+                return -1;
+            }
+            int n = Math.min(this.length - this.next, len);
+            this.str.getChars(this.next, this.next + n, cbuf, off);
+            this.next += n;
+            return n;
+        }
+
+        @Override
+        public void close() throws IOException {
+            this.str = null; // Just set the reference to null, help the GC
+        }
+
     }
 
 

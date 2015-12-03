@@ -20,6 +20,7 @@
 package org.unbescape.css;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 
 /**
@@ -79,13 +80,17 @@ import java.io.Writer;
  * <strong><u>Input/Output</u></strong>
  *
  * <p>
- *   There are two different input/output modes that can be used in escape/unescape operations:
+ *   There are four different input/output modes that can be used in escape/unescape operations:
  * </p>
  * <ul>
  *   <li><em><tt>String</tt> input, <tt>String</tt> output</em>: Input is specified as a <tt>String</tt> object
  *       and output is returned as another. In order to improve memory performance, all escape and unescape
  *       operations <u>will return the exact same input object as output if no escape/unescape modifications
  *       are required</u>.</li>
+ *   <li><em><tt>String</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a String
+ *       and output will be written into the specified <tt>java.io.Writer</tt>.</li>
+ *   <li><em><tt>java.io.Reader</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a Reader
+ *       and output will be written into the specified <tt>java.io.Writer</tt>.</li>
  *   <li><em><tt>char[]</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a char array
  *       (<tt>char[]</tt>) and output will be written into the specified <tt>java.io.Writer</tt>.
  *       Two <tt>int</tt> arguments called <tt>offset</tt> and <tt>len</tt> will be
@@ -183,7 +188,7 @@ public final class CssEscape {
      * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String escapeCssStringMinimal(final String text) {
         return escapeCssString(text,
@@ -239,7 +244,7 @@ public final class CssEscape {
      * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String escapeCssString(final String text) {
         return escapeCssString(text,
@@ -272,7 +277,7 @@ public final class CssEscape {
      * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String escapeCssString(final String text,
                                     final CssStringEscapeType type, final CssStringEscapeLevel level) {
@@ -286,6 +291,328 @@ public final class CssEscape {
         }
 
         return CssStringEscapeUtil.escape(text, type, level);
+
+    }
+
+
+
+
+    /**
+     * <p>
+     *   Perform a CSS String level 1 (only basic set) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the CSS String basic escape set:
+     * </p>
+     * <ul>
+     *   <li>The <em>Backslash Escapes</em>:
+     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>) and
+     *       <tt>&#92;&#39;</tt> (<tt>U+0027</tt>).
+     *   </li>
+     *   <li>
+     *       Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *       and <tt>U+007F</tt> to <tt>U+009F</tt>.
+     *   </li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by using Backslash escapes whenever possible. For escaped
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
+     *   Hexadecimal Escapes.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeCssString(String, Writer, CssStringEscapeType, CssStringEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link CssStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link CssStringEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCssStringMinimal(final String text, final Writer writer)
+            throws IOException {
+        escapeCssString(text, writer,
+                CssStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssStringEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a CSS String level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The CSS String basic escape set:
+     *         <ul>
+     *           <li>The <em>Backslash Escapes</em>:
+     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>) and
+     *               <tt>&#92;&#39;</tt> (<tt>U+0027</tt>).
+     *           </li>
+     *           <li>
+     *               Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *               and <tt>U+007F</tt> to <tt>U+009F</tt>.
+     *           </li>
+     *         </ul>
+     *   </li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by using Backslash escapes whenever possible. For escaped
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
+     *   Hexadecimal Escapes.
+     * </p>
+     * <p>
+     *   This method calls
+     *   {@link #escapeCssString(String, Writer, CssStringEscapeType, CssStringEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link CssStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link CssStringEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCssString(final String text, final Writer writer)
+            throws IOException {
+        escapeCssString(text, writer,
+                CssStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssStringEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) CSS String <strong>escape</strong> operation on a <tt>String</tt> input,
+     *   writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link CssStringEscapeType} and
+     *   {@link CssStringEscapeLevel} argument values.
+     * </p>
+     * <p>
+     *   All other <tt>String</tt>/<tt>Writer</tt>-based <tt>escapeCssString*(...)</tt> methods call this one
+     *   with preconfigured <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param type the type of escape operation to be performed, see
+     *             {@link CssStringEscapeType}.
+     * @param level the escape level to be applied, see {@link CssStringEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCssString(final String text, final Writer writer,
+                                       final CssStringEscapeType type, final CssStringEscapeLevel level)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        if (type == null) {
+            throw new IllegalArgumentException("The 'type' argument cannot be null");
+        }
+
+        if (level == null) {
+            throw new IllegalArgumentException("The 'level' argument cannot be null");
+        }
+
+        CssStringEscapeUtil.escape(new InternalStringReader(text), writer, type, level);
+
+    }
+
+
+
+
+    /**
+     * <p>
+     *   Perform a CSS String level 1 (only basic set) <strong>escape</strong> operation
+     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the CSS String basic escape set:
+     * </p>
+     * <ul>
+     *   <li>The <em>Backslash Escapes</em>:
+     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>) and
+     *       <tt>&#92;&#39;</tt> (<tt>U+0027</tt>).
+     *   </li>
+     *   <li>
+     *       Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *       and <tt>U+007F</tt> to <tt>U+009F</tt>.
+     *   </li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by using Backslash escapes whenever possible. For escaped
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
+     *   Hexadecimal Escapes.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeCssString(Reader, Writer, CssStringEscapeType, CssStringEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link CssStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link CssStringEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCssStringMinimal(final Reader reader, final Writer writer)
+            throws IOException {
+        escapeCssString(reader, writer,
+                CssStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssStringEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a CSS String level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The CSS String basic escape set:
+     *         <ul>
+     *           <li>The <em>Backslash Escapes</em>:
+     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>) and
+     *               <tt>&#92;&#39;</tt> (<tt>U+0027</tt>).
+     *           </li>
+     *           <li>
+     *               Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *               and <tt>U+007F</tt> to <tt>U+009F</tt>.
+     *           </li>
+     *         </ul>
+     *   </li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by using Backslash escapes whenever possible. For escaped
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
+     *   Hexadecimal Escapes.
+     * </p>
+     * <p>
+     *   This method calls
+     *   {@link #escapeCssString(Reader, Writer, CssStringEscapeType, CssStringEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link CssStringEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link CssStringEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCssString(final Reader reader, final Writer writer)
+            throws IOException {
+        escapeCssString(reader, writer,
+                CssStringEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssStringEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) CSS String <strong>escape</strong> operation on a <tt>Reader</tt> input,
+     *   writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link CssStringEscapeType} and
+     *   {@link CssStringEscapeLevel} argument values.
+     * </p>
+     * <p>
+     *   All other <tt>Reader</tt>/<tt>Writer</tt>-based <tt>escapeCssString*(...)</tt> methods call this one
+     *   with preconfigured <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param type the type of escape operation to be performed, see
+     *             {@link CssStringEscapeType}.
+     * @param level the escape level to be applied, see {@link CssStringEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCssString(final Reader reader, final Writer writer,
+                                       final CssStringEscapeType type, final CssStringEscapeLevel level)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        if (type == null) {
+            throw new IllegalArgumentException("The 'type' argument cannot be null");
+        }
+
+        if (level == null) {
+            throw new IllegalArgumentException("The 'level' argument cannot be null");
+        }
+
+        CssStringEscapeUtil.escape(reader, writer, type, level);
 
     }
 
@@ -334,7 +661,7 @@ public final class CssEscape {
      * @param offset the position in <tt>text</tt> at which the escape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeCssStringMinimal(final char[] text, final int offset, final int len, final Writer writer)
@@ -392,7 +719,7 @@ public final class CssEscape {
      * @param offset the position in <tt>text</tt> at which the escape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeCssString(final char[] text, final int offset, final int len, final Writer writer)
@@ -424,7 +751,7 @@ public final class CssEscape {
      * @param offset the position in <tt>text</tt> at which the escape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @param type the type of escape operation to be performed, see
      *             {@link CssStringEscapeType}.
      * @param level the escape level to be applied, see {@link CssStringEscapeLevel}.
@@ -545,7 +872,7 @@ public final class CssEscape {
      * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String escapeCssIdentifierMinimal(final String text) {
         return escapeCssIdentifier(text,
@@ -635,7 +962,7 @@ public final class CssEscape {
      * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String escapeCssIdentifier(final String text) {
         return escapeCssIdentifier(text,
@@ -668,7 +995,7 @@ public final class CssEscape {
      * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String escapeCssIdentifier(final String text,
                                          final CssIdentifierEscapeType type, final CssIdentifierEscapeLevel level) {
@@ -682,6 +1009,464 @@ public final class CssEscape {
         }
 
         return CssIdentifierEscapeUtil.escape(text, type, level);
+
+    }
+
+
+
+
+    /**
+     * <p>
+     *   Perform a CSS Identifier level 1 (only basic set) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the CSS Identifier basic escape set:
+     * </p>
+     * <ul>
+     *   <li>The <em>Backslash Escapes</em>:
+     *       <tt>&#92; </tt> (<tt>U+0020</tt>),
+     *       <tt>&#92;!</tt> (<tt>U+0021</tt>),
+     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+     *       <tt>&#92;#</tt> (<tt>U+0023</tt>),
+     *       <tt>&#92;$</tt> (<tt>U+0024</tt>),
+     *       <tt>&#92;%</tt> (<tt>U+0025</tt>),
+     *       <tt>&#92;&amp;</tt> (<tt>U+0026</tt>),
+     *       <tt>&#92;&#39;</tt> (<tt>U+0027</tt>),
+     *       <tt>&#92;(</tt> (<tt>U+0028</tt>),
+     *       <tt>&#92;)</tt> (<tt>U+0029</tt>),
+     *       <tt>&#92;*</tt> (<tt>U+002A</tt>),
+     *       <tt>&#92;+</tt> (<tt>U+002B</tt>),
+     *       <tt>&#92;,</tt> (<tt>U+002C</tt>),
+     *       <tt>&#92;.</tt> (<tt>U+002E</tt>),
+     *       <tt>&#92;&#47;</tt> (<tt>U+002F</tt>),
+     *       <tt>&#92;;</tt> (<tt>U+003B</tt>),
+     *       <tt>&#92;&lt;</tt> (<tt>U+003C</tt>),
+     *       <tt>&#92;=</tt> (<tt>U+003D</tt>),
+     *       <tt>&#92;&gt;</tt> (<tt>U+003E</tt>),
+     *       <tt>&#92;?</tt> (<tt>U+003F</tt>),
+     *       <tt>&#92;@</tt> (<tt>U+0040</tt>),
+     *       <tt>&#92;[</tt> (<tt>U+005B</tt>),
+     *       <tt>&#92;&#92;</tt> (<tt>U+005C</tt>),
+     *       <tt>&#92;]</tt> (<tt>U+005D</tt>),
+     *       <tt>&#92;^</tt> (<tt>U+005E</tt>),
+     *       <tt>&#92;`</tt> (<tt>U+0060</tt>),
+     *       <tt>&#92;{</tt> (<tt>U+007B</tt>),
+     *       <tt>&#92;|</tt> (<tt>U+007C</tt>),
+     *       <tt>&#92;}</tt> (<tt>U+007D</tt>) and
+     *       <tt>&#92;~</tt> (<tt>U+007E</tt>).
+     *       Note that the <tt>&#92;-</tt> (<tt>U+002D</tt>) escape sequence exists, but will only be used
+     *       when an identifier starts with two hypens or hyphen + digit. Also, the <tt>&#92;_</tt>
+     *       (<tt>U+005F</tt>) escape will only be used at the beginning of an identifier to avoid
+     *       problems with Internet Explorer 6. In the same sense, note that the <tt>&#92;:</tt>
+     *       (<tt>U+003A</tt>) escape sequence is also defined in the standard, but will not be
+     *       used for escaping as Internet Explorer &lt; 8 does not recognize it.
+     *   </li>
+     *   <li>
+     *       Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *       and <tt>U+007F</tt> to <tt>U+009F</tt>.
+     *   </li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by using Backslash escapes whenever possible. For escaped
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
+     *   Hexadecimal Escapes.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeCssIdentifier(String, Writer, CssIdentifierEscapeType, CssIdentifierEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link CssIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link CssIdentifierEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCssIdentifierMinimal(final String text, final Writer writer)
+            throws IOException {
+        escapeCssIdentifier(text, writer,
+                CssIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssIdentifierEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a CSS Identifier level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The CSS Identifier basic escape set:
+     *         <ul>
+     *           <li>The <em>Backslash Escapes</em>:
+     *               <tt>&#92; </tt> (<tt>U+0020</tt>),
+     *               <tt>&#92;!</tt> (<tt>U+0021</tt>),
+     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+     *               <tt>&#92;#</tt> (<tt>U+0023</tt>),
+     *               <tt>&#92;$</tt> (<tt>U+0024</tt>),
+     *               <tt>&#92;%</tt> (<tt>U+0025</tt>),
+     *               <tt>&#92;&amp;</tt> (<tt>U+0026</tt>),
+     *               <tt>&#92;&#39;</tt> (<tt>U+0027</tt>),
+     *               <tt>&#92;(</tt> (<tt>U+0028</tt>),
+     *               <tt>&#92;)</tt> (<tt>U+0029</tt>),
+     *               <tt>&#92;*</tt> (<tt>U+002A</tt>),
+     *               <tt>&#92;+</tt> (<tt>U+002B</tt>),
+     *               <tt>&#92;,</tt> (<tt>U+002C</tt>),
+     *               <tt>&#92;.</tt> (<tt>U+002E</tt>),
+     *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>),
+     *               <tt>&#92;;</tt> (<tt>U+003B</tt>),
+     *               <tt>&#92;&lt;</tt> (<tt>U+003C</tt>),
+     *               <tt>&#92;=</tt> (<tt>U+003D</tt>),
+     *               <tt>&#92;&gt;</tt> (<tt>U+003E</tt>),
+     *               <tt>&#92;?</tt> (<tt>U+003F</tt>),
+     *               <tt>&#92;@</tt> (<tt>U+0040</tt>),
+     *               <tt>&#92;[</tt> (<tt>U+005B</tt>),
+     *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>),
+     *               <tt>&#92;]</tt> (<tt>U+005D</tt>),
+     *               <tt>&#92;^</tt> (<tt>U+005E</tt>),
+     *               <tt>&#92;`</tt> (<tt>U+0060</tt>),
+     *               <tt>&#92;{</tt> (<tt>U+007B</tt>),
+     *               <tt>&#92;|</tt> (<tt>U+007C</tt>),
+     *               <tt>&#92;}</tt> (<tt>U+007D</tt>) and
+     *               <tt>&#92;~</tt> (<tt>U+007E</tt>).
+     *               Note that the <tt>&#92;-</tt> (<tt>U+002D</tt>) escape sequence exists, but will only be used
+     *               when an identifier starts with two hypens or hyphen + digit. Also, the <tt>&#92;_</tt>
+     *               (<tt>U+005F</tt>) escape will only be used at the beginning of an identifier to avoid
+     *               problems with Internet Explorer 6. In the same sense, note that the <tt>&#92;:</tt>
+     *               (<tt>U+003A</tt>) escape sequence is also defined in the standard, but will not be
+     *               used for escaping as Internet Explorer &lt; 8 does not recognize it.
+     *           </li>
+     *           <li>
+     *               Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *               and <tt>U+007F</tt> to <tt>U+009F</tt>.
+     *           </li>
+     *         </ul>
+     *   </li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by using Backslash escapes whenever possible. For escaped
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
+     *   Hexadecimal Escapes.
+     * </p>
+     * <p>
+     *   This method calls
+     *   {@link #escapeCssIdentifier(String, Writer, CssIdentifierEscapeType, CssIdentifierEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link CssIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link CssIdentifierEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCssIdentifier(final String text, final Writer writer)
+            throws IOException {
+        escapeCssIdentifier(text, writer,
+                CssIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssIdentifierEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) CSS Identifier <strong>escape</strong> operation on a <tt>String</tt> input,
+     *   writing the results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link CssIdentifierEscapeType} and
+     *   {@link CssIdentifierEscapeLevel} argument values.
+     * </p>
+     * <p>
+     *   All other <tt>String</tt>/<tt>Writer</tt>-based <tt>escapeCssIdentifier*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param type the type of escape operation to be performed, see
+     *             {@link CssIdentifierEscapeType}.
+     * @param level the escape level to be applied, see {@link CssIdentifierEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCssIdentifier(final String text, final Writer writer,
+                                           final CssIdentifierEscapeType type, final CssIdentifierEscapeLevel level)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        if (type == null) {
+            throw new IllegalArgumentException("The 'type' argument cannot be null");
+        }
+
+        if (level == null) {
+            throw new IllegalArgumentException("The 'level' argument cannot be null");
+        }
+
+        CssIdentifierEscapeUtil.escape(new InternalStringReader(text), writer, type, level);
+
+    }
+
+
+
+
+    /**
+     * <p>
+     *   Perform a CSS Identifier level 1 (only basic set) <strong>escape</strong> operation
+     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the CSS Identifier basic escape set:
+     * </p>
+     * <ul>
+     *   <li>The <em>Backslash Escapes</em>:
+     *       <tt>&#92; </tt> (<tt>U+0020</tt>),
+     *       <tt>&#92;!</tt> (<tt>U+0021</tt>),
+     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+     *       <tt>&#92;#</tt> (<tt>U+0023</tt>),
+     *       <tt>&#92;$</tt> (<tt>U+0024</tt>),
+     *       <tt>&#92;%</tt> (<tt>U+0025</tt>),
+     *       <tt>&#92;&amp;</tt> (<tt>U+0026</tt>),
+     *       <tt>&#92;&#39;</tt> (<tt>U+0027</tt>),
+     *       <tt>&#92;(</tt> (<tt>U+0028</tt>),
+     *       <tt>&#92;)</tt> (<tt>U+0029</tt>),
+     *       <tt>&#92;*</tt> (<tt>U+002A</tt>),
+     *       <tt>&#92;+</tt> (<tt>U+002B</tt>),
+     *       <tt>&#92;,</tt> (<tt>U+002C</tt>),
+     *       <tt>&#92;.</tt> (<tt>U+002E</tt>),
+     *       <tt>&#92;&#47;</tt> (<tt>U+002F</tt>),
+     *       <tt>&#92;;</tt> (<tt>U+003B</tt>),
+     *       <tt>&#92;&lt;</tt> (<tt>U+003C</tt>),
+     *       <tt>&#92;=</tt> (<tt>U+003D</tt>),
+     *       <tt>&#92;&gt;</tt> (<tt>U+003E</tt>),
+     *       <tt>&#92;?</tt> (<tt>U+003F</tt>),
+     *       <tt>&#92;@</tt> (<tt>U+0040</tt>),
+     *       <tt>&#92;[</tt> (<tt>U+005B</tt>),
+     *       <tt>&#92;&#92;</tt> (<tt>U+005C</tt>),
+     *       <tt>&#92;]</tt> (<tt>U+005D</tt>),
+     *       <tt>&#92;^</tt> (<tt>U+005E</tt>),
+     *       <tt>&#92;`</tt> (<tt>U+0060</tt>),
+     *       <tt>&#92;{</tt> (<tt>U+007B</tt>),
+     *       <tt>&#92;|</tt> (<tt>U+007C</tt>),
+     *       <tt>&#92;}</tt> (<tt>U+007D</tt>) and
+     *       <tt>&#92;~</tt> (<tt>U+007E</tt>).
+     *       Note that the <tt>&#92;-</tt> (<tt>U+002D</tt>) escape sequence exists, but will only be used
+     *       when an identifier starts with two hypens or hyphen + digit. Also, the <tt>&#92;_</tt>
+     *       (<tt>U+005F</tt>) escape will only be used at the beginning of an identifier to avoid
+     *       problems with Internet Explorer 6. In the same sense, note that the <tt>&#92;:</tt>
+     *       (<tt>U+003A</tt>) escape sequence is also defined in the standard, but will not be
+     *       used for escaping as Internet Explorer &lt; 8 does not recognize it.
+     *   </li>
+     *   <li>
+     *       Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *       and <tt>U+007F</tt> to <tt>U+009F</tt>.
+     *   </li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by using Backslash escapes whenever possible. For escaped
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
+     *   Hexadecimal Escapes.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeCssIdentifier(Reader, Writer, CssIdentifierEscapeType, CssIdentifierEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link CssIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link CssIdentifierEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCssIdentifierMinimal(final Reader reader, final Writer writer)
+            throws IOException {
+        escapeCssIdentifier(reader, writer,
+                CssIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssIdentifierEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a CSS Identifier level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The CSS Identifier basic escape set:
+     *         <ul>
+     *           <li>The <em>Backslash Escapes</em>:
+     *               <tt>&#92; </tt> (<tt>U+0020</tt>),
+     *               <tt>&#92;!</tt> (<tt>U+0021</tt>),
+     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+     *               <tt>&#92;#</tt> (<tt>U+0023</tt>),
+     *               <tt>&#92;$</tt> (<tt>U+0024</tt>),
+     *               <tt>&#92;%</tt> (<tt>U+0025</tt>),
+     *               <tt>&#92;&amp;</tt> (<tt>U+0026</tt>),
+     *               <tt>&#92;&#39;</tt> (<tt>U+0027</tt>),
+     *               <tt>&#92;(</tt> (<tt>U+0028</tt>),
+     *               <tt>&#92;)</tt> (<tt>U+0029</tt>),
+     *               <tt>&#92;*</tt> (<tt>U+002A</tt>),
+     *               <tt>&#92;+</tt> (<tt>U+002B</tt>),
+     *               <tt>&#92;,</tt> (<tt>U+002C</tt>),
+     *               <tt>&#92;.</tt> (<tt>U+002E</tt>),
+     *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>),
+     *               <tt>&#92;;</tt> (<tt>U+003B</tt>),
+     *               <tt>&#92;&lt;</tt> (<tt>U+003C</tt>),
+     *               <tt>&#92;=</tt> (<tt>U+003D</tt>),
+     *               <tt>&#92;&gt;</tt> (<tt>U+003E</tt>),
+     *               <tt>&#92;?</tt> (<tt>U+003F</tt>),
+     *               <tt>&#92;@</tt> (<tt>U+0040</tt>),
+     *               <tt>&#92;[</tt> (<tt>U+005B</tt>),
+     *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>),
+     *               <tt>&#92;]</tt> (<tt>U+005D</tt>),
+     *               <tt>&#92;^</tt> (<tt>U+005E</tt>),
+     *               <tt>&#92;`</tt> (<tt>U+0060</tt>),
+     *               <tt>&#92;{</tt> (<tt>U+007B</tt>),
+     *               <tt>&#92;|</tt> (<tt>U+007C</tt>),
+     *               <tt>&#92;}</tt> (<tt>U+007D</tt>) and
+     *               <tt>&#92;~</tt> (<tt>U+007E</tt>).
+     *               Note that the <tt>&#92;-</tt> (<tt>U+002D</tt>) escape sequence exists, but will only be used
+     *               when an identifier starts with two hypens or hyphen + digit. Also, the <tt>&#92;_</tt>
+     *               (<tt>U+005F</tt>) escape will only be used at the beginning of an identifier to avoid
+     *               problems with Internet Explorer 6. In the same sense, note that the <tt>&#92;:</tt>
+     *               (<tt>U+003A</tt>) escape sequence is also defined in the standard, but will not be
+     *               used for escaping as Internet Explorer &lt; 8 does not recognize it.
+     *           </li>
+     *           <li>
+     *               Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>
+     *               and <tt>U+007F</tt> to <tt>U+009F</tt>.
+     *           </li>
+     *         </ul>
+     *   </li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by using Backslash escapes whenever possible. For escaped
+     *   characters that do not have an associated Backslash, default to <tt>&#92;FF </tt>
+     *   Hexadecimal Escapes.
+     * </p>
+     * <p>
+     *   This method calls
+     *   {@link #escapeCssIdentifier(Reader, Writer, CssIdentifierEscapeType, CssIdentifierEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link CssIdentifierEscapeType#BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link CssIdentifierEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCssIdentifier(final Reader reader, final Writer writer)
+            throws IOException {
+        escapeCssIdentifier(reader, writer,
+                CssIdentifierEscapeType.BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA,
+                CssIdentifierEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) CSS Identifier <strong>escape</strong> operation on a <tt>Reader</tt> input,
+     *   writing the results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link CssIdentifierEscapeType} and
+     *   {@link CssIdentifierEscapeLevel} argument values.
+     * </p>
+     * <p>
+     *   All other <tt>Reader</tt>/<tt>Writer</tt>-based <tt>escapeCssIdentifier*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param type the type of escape operation to be performed, see
+     *             {@link CssIdentifierEscapeType}.
+     * @param level the escape level to be applied, see {@link CssIdentifierEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeCssIdentifier(final Reader reader, final Writer writer,
+                                           final CssIdentifierEscapeType type, final CssIdentifierEscapeLevel level)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        if (type == null) {
+            throw new IllegalArgumentException("The 'type' argument cannot be null");
+        }
+
+        if (level == null) {
+            throw new IllegalArgumentException("The 'level' argument cannot be null");
+        }
+
+        CssIdentifierEscapeUtil.escape(reader, writer, type, level);
 
     }
 
@@ -764,7 +1549,7 @@ public final class CssEscape {
      * @param offset the position in <tt>text</tt> at which the escape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeCssIdentifierMinimal(final char[] text, final int offset, final int len, final Writer writer)
@@ -856,7 +1641,7 @@ public final class CssEscape {
      * @param offset the position in <tt>text</tt> at which the escape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeCssIdentifier(final char[] text, final int offset, final int len, final Writer writer)
@@ -888,7 +1673,7 @@ public final class CssEscape {
      * @param offset the position in <tt>text</tt> at which the escape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @param type the type of escape operation to be performed, see
      *             {@link CssIdentifierEscapeType}.
      * @param level the escape level to be applied, see {@link CssIdentifierEscapeLevel}.
@@ -950,10 +1735,70 @@ public final class CssEscape {
      * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String unescapeCss(final String text) {
         return CssUnescapeUtil.unescape(text);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a CSS <strong>unescape</strong> operation on a <tt>String</tt> input, writing results
+     *   to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   No additional configuration arguments are required. Unescape operations
+     *   will always perform <em>complete</em> CSS unescape of backslash and hexadecimal escape
+     *   sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be unescaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     */
+    public static void unescapeCss(final String text, final Writer writer)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        CssUnescapeUtil.unescape(new InternalStringReader(text), writer);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a CSS <strong>unescape</strong> operation on a <tt>String</tt> input, writing results
+     *   to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   No additional configuration arguments are required. Unescape operations
+     *   will always perform <em>complete</em> CSS unescape of backslash and hexadecimal escape
+     *   sequences.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be unescaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     */
+    public static void unescapeCss(final Reader reader, final Writer writer)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        CssUnescapeUtil.unescape(reader, writer);
     }
 
 
@@ -974,11 +1819,12 @@ public final class CssEscape {
      * @param offset the position in <tt>text</tt> at which the unescape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be unescaped.
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @throws IOException if an input/output exception occurs
      */
     public static void unescapeCss(final char[] text, final int offset, final int len, final Writer writer)
                                    throws IOException{
+
         if (writer == null) {
             throw new IllegalArgumentException("Argument 'writer' cannot be null");
         }
@@ -1007,6 +1853,58 @@ public final class CssEscape {
         super();
     }
 
+
+
+    /*
+     * This is basically a very simplified, thread-unsafe version of StringReader that should
+     * perform better than the original StringReader by removing all synchronization structures.
+     *
+     * Note the only implemented methods are those that we know are really used from within the
+     * stream-based escape/unescape operations.
+     */
+    private static final class InternalStringReader extends Reader {
+
+        private String str;
+        private int length;
+        private int next = 0;
+
+        public InternalStringReader(final String s) {
+            super();
+            this.str = s;
+            this.length = s.length();
+        }
+
+        @Override
+        public int read() throws IOException {
+            if (this.next >= length) {
+                return -1;
+            }
+            return this.str.charAt(this.next++);
+        }
+
+        @Override
+        public int read(final char[] cbuf, final int off, final int len) throws IOException {
+            if ((off < 0) || (off > cbuf.length) || (len < 0) ||
+                    ((off + len) > cbuf.length) || ((off + len) < 0)) {
+                throw new IndexOutOfBoundsException();
+            } else if (len == 0) {
+                return 0;
+            }
+            if (this.next >= this.length) {
+                return -1;
+            }
+            int n = Math.min(this.length - this.next, len);
+            this.str.getChars(this.next, this.next + n, cbuf, off);
+            this.next += n;
+            return n;
+        }
+
+        @Override
+        public void close() throws IOException {
+            this.str = null; // Just set the reference to null, help the GC
+        }
+
+    }
 
 
 }

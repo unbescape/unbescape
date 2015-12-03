@@ -20,6 +20,7 @@
 package org.unbescape.json;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 
 
@@ -86,13 +87,17 @@ import java.io.Writer;
  * <strong><u>Input/Output</u></strong>
  *
  * <p>
- *   There are two different input/output modes that can be used in escape/unescape operations:
+ *   There are four different input/output modes that can be used in escape/unescape operations:
  * </p>
  * <ul>
  *   <li><em><tt>String</tt> input, <tt>String</tt> output</em>: Input is specified as a <tt>String</tt> object
  *       and output is returned as another. In order to improve memory performance, all escape and unescape
  *       operations <u>will return the exact same input object as output if no escape/unescape modifications
  *       are required</u>.</li>
+ *   <li><em><tt>String</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a String
+ *       and output will be written into the specified <tt>java.io.Writer</tt>.</li>
+ *   <li><em><tt>java.io.Reader</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a Reader
+ *       and output will be written into the specified <tt>java.io.Writer</tt>.</li>
  *   <li><em><tt>char[]</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a char array
  *       (<tt>char[]</tt>) and output will be written into the specified <tt>java.io.Writer</tt>.
  *       Two <tt>int</tt> arguments called <tt>offset</tt> and <tt>len</tt> will be
@@ -199,12 +204,12 @@ public final class JsonEscape {
      * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String escapeJsonMinimal(final String text) {
         return escapeJson(text,
-                          JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
-                          JsonEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+                JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
+                JsonEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
     }
 
 
@@ -264,12 +269,12 @@ public final class JsonEscape {
      * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String escapeJson(final String text) {
         return escapeJson(text,
-                          JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
-                          JsonEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+                JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
+                JsonEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
     }
 
 
@@ -297,7 +302,7 @@ public final class JsonEscape {
      * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String escapeJson(final String text,
                                     final JsonEscapeType type, final JsonEscapeLevel level) {
@@ -311,6 +316,356 @@ public final class JsonEscape {
         }
 
         return JsonEscapeUtil.escape(text, type, level);
+
+    }
+
+
+
+
+    /**
+     * <p>
+     *   Perform a JSON level 1 (only basic set) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the JSON basic escape set:
+     * </p>
+     * <ul>
+     *   <li>The <em>Single Escape Characters</em>:
+     *       <tt>&#92;b</tt> (<tt>U+0008</tt>),
+     *       <tt>&#92;t</tt> (<tt>U+0009</tt>),
+     *       <tt>&#92;n</tt> (<tt>U+000A</tt>),
+     *       <tt>&#92;f</tt> (<tt>U+000C</tt>),
+     *       <tt>&#92;r</tt> (<tt>U+000D</tt>),
+     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+     *       <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
+     *       <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
+     *       Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
+     *       symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
+     *       closing <tt>&lt;script&gt;</tt> tags in HTML.
+     *   </li>
+     *   <li>
+     *       Two ranges of non-displayable, control characters (some of which are already part of the
+     *       <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
+     *       by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+     *   </li>
+     * </ul>
+     * <p>
+     *   This method calls {@link #escapeJson(String, Writer, JsonEscapeType, JsonEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link JsonEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeJsonMinimal(final String text, final Writer writer)
+            throws IOException {
+        escapeJson(text, writer,
+                JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
+                JsonEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a JSON level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The JSON basic escape set:
+     *         <ul>
+     *           <li>The <em>Single Escape Characters</em>:
+     *               <tt>&#92;b</tt> (<tt>U+0008</tt>),
+     *               <tt>&#92;t</tt> (<tt>U+0009</tt>),
+     *               <tt>&#92;n</tt> (<tt>U+000A</tt>),
+     *               <tt>&#92;f</tt> (<tt>U+000C</tt>),
+     *               <tt>&#92;r</tt> (<tt>U+000D</tt>),
+     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+     *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
+     *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
+     *               Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
+     *               symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
+     *               closing <tt>&lt;script&gt;</tt> tags in HTML.
+     *           </li>
+     *           <li>
+     *               Two ranges of non-displayable, control characters (some of which are already part of the
+     *               <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
+     *               by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+     *           </li>
+     *         </ul>
+     *   </li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by using the Single Escape Chars whenever possible. For escaped
+     *   characters that do not have an associated SEC, default to <tt>&#92;uFFFF</tt>
+     *   Hexadecimal Escapes.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeJson(String, Writer, JsonEscapeType, JsonEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link JsonEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeJson(final String text, final Writer writer)
+            throws IOException {
+        escapeJson(text, writer,
+                JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
+                JsonEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) JSON <strong>escape</strong> operation on a <tt>String</tt> input,
+     *   writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link JsonEscapeType} and
+     *   {@link JsonEscapeLevel} argument values.
+     * </p>
+     * <p>
+     *   All other <tt>String</tt>/<tt>Writer</tt>-based <tt>escapeJson*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param type the type of escape operation to be performed, see
+     *             {@link JsonEscapeType}.
+     * @param level the escape level to be applied, see {@link JsonEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeJson(final String text, final Writer writer,
+                                  final JsonEscapeType type, final JsonEscapeLevel level)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        if (type == null) {
+            throw new IllegalArgumentException("The 'type' argument cannot be null");
+        }
+
+        if (level == null) {
+            throw new IllegalArgumentException("The 'level' argument cannot be null");
+        }
+
+        JsonEscapeUtil.escape(new InternalStringReader(text), writer, type, level);
+
+    }
+
+
+
+
+    /**
+     * <p>
+     *   Perform a JSON level 1 (only basic set) <strong>escape</strong> operation
+     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the JSON basic escape set:
+     * </p>
+     * <ul>
+     *   <li>The <em>Single Escape Characters</em>:
+     *       <tt>&#92;b</tt> (<tt>U+0008</tt>),
+     *       <tt>&#92;t</tt> (<tt>U+0009</tt>),
+     *       <tt>&#92;n</tt> (<tt>U+000A</tt>),
+     *       <tt>&#92;f</tt> (<tt>U+000C</tt>),
+     *       <tt>&#92;r</tt> (<tt>U+000D</tt>),
+     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+     *       <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
+     *       <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
+     *       Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
+     *       symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
+     *       closing <tt>&lt;script&gt;</tt> tags in HTML.
+     *   </li>
+     *   <li>
+     *       Two ranges of non-displayable, control characters (some of which are already part of the
+     *       <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
+     *       by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+     *   </li>
+     * </ul>
+     * <p>
+     *   This method calls {@link #escapeJson(Reader, Writer, JsonEscapeType, JsonEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link JsonEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeJsonMinimal(final Reader reader, final Writer writer)
+            throws IOException {
+        escapeJson(reader, writer,
+                JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
+                JsonEscapeLevel.LEVEL_1_BASIC_ESCAPE_SET);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a JSON level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The JSON basic escape set:
+     *         <ul>
+     *           <li>The <em>Single Escape Characters</em>:
+     *               <tt>&#92;b</tt> (<tt>U+0008</tt>),
+     *               <tt>&#92;t</tt> (<tt>U+0009</tt>),
+     *               <tt>&#92;n</tt> (<tt>U+000A</tt>),
+     *               <tt>&#92;f</tt> (<tt>U+000C</tt>),
+     *               <tt>&#92;r</tt> (<tt>U+000D</tt>),
+     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
+     *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
+     *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
+     *               Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
+     *               symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
+     *               closing <tt>&lt;script&gt;</tt> tags in HTML.
+     *           </li>
+     *           <li>
+     *               Two ranges of non-displayable, control characters (some of which are already part of the
+     *               <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
+     *               by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+     *           </li>
+     *         </ul>
+     *   </li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by using the Single Escape Chars whenever possible. For escaped
+     *   characters that do not have an associated SEC, default to <tt>&#92;uFFFF</tt>
+     *   Hexadecimal Escapes.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeJson(Reader, Writer, JsonEscapeType, JsonEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link JsonEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeJson(final Reader reader, final Writer writer)
+            throws IOException {
+        escapeJson(reader, writer,
+                JsonEscapeType.SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA,
+                JsonEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) JSON <strong>escape</strong> operation on a <tt>Reader</tt> input,
+     *   writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link JsonEscapeType} and
+     *   {@link JsonEscapeLevel} argument values.
+     * </p>
+     * <p>
+     *   All other <tt>Reader</tt>/<tt>Writer</tt>-based <tt>escapeJson*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param type the type of escape operation to be performed, see
+     *             {@link JsonEscapeType}.
+     * @param level the escape level to be applied, see {@link JsonEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void escapeJson(final Reader reader, final Writer writer,
+                                  final JsonEscapeType type, final JsonEscapeLevel level)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        if (type == null) {
+            throw new IllegalArgumentException("The 'type' argument cannot be null");
+        }
+
+        if (level == null) {
+            throw new IllegalArgumentException("The 'level' argument cannot be null");
+        }
+
+        JsonEscapeUtil.escape(reader, writer, type, level);
 
     }
 
@@ -364,7 +719,7 @@ public final class JsonEscape {
      * @param offset the position in <tt>text</tt> at which the escape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeJsonMinimal(final char[] text, final int offset, final int len, final Writer writer)
@@ -432,7 +787,7 @@ public final class JsonEscape {
      * @param offset the position in <tt>text</tt> at which the escape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeJson(final char[] text, final int offset, final int len, final Writer writer)
@@ -464,7 +819,7 @@ public final class JsonEscape {
      * @param offset the position in <tt>text</tt> at which the escape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be escaped.
      * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @param type the type of escape operation to be performed, see
      *             {@link JsonEscapeType}.
      * @param level the escape level to be applied, see {@link JsonEscapeLevel}.
@@ -525,10 +880,74 @@ public final class JsonEscape {
      * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
      *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
      *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if <tt>text</tt> is <tt>null</tt>.
+     *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String unescapeJson(final String text) {
         return JsonEscapeUtil.unescape(text);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a JSON <strong>unescape</strong> operation on a <tt>String</tt> input, writing
+     *   results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   No additional configuration arguments are required. Unescape operations
+     *   will always perform <em>complete</em> JSON unescape of SECs and u-based escapes.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be unescaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void unescapeJson(final String text, final Writer writer)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        JsonEscapeUtil.unescape(new InternalStringReader(text), writer);
+
+    }
+
+
+    /**
+     * <p>
+     *   Perform a JSON <strong>unescape</strong> operation on a <tt>Reader</tt> input, writing
+     *   results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   No additional configuration arguments are required. Unescape operations
+     *   will always perform <em>complete</em> JSON unescape of SECs and u-based escapes.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be unescaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.2
+     */
+    public static void unescapeJson(final Reader reader, final Writer writer)
+            throws IOException {
+
+        if (writer == null) {
+            throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        JsonEscapeUtil.unescape(reader, writer);
+
     }
 
 
@@ -548,11 +967,12 @@ public final class JsonEscape {
      * @param offset the position in <tt>text</tt> at which the unescape operation should start.
      * @param len the number of characters in <tt>text</tt> that should be unescaped.
      * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if <tt>text</tt> is <tt>null</tt>.
+     *               be written at all to this writer if input is <tt>null</tt>.
      * @throws IOException if an input/output exception occurs
      */
     public static void unescapeJson(final char[] text, final int offset, final int len, final Writer writer)
-                                    throws IOException{
+                                    throws IOException {
+
         if (writer == null) {
             throw new IllegalArgumentException("Argument 'writer' cannot be null");
         }
@@ -578,6 +998,59 @@ public final class JsonEscape {
 
     private JsonEscape() {
         super();
+    }
+
+
+
+    /*
+     * This is basically a very simplified, thread-unsafe version of StringReader that should
+     * perform better than the original StringReader by removing all synchronization structures.
+     *
+     * Note the only implemented methods are those that we know are really used from within the
+     * stream-based escape/unescape operations.
+     */
+    private static final class InternalStringReader extends Reader {
+
+        private String str;
+        private int length;
+        private int next = 0;
+
+        public InternalStringReader(final String s) {
+            super();
+            this.str = s;
+            this.length = s.length();
+        }
+
+        @Override
+        public int read() throws IOException {
+            if (this.next >= length) {
+                return -1;
+            }
+            return this.str.charAt(this.next++);
+        }
+
+        @Override
+        public int read(final char[] cbuf, final int off, final int len) throws IOException {
+            if ((off < 0) || (off > cbuf.length) || (len < 0) ||
+                    ((off + len) > cbuf.length) || ((off + len) < 0)) {
+                throw new IndexOutOfBoundsException();
+            } else if (len == 0) {
+                return 0;
+            }
+            if (this.next >= this.length) {
+                return -1;
+            }
+            int n = Math.min(this.length - this.next, len);
+            this.str.getChars(this.next, this.next + n, cbuf, off);
+            this.next += n;
+            return n;
+        }
+
+        @Override
+        public void close() throws IOException {
+            this.str = null; // Just set the reference to null, help the GC
+        }
+
     }
 
 
