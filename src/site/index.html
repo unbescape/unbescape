@@ -139,7 +139,7 @@
             <li>To be <strong>versatile</strong>. Provides different escaping types and levels in order to better adapt
                 to different scenarios and contexts.</li>
             <li>To be <strong>feature-complete</strong>. Includes <em>full HTML5 support</em>, careful implementation
-                of the JavaScript, JSON, Java, etc specifications, advanced format tweaks...</li>
+                of the JavaScript, JSON, Java, etc specifications, streaming support...</li>
           </ul>
         
         <hr />
@@ -275,6 +275,13 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
                             in order to provide maximum performance and reduce Garbage Collector latency (e.g. if a
                             <kbd>String</kbd> has the same content after escaping/unescaping, exactly the same <kbd>String</kbd> object
                             is returned, no copy is made).
+                        </li>
+                        <li>
+                            Support is provided for escape and unescape operations in <em>streaming</em> mode, so that input can be directly
+                            read from a <kbd>java.io.Reader</kbd>, escaped/unescaped and then output to a <kbd>java.io.Writer</kbd> without the
+                            need to store potentially large chunks of text in memory. Especially useful in web application environments where
+                            the escaped/unescaped text can be directly written to the <em>response writer</em> (and thus sent to the
+                            browser/client) as soon as it is produced.
                         </li>
                         <li>
                             See (and execute) the <a href="https://github.com/unbescape/unbescape-tests/blob/20140429/benchmark.sh" target="_blank"><kbd>benchmark.sh</kbd></a> script in the
@@ -571,7 +578,7 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
           <h3>Project status</h3>
 
           <p>
-            unbescape is stable and production-ready. Current version is <b>1.1.1.RELEASE</b>.
+            unbescape is stable and production-ready. Current version is <b>1.1.2.RELEASE</b>.
           </p>
           
         </div>
