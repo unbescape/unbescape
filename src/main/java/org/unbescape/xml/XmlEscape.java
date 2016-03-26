@@ -1225,6 +1225,13 @@ public final class XmlEscape {
      */
     public static String unescapeXml(final String text) {
         // The chosen symbols (1.0 or 1.1) don't really matter, as both contain the same CERs
+        if (text == null) {
+            return null;
+        }
+        if (text.indexOf('&') < 0) {
+            // Fail fast, avoid more complex (and less JIT-table) method to execute if not needed
+            return text;
+        }
         return XmlEscapeUtil.unescape(text, XmlEscapeSymbols.XML11_SYMBOLS);
     }
 
@@ -1255,6 +1262,14 @@ public final class XmlEscape {
 
         if (writer == null) {
             throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+        if (text == null) {
+            return;
+        }
+        if (text.indexOf('&') < 0) {
+            // Fail fast, avoid more complex (and less JIT-table) method to execute if not needed
+            writer.write(text);
+            return;
         }
 
         // The chosen symbols (1.0 or 1.1) don't really matter, as both contain the same CERs

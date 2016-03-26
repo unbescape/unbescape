@@ -957,6 +957,13 @@ public final class JavaScriptEscape {
      *         return <tt>null</tt> if input is <tt>null</tt>.
      */
     public static String unescapeJavaScript(final String text) {
+        if (text == null) {
+            return null;
+        }
+        if (text.indexOf('\\') < 0) {
+            // Fail fast, avoid more complex (and less JIT-table) method to execute if not needed
+            return text;
+        }
         return JavaScriptEscapeUtil.unescape(text);
     }
 
@@ -987,6 +994,14 @@ public final class JavaScriptEscape {
 
         if (writer == null) {
             throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+        if (text == null) {
+            return;
+        }
+        if (text.indexOf('\\') < 0) {
+            // Fail fast, avoid more complex (and less JIT-table) method to execute if not needed
+            writer.write(text);
+            return;
         }
 
         JavaScriptEscapeUtil.unescape(new InternalStringReader(text), writer);
