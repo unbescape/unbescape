@@ -1,3 +1,12 @@
+1.1.3.RELEASE
+=============
+- Improved performance of String-based unescape methods for HTML, XML, JS, JSON and others when the
+  text to be unescaped actually needs no unescaping.
+
+1.1.2.RELEASE
+=============
+- Added support for stream-based (String-to-Writer and Reader-to-Writer) escape and unescape operations.
+
 1.1.1.RELEASE
 =============
 - Fixed HTML unescape for codepoints > U+10FFFF (was throwing IllegalArgumentException).
