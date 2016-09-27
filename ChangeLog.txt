@@ -1,3 +1,9 @@
+1.1.4.RELEASE
+=============
+- Added ampersand (&) to the list of characters to be escaped in LEVEL 1 for JSON, JavaScript and CSS literals
+  in order to make escaped code safe against code injection attacks in XHTML scenarios (browsers using XHTML
+  processing mode) performed by means of including XHTML escape codes in literals.
+
 1.1.3.RELEASE
 =============
 - Improved performance of String-based unescape methods for HTML, XML, JS, JSON and others when the

@@ -31,8 +31,25 @@ package org.unbescape.css;
  *         <em>basic set</em> consists of:
  *         <ul>
  *           <li>The <em>Backslash Escapes</em>:
- *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>) and
- *               <tt>&#92;&#39;</tt> (<tt>U+0027</tt>).
+ *             <ul>
+ *               <li>The quote symbols:
+ *                   <tt>&#92;&quot;</tt> (<tt>U+0022</tt>) and
+ *                   <tt>&#92;&#39;</tt> (<tt>U+0027</tt>).
+ *               </li>
+ *               <li>The backslash: <tt>&#92;&#92;</tt> (<tt>U+005C</tt>).</li>
+ *               <li>
+ *                   The slash (solidus) symbol (<tt>&#47;</tt>, <tt>U+002F</tt>), which will be escaped in
+ *                   order to protect from code injection in HTML environments: browsers will parse
+ *                   <tt>&lt;&#47;style&gt;</tt> close tags inside CSS literals and close the tag, therefore
+ *                   allowing for further code injection.
+ *               </li>
+ *               <li>
+ *                   The ampersand (<tt>&amp;</tt>, <tt>U+0026</tt>) and semi-colon (<tt>;</tt>, <tt>U+003B</tt>) symbols,
+ *                   which will be escaped in order to protect from code injection in XHTML environments: browsers will
+ *                   parse XHTML escape codes inside literals in <tt>&lt;style&gt;</tt> tags, therefore allowing
+ *                   the closing of the literal and the <tt>&lt;style&gt;</tt> tag itself.
+ *               </li>
+ *             </ul>
  *           </li>
  *           <li>
  *               Two ranges of non-displayable, control characters: <tt>U+0000</tt> to <tt>U+001F</tt>

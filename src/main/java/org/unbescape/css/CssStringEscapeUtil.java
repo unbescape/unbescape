@@ -185,6 +185,12 @@ final class CssStringEscapeUtil {
         ESCAPE_LEVELS[0x27] = 1;
         ESCAPE_LEVELS[0x5C] = 1;
 
+        /*
+         * Escapes related to code injection protection: / (HTML) and &, ; (XHTML)
+         */
+        ESCAPE_LEVELS[0x2F] = 1;
+        ESCAPE_LEVELS[0x26] = 1;
+        ESCAPE_LEVELS[0x3B] = 1;
 
         /*
          * Two ranges of non-displayable, control characters:

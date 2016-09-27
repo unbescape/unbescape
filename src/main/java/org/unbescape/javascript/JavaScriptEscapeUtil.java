@@ -180,6 +180,11 @@ final class JavaScriptEscapeUtil {
         ESCAPE_LEVELS[0x2F] = 1;
 
         /*
+         * Ampersand (&) will be level 1 (always escaped) in order to protect from code injection in XHTML
+         */
+        ESCAPE_LEVELS[0x26] = 1;
+
+        /*
          * JavaScript defines two ranges of non-displayable, control characters (some of which are already part of the
          * Single Escape Characters list): U+0001 to U+001F and U+007F to U+009F.
          */

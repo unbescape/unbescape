@@ -175,6 +175,11 @@ final class JsonEscapeUtil {
         ESCAPE_LEVELS[0x2F] = 1;
 
         /*
+         * Ampersand (&) will be level 1 (always escaped) in order to protect from code injection in XHTML
+         */
+        ESCAPE_LEVELS[0x26] = 1;
+
+        /*
          * JSON defines one ranges of non-displayable, control characters: U+0000 to U+001F.
          * Additionally, the U+007F to U+009F range is also escaped (which is allowed).
          */

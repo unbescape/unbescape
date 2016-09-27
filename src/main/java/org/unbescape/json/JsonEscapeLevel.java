@@ -44,6 +44,13 @@ package org.unbescape.json;
  *               closing <tt>&lt;script&gt;</tt> tags in HTML.
  *           </li>
  *           <li>
+ *               The ampersand symbol (<tt>&amp;</tt>, <tt>U+0026</tt>), which will be escaped in order to protect from
+ *               code injection in XHTML environments (browsers will parse XHTML escape codes inside
+ *               literals in <tt>&lt;script&gt;</tt> tags). Note there is no <em>Single Escape Character</em>
+ *               for this symbol, so it will be escaped using the sequence corresponding to the selected
+ *               escape type (e.g. <tt>&#92;u0026</tt>).
+ *           </li>
+ *           <li>
  *               Two ranges of non-displayable, control characters (some of which are already part of the
  *               <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
  *               by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
