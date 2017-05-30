@@ -251,7 +251,7 @@ final class HtmlEscapeSymbols {
         final List<char[]> ncrsOrdered = new ArrayList<char[]>(ncrs);
         Collections.sort(ncrsOrdered, new Comparator<char[]>() {
             public int compare(final char[] o1, final char[] o2) {
-                return new String(o1).compareTo(new String(o2));
+                return HtmlEscapeSymbols.compare(o1, o2, 0, o2.length);
             }
         });
 
@@ -351,6 +351,10 @@ final class HtmlEscapeSymbols {
      * because the unescape method will have no way of differentiating the chars after the NCR from chars that
      * could be in fact part of the NCR. Also note that, in the case of a partial match, (-1) * (returnValue + 10)
      * will specify the number of matched chars.
+     *
+     * Note we will willingly alter order so that ';' goes always first (even before no-char). This will allow
+     * proper functioning of the partial-matching mechanism for NCRs that can appear both with and without
+     * a ';' suffix.
      */
 
     private static int compare(final char[] ncr, final String text, final int start, final int end) {
@@ -361,15 +365,27 @@ final class HtmlEscapeSymbols {
         for (i = 1; i < maxCommon; i++) {
             final char tc = text.charAt(start + i);
             if (ncr[i] < tc) {
+                if (tc == ';') {
+                    return 1;
+                }
                 return -1;
             } else if (ncr[i] > tc) {
+                if (ncr[i] == ';') {
+                    return -1;
+                }
                 return 1;
             }
         }
         if (ncr.length > i) {
+            if (ncr[i] == ';') {
+                return -1;
+            }
             return 1;
         }
         if (textLen > i) {
+            if (text.charAt(start + i) == ';') {
+                return 1;
+            }
             // We have a partial match. Can be an NCR not finishing in a semicolon
             return - ((textLen - i) + 10);
         }
@@ -384,15 +400,27 @@ final class HtmlEscapeSymbols {
         for (i = 1; i < maxCommon; i++) {
             final char tc = text[start + i];
             if (ncr[i] < tc) {
+                if (tc == ';') {
+                    return 1;
+                }
                 return -1;
             } else if (ncr[i] > tc) {
+                if (ncr[i] == ';') {
+                    return -1;
+                }
                 return 1;
             }
         }
         if (ncr.length > i) {
+            if (ncr[i] == ';') {
+                return -1;
+            }
             return 1;
         }
         if (textLen > i) {
+            if (text[start + i] == ';') {
+                return 1;
+            }
             // We have a partial match. Can be an NCR not finishing in a semicolon
             return - ((textLen - i) + 10);
         }
