@@ -34,7 +34,7 @@ import java.util.Arrays;
 final class Xml11EscapeSymbolsInitializer {
 
 
-    static XmlEscapeSymbols initializeXml11() {
+    static XmlEscapeSymbols initializeXml11(final boolean attributes) {
 
         final XmlEscapeSymbols.References xml11References = new XmlEscapeSymbols.References();
 
@@ -98,6 +98,16 @@ final class Xml11EscapeSymbolsInitializer {
         escapeLevels['<'] = 1;
         escapeLevels['>'] = 1;
         escapeLevels['&'] = 1;
+
+        /*
+         * If these symbols are being initialized for escaping attributes, then we will
+         * need to add \t, \n and \r
+         */
+        if (attributes) {
+            escapeLevels['\t'] = 1;
+            escapeLevels['\n'] = 1;
+            escapeLevels['\r'] = 1;
+        }
 
         /*
          * XML 1.1 allows a series of control characters, but they should appear

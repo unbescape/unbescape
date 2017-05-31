@@ -222,6 +222,94 @@ public final class XmlEscape {
 
     /**
      * <p>
+     *   Perform an XML 1.0 level 1 (only markup-significant chars) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input meant to be an XML attribute value.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the five markup-significant characters which
+     *   are <em>predefined</em> as Character Entity References in XML:
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml10(String, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if input is <tt>null</tt>.
+     *
+     * @since 1.1.5
+     */
+    public static String escapeXml10AttributeMinimal(final String text) {
+        return escapeXml(text, XmlEscapeSymbols.XML10_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
+     *   Perform an XML 1.1 level 1 (only markup-significant chars) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input meant to be an XML attribute value.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the five markup-significant characters which
+     *   are <em>predefined</em> as Character Entity References in XML:
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml11(String, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if input is <tt>null</tt>.
+     *
+     * @since 1.1.5
+     */
+    public static String escapeXml11AttributeMinimal(final String text) {
+        return escapeXml(text, XmlEscapeSymbols.XML11_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
      *   Perform an XML 1.0 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
      *   on a <tt>String</tt> input.
      * </p>
@@ -312,6 +400,110 @@ public final class XmlEscape {
 
     /**
      * <p>
+     *   Perform an XML 1.0 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input meant to be an XML attribute value.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by replacing those chars by the corresponding XML Character Entity References
+     *   (e.g. <tt>'&amp;lt;'</tt>) when such CER exists for the replaced character, and replacing by a hexadecimal
+     *   character reference (e.g. <tt>'&amp;#x2430;'</tt>) when there there is no CER for the replaced character.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml10(String, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if input is <tt>null</tt>.
+     *
+     * @since 1.1.5
+     */
+    public static String escapeXml10Attribute(final String text) {
+        return escapeXml(text, XmlEscapeSymbols.XML10_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
+     *   Perform an XML 1.1 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input meant to be an XML attribute value.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by replacing those chars by the corresponding XML Character Entity References
+     *   (e.g. <tt>'&amp;lt;'</tt>) when such CER exists for the replaced character, and replacing by a hexadecimal
+     *   character reference (e.g. <tt>'&amp;#x2430;'</tt>) when there there is no CER for the replaced character.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml11(String, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if input is <tt>null</tt>.
+     *
+     * @since 1.1.5
+     */
+    public static String escapeXml11Attribute(final String text) {
+        return escapeXml(text, XmlEscapeSymbols.XML11_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
      *   Perform a (configurable) XML 1.0 <strong>escape</strong> operation on a <tt>String</tt> input.
      * </p>
      * <p>
@@ -367,6 +559,82 @@ public final class XmlEscape {
      */
     public static String escapeXml11(final String text, final XmlEscapeType type, final XmlEscapeLevel level) {
         return escapeXml(text, XmlEscapeSymbols.XML11_SYMBOLS, type, level);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) XML 1.0 <strong>escape</strong> operation on a <tt>String</tt> input
+     *   meant to be an XML attribute value.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link org.unbescape.xml.XmlEscapeType} and {@link org.unbescape.xml.XmlEscapeLevel}
+     *   argument values.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   All other <tt>String</tt>-based <tt>escapeXml10*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param type the type of escape operation to be performed, see {@link org.unbescape.xml.XmlEscapeType}.
+     * @param level the escape level to be applied, see {@link org.unbescape.xml.XmlEscapeLevel}.
+     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if input is <tt>null</tt>.
+     *
+     * @since 1.1.5
+     */
+    public static String escapeXml10Attribute(final String text, final XmlEscapeType type, final XmlEscapeLevel level) {
+        return escapeXml(text, XmlEscapeSymbols.XML10_ATTRIBUTE_SYMBOLS, type, level);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) XML 1.1 <strong>escape</strong> operation on a <tt>String</tt> input
+     *   meant to be an XML attribute value.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link org.unbescape.xml.XmlEscapeType} and {@link org.unbescape.xml.XmlEscapeLevel}
+     *   argument values.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   All other <tt>String</tt>-based <tt>escapeXml11*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param type the type of escape operation to be performed, see {@link org.unbescape.xml.XmlEscapeType}.
+     * @param level the escape level to be applied, see {@link org.unbescape.xml.XmlEscapeLevel}.
+     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
+     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
+     *         no additional <tt>String</tt> objects will be created during processing). Will
+     *         return <tt>null</tt> if input is <tt>null</tt>.
+     *
+     * @since 1.1.5
+     */
+    public static String escapeXml11Attribute(final String text, final XmlEscapeType type, final XmlEscapeLevel level) {
+        return escapeXml(text, XmlEscapeSymbols.XML11_ATTRIBUTE_SYMBOLS, type, level);
     }
 
 
@@ -473,6 +741,94 @@ public final class XmlEscape {
 
     /**
      * <p>
+     *   Perform an XML 1.0 level 1 (only markup-significant chars) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input meant to be an XML attribute value, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the five markup-significant characters which
+     *   are <em>predefined</em> as Character Entity References in XML:
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml10(String, Writer, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml10AttributeMinimal(final String text, final Writer writer)
+            throws IOException {
+        escapeXml(text, writer, XmlEscapeSymbols.XML10_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
+     *   Perform an XML 1.1 level 1 (only markup-significant chars) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input meant to be an XML attribute value, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the five markup-significant characters which
+     *   are <em>predefined</em> as Character Entity References in XML:
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml11(String, Writer, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml11AttributeMinimal(final String text, final Writer writer)
+            throws IOException {
+        escapeXml(text, writer, XmlEscapeSymbols.XML11_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
      *   Perform an XML 1.0 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
      *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
      * </p>
@@ -567,6 +923,110 @@ public final class XmlEscape {
 
     /**
      * <p>
+     *   Perform an XML 1.0 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input meant to be an XML attribute value, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by replacing those chars by the corresponding XML Character Entity References
+     *   (e.g. <tt>'&amp;lt;'</tt>) when such CER exists for the replaced character, and replacing by a hexadecimal
+     *   character reference (e.g. <tt>'&amp;#x2430;'</tt>) when there there is no CER for the replaced character.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml10(String, Writer, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml10Attribute(final String text, final Writer writer)
+            throws IOException {
+        escapeXml(text, writer, XmlEscapeSymbols.XML10_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
+     *   Perform an XML 1.1 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>String</tt> input meant to be an XML attribute value, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by replacing those chars by the corresponding XML Character Entity References
+     *   (e.g. <tt>'&amp;lt;'</tt>) when such CER exists for the replaced character, and replacing by a hexadecimal
+     *   character reference (e.g. <tt>'&amp;#x2430;'</tt>) when there there is no CER for the replaced character.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml11(String, Writer, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml11Attribute(final String text, final Writer writer)
+            throws IOException {
+        escapeXml(text, writer, XmlEscapeSymbols.XML11_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
      *   Perform a (configurable) XML 1.0 <strong>escape</strong> operation on a <tt>String</tt> input,
      *   writing results to a <tt>Writer</tt>.
      * </p>
@@ -628,6 +1088,82 @@ public final class XmlEscape {
     public static void escapeXml11(final String text, final Writer writer, final XmlEscapeType type, final XmlEscapeLevel level)
             throws IOException {
         escapeXml(text, writer, XmlEscapeSymbols.XML11_SYMBOLS, type, level);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) XML 1.0 <strong>escape</strong> operation on a <tt>String</tt> input
+     *   meant to be an XML attribute value, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link org.unbescape.xml.XmlEscapeType} and {@link org.unbescape.xml.XmlEscapeLevel}
+     *   argument values.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   All other <tt>String</tt>/<tt>Writer</tt>-based <tt>escapeXml10*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param type the type of escape operation to be performed, see {@link org.unbescape.xml.XmlEscapeType}.
+     * @param level the escape level to be applied, see {@link org.unbescape.xml.XmlEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml10Attribute(final String text, final Writer writer, final XmlEscapeType type, final XmlEscapeLevel level)
+            throws IOException {
+        escapeXml(text, writer, XmlEscapeSymbols.XML10_ATTRIBUTE_SYMBOLS, type, level);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) XML 1.1 <strong>escape</strong> operation on a <tt>String</tt> input
+     *   meant to be an XML attribute value, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link org.unbescape.xml.XmlEscapeType} and {@link org.unbescape.xml.XmlEscapeLevel}
+     *   argument values.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   All other <tt>String</tt>/<tt>Writer</tt>-based <tt>escapeXml11*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>String</tt> to be escaped.
+     * @param type the type of escape operation to be performed, see {@link org.unbescape.xml.XmlEscapeType}.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param level the escape level to be applied, see {@link org.unbescape.xml.XmlEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml11Attribute(final String text, final Writer writer, final XmlEscapeType type, final XmlEscapeLevel level)
+            throws IOException {
+        escapeXml(text, writer, XmlEscapeSymbols.XML11_ATTRIBUTE_SYMBOLS, type, level);
     }
 
 
@@ -739,6 +1275,94 @@ public final class XmlEscape {
 
     /**
      * <p>
+     *   Perform an XML 1.0 level 1 (only markup-significant chars) <strong>escape</strong> operation
+     *   on a <tt>Reader</tt> input meant to be an XML attribute value, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the five markup-significant characters which
+     *   are <em>predefined</em> as Character Entity References in XML:
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml10(Reader, Writer, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml10AttributeMinimal(final Reader reader, final Writer writer)
+            throws IOException {
+        escapeXml(reader, writer, XmlEscapeSymbols.XML10_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
+     *   Perform an XML 1.1 level 1 (only markup-significant chars) <strong>escape</strong> operation
+     *   on a <tt>Reader</tt> input meant to be an XML attribute value, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the five markup-significant characters which
+     *   are <em>predefined</em> as Character Entity References in XML:
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml11(Reader, Writer, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml11AttributeMinimal(final Reader reader, final Writer writer)
+            throws IOException {
+        escapeXml(reader, writer, XmlEscapeSymbols.XML11_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
      *   Perform an XML 1.0 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
      *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
      * </p>
@@ -833,6 +1457,110 @@ public final class XmlEscape {
 
     /**
      * <p>
+     *   Perform an XML 1.0 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>Reader</tt> input meant to be an XML attribute value, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by replacing those chars by the corresponding XML Character Entity References
+     *   (e.g. <tt>'&amp;lt;'</tt>) when such CER exists for the replaced character, and replacing by a hexadecimal
+     *   character reference (e.g. <tt>'&amp;#x2430;'</tt>) when there there is no CER for the replaced character.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml10(Reader, Writer, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml10Attribute(final Reader reader, final Writer writer)
+            throws IOException {
+        escapeXml(reader, writer, XmlEscapeSymbols.XML10_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
+     *   Perform an XML 1.1 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>Reader</tt> input meant to be an XML attribute value, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by replacing those chars by the corresponding XML Character Entity References
+     *   (e.g. <tt>'&amp;lt;'</tt>) when such CER exists for the replaced character, and replacing by a hexadecimal
+     *   character reference (e.g. <tt>'&amp;#x2430;'</tt>) when there there is no CER for the replaced character.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml11(Reader, Writer, XmlEscapeType, XmlEscapeLevel)} with the following
+     *   preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml11Attribute(final Reader reader, final Writer writer)
+            throws IOException {
+        escapeXml(reader, writer, XmlEscapeSymbols.XML11_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
      *   Perform a (configurable) XML 1.0 <strong>escape</strong> operation on a <tt>Reader</tt> input,
      *   writing results to a <tt>Writer</tt>.
      * </p>
@@ -894,6 +1622,82 @@ public final class XmlEscape {
     public static void escapeXml11(final Reader reader, final Writer writer, final XmlEscapeType type, final XmlEscapeLevel level)
             throws IOException {
         escapeXml(reader, writer, XmlEscapeSymbols.XML11_SYMBOLS, type, level);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) XML 1.0 <strong>escape</strong> operation on a <tt>Reader</tt> input
+     *   meant to be an XML attribute value, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link org.unbescape.xml.XmlEscapeType} and {@link org.unbescape.xml.XmlEscapeLevel}
+     *   argument values.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   All other <tt>Reader</tt>/<tt>Writer</tt>-based <tt>escapeXml10*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param type the type of escape operation to be performed, see {@link org.unbescape.xml.XmlEscapeType}.
+     * @param level the escape level to be applied, see {@link org.unbescape.xml.XmlEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml10Attribute(final Reader reader, final Writer writer, final XmlEscapeType type, final XmlEscapeLevel level)
+            throws IOException {
+        escapeXml(reader, writer, XmlEscapeSymbols.XML10_ATTRIBUTE_SYMBOLS, type, level);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) XML 1.1 <strong>escape</strong> operation on a <tt>Reader</tt> input
+     *   meant to be an XML attribute value, writing results to a <tt>Writer</tt>.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link org.unbescape.xml.XmlEscapeType} and {@link org.unbescape.xml.XmlEscapeLevel}
+     *   argument values.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   All other <tt>Reader</tt>/<tt>Writer</tt>-based <tt>escapeXml11*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param reader the <tt>Reader</tt> reading the text to be escaped.
+     * @param type the type of escape operation to be performed, see {@link org.unbescape.xml.XmlEscapeType}.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param level the escape level to be applied, see {@link org.unbescape.xml.XmlEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml11Attribute(final Reader reader, final Writer writer, final XmlEscapeType type, final XmlEscapeLevel level)
+            throws IOException {
+        escapeXml(reader, writer, XmlEscapeSymbols.XML11_ATTRIBUTE_SYMBOLS, type, level);
     }
 
 
@@ -1007,6 +1811,100 @@ public final class XmlEscape {
 
     /**
      * <p>
+     *   Perform an XML 1.0 level 1 (only markup-significant chars) <strong>escape</strong> operation
+     *   on a <tt>char[]</tt> input meant to be an XML attribute value.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the five markup-significant characters which
+     *   are <em>predefined</em> as Character Entity References in XML:
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls
+     *   {@link #escapeXml10(char[], int, int, java.io.Writer, XmlEscapeType, XmlEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>char[]</tt> to be escaped.
+     * @param offset the position in <tt>text</tt> at which the escape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml10AttributeMinimal(final char[] text, final int offset, final int len, final Writer writer)
+            throws IOException {
+        escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML10_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
+     *   Perform an XML 1.1 level 1 (only markup-significant chars) <strong>escape</strong> operation
+     *   on a <tt>char[]</tt> input meant to be an XML attribute value.
+     * </p>
+     * <p>
+     *   <em>Level 1</em> means this method will only escape the five markup-significant characters which
+     *   are <em>predefined</em> as Character Entity References in XML:
+     *   <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls
+     *   {@link #escapeXml10(char[], int, int, java.io.Writer, XmlEscapeType, XmlEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_1_ONLY_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>char[]</tt> to be escaped.
+     * @param offset the position in <tt>text</tt> at which the escape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml11AttributeMinimal(final char[] text, final int offset, final int len, final Writer writer)
+            throws IOException {
+        escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML11_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_1_ONLY_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
      *   Perform an XML 1.0 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
      *   on a <tt>char[]</tt> input.
      * </p>
@@ -1101,6 +1999,114 @@ public final class XmlEscape {
 
     /**
      * <p>
+     *   Perform an XML 1.0 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>char[]</tt> input meant to be an XML attribute value.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by replacing those chars by the corresponding XML Character Entity References
+     *   (e.g. <tt>'&amp;lt;'</tt>) when such CER exists for the replaced character, and replacing by a hexadecimal
+     *   character reference (e.g. <tt>'&amp;#x2430;'</tt>) when there there is no CER for the replaced character.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml10(char[], int, int, java.io.Writer, XmlEscapeType, XmlEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>char[]</tt> to be escaped.
+     * @param offset the position in <tt>text</tt> at which the escape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml10Attribute(final char[] text, final int offset, final int len, final Writer writer)
+            throws IOException {
+        escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML10_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
+     *   Perform an XML 1.1 level 2 (markup-significant and all non-ASCII chars) <strong>escape</strong> operation
+     *   on a <tt>char[]</tt> input meant to be an XML attribute value.
+     * </p>
+     * <p>
+     *   <em>Level 2</em> means this method will escape:
+     * </p>
+     * <ul>
+     *   <li>The five markup-significant characters: <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>,
+     *       <tt>&quot;</tt> and <tt>&#39;</tt></li>
+     *   <li>All non ASCII characters.</li>
+     * </ul>
+     * <p>
+     *   This escape will be performed by replacing those chars by the corresponding XML Character Entity References
+     *   (e.g. <tt>'&amp;lt;'</tt>) when such CER exists for the replaced character, and replacing by a hexadecimal
+     *   character reference (e.g. <tt>'&amp;#x2430;'</tt>) when there there is no CER for the replaced character.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   This method calls {@link #escapeXml11(char[], int, int, java.io.Writer, XmlEscapeType, XmlEscapeLevel)}
+     *   with the following preconfigured values:
+     * </p>
+     * <ul>
+     *   <li><tt>type</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeType#CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA}</li>
+     *   <li><tt>level</tt>:
+     *       {@link org.unbescape.xml.XmlEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT}</li>
+     * </ul>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>char[]</tt> to be escaped.
+     * @param offset the position in <tt>text</tt> at which the escape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml11Attribute(final char[] text, final int offset, final int len, final Writer writer)
+            throws IOException {
+        escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML11_ATTRIBUTE_SYMBOLS,
+                XmlEscapeType.CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_HEXA,
+                XmlEscapeLevel.LEVEL_2_ALL_NON_ASCII_PLUS_MARKUP_SIGNIFICANT);
+    }
+
+
+    /**
+     * <p>
      *   Perform a (configurable) XML 1.0 <strong>escape</strong> operation on a <tt>char[]</tt> input.
      * </p>
      * <p>
@@ -1162,6 +2168,88 @@ public final class XmlEscape {
                                    final XmlEscapeType type, final XmlEscapeLevel level)
                                    throws IOException {
         escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML11_SYMBOLS, type, level);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) XML 1.0 <strong>escape</strong> operation on a <tt>char[]</tt> input
+     *   meant to be an XML attribute value.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link org.unbescape.xml.XmlEscapeType} and {@link org.unbescape.xml.XmlEscapeLevel}
+     *   argument values.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   All other <tt>char[]</tt>-based <tt>escapeXml10*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>char[]</tt> to be escaped.
+     * @param offset the position in <tt>text</tt> at which the escape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param type the type of escape operation to be performed, see {@link org.unbescape.xml.XmlEscapeType}.
+     * @param level the escape level to be applied, see {@link org.unbescape.xml.XmlEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml10Attribute(final char[] text, final int offset, final int len, final Writer writer,
+                                   final XmlEscapeType type, final XmlEscapeLevel level)
+            throws IOException {
+        escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML10_ATTRIBUTE_SYMBOLS, type, level);
+    }
+
+
+    /**
+     * <p>
+     *   Perform a (configurable) XML 1.1 <strong>escape</strong> operation on a <tt>char[]</tt> input
+     *   meant to be an XML attribute value.
+     * </p>
+     * <p>
+     *   This method will perform an escape operation according to the specified
+     *   {@link org.unbescape.xml.XmlEscapeType} and {@link org.unbescape.xml.XmlEscapeLevel}
+     *   argument values.
+     * </p>
+     * <p>
+     *   Besides, being an attribute value also <tt>&#92;t</tt>, <tt>&#92;n</tt> and <tt>&#92;r</tt> will
+     *   be escaped to avoid white-space normalization from removing line feeds (turning them into white
+     *   spaces) during future parsing operations.
+     * </p>
+     * <p>
+     *   All other <tt>char[]</tt>-based <tt>escapeXml11*(...)</tt> methods call this one with preconfigured
+     *   <tt>type</tt> and <tt>level</tt> values.
+     * </p>
+     * <p>
+     *   This method is <strong>thread-safe</strong>.
+     * </p>
+     *
+     * @param text the <tt>char[]</tt> to be escaped.
+     * @param offset the position in <tt>text</tt> at which the escape operation should start.
+     * @param len the number of characters in <tt>text</tt> that should be escaped.
+     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param type the type of escape operation to be performed, see {@link org.unbescape.xml.XmlEscapeType}.
+     * @param level the escape level to be applied, see {@link org.unbescape.xml.XmlEscapeLevel}.
+     * @throws IOException if an input/output exception occurs
+     *
+     * @since 1.1.5
+     */
+    public static void escapeXml11Attribute(final char[] text, final int offset, final int len, final Writer writer,
+                                   final XmlEscapeType type, final XmlEscapeLevel level)
+            throws IOException {
+        escapeXml(text, offset, len, writer, XmlEscapeSymbols.XML11_ATTRIBUTE_SYMBOLS, type, level);
     }
 
 

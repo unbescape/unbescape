@@ -89,16 +89,26 @@ final class XmlEscapeSymbols {
     /*
      * Constants holding the definition of all the XmlEscapeSymbols for XML 1.0 and 1.1, to be used in escape and
      * unescape operations.
+     *
+     * Note different sets are needed for attributes in order to escape \t, \n and \r in attributes. Even if these
+     * are characters allowed by the XML spec to appear in attribute values, the spec also specifies that attribute
+     * values should be normalised when read so that these characters are turned into white space characters. So
+     * in order to preserve the original values properly, we need these characters to be escaped.
+     * See: https://www.w3.org/TR/REC-xml/#AVNormalize
      */
     static final XmlEscapeSymbols XML10_SYMBOLS;
     static final XmlEscapeSymbols XML11_SYMBOLS;
+    static final XmlEscapeSymbols XML10_ATTRIBUTE_SYMBOLS;
+    static final XmlEscapeSymbols XML11_ATTRIBUTE_SYMBOLS;
 
 
 
     static {
 
-        XML10_SYMBOLS = Xml10EscapeSymbolsInitializer.initializeXml10();
-        XML11_SYMBOLS = Xml11EscapeSymbolsInitializer.initializeXml11();
+        XML10_SYMBOLS = Xml10EscapeSymbolsInitializer.initializeXml10(false);
+        XML11_SYMBOLS = Xml11EscapeSymbolsInitializer.initializeXml11(false);
+        XML10_ATTRIBUTE_SYMBOLS = Xml10EscapeSymbolsInitializer.initializeXml10(true);
+        XML11_ATTRIBUTE_SYMBOLS = Xml11EscapeSymbolsInitializer.initializeXml11(true);
 
     }
 
