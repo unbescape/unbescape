@@ -1,3 +1,12 @@
+1.1.5.RELEASE
+=============
+- Fixed unescaping of some HTML5 NCRs (Named Character References) which are allowed to be specified without
+  a semicolon-char suffix (e.g. "&nbsp").
+- Added to XmlEscape specific methods for performing escape operations on XML attribute values. These methods will
+  always perform the escaping of the \t, \n and \r characters to avoid a possible loss of information when the XML
+  document is read by a parser, as according to the XML spec at https://www.w3.org/TR/REC-xml/#AVNormalize all
+  these three characters would be normalised to white-space.
+
 1.1.4.RELEASE
 =============
 - Added ampersand (&) to the list of characters to be escaped in LEVEL 1 for JSON, JavaScript and CSS literals
