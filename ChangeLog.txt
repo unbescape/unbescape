@@ -1,3 +1,7 @@
+1.1.6.RELEASE
+=============
+- Added class org.unbescape.Unbescape in order to report the version of the library being used.
+
 1.1.5.RELEASE
 =============
 - Fixed unescaping of some HTML5 NCRs (Named Character References) which are allowed to be specified without
