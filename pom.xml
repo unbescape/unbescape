@@ -87,8 +87,8 @@
   </repositories>
 
   <properties>
-    <maven.compile.source>1.5</maven.compile.source>
-    <maven.compile.target>1.5</maven.compile.target>
+    <maven.compile.source>6</maven.compile.source>
+    <maven.compile.target>6</maven.compile.target>
     <!-- These are needed for showing the build timestamp correctly at the unbescape.properties file -->
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
