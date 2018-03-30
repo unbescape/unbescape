@@ -1,6 +1,7 @@
 1.1.6.RELEASE
 =============
 - Added class org.unbescape.Unbescape in order to report the version of the library being used.
+- Set compilation baseline to Java 6.
 
 1.1.5.RELEASE
 =============
