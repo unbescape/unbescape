@@ -25,7 +25,7 @@ This project is stable and production-ready.
 
 Current versions: 
 
-  * Version **1.1.5.RELEASE** (1 Jun 2017)
+  * Version **1.1.6.RELEASE** (30 Mar 2018)
 
 
 License
@@ -37,7 +37,7 @@ This software is licensed under the [Apache License 2.0](http://www.apache.org/l
 Requirements
 ------------
 
-  *   Java SE 5.0 or higher
+  *   Java SE 6 or higher
 
 
 Maven info
