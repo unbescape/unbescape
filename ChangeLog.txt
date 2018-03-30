@@ -2,6 +2,7 @@
 =============
 - Added class org.unbescape.Unbescape in order to report the version of the library being used.
 - Set compilation baseline to Java 6.
+- Added "Automatic-Module-Name: unbescape" to MANIFEST.MF for Java 9+ JPMS.
 
 1.1.5.RELEASE
 =============
