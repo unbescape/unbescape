@@ -92,6 +92,8 @@
     <!-- These are needed for showing the build timestamp correctly at the unbescape.properties file -->
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
+    <!-- A project-name-based approach is adopted for the module name (instead of a reverse-DNS one) -->
+    <module.name>${artifactId}</module.name>
   </properties>
 
 
@@ -221,6 +223,9 @@
               <!-- library users. See: http://commons.apache.org/releases/prepare.html                -->
               <X-Compile-Source-JDK>${maven.compile.source}</X-Compile-Source-JDK>
               <X-Compile-Target-JDK>${maven.compile.target}</X-Compile-Target-JDK>
+              <!-- Setting this automatic module name will fix the module name used by unbescape even -->
+              <!-- if the library is not yet fully modularised.                                       -->
+              <Automatic-Module-Name>${module.name}</Automatic-Module-Name>
             </manifestEntries>
           </archive>
         </configuration>
