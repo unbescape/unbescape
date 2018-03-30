@@ -1,6 +1,7 @@
 1.1.6.RELEASE
 =============
 - Added class org.unbescape.Unbescape in order to report the version of the library being used.
+- Added support for unescaping (ignoring) line continuators (\ + LF) in CSS and JavaScript literals.
 - Set compilation baseline to Java 6.
 - Added "Automatic-Module-Name: unbescape" to MANIFEST.MF for Java 9+ JPMS.
 
