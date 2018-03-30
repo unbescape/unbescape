@@ -93,6 +93,10 @@ final class CssUnescapeUtil {
      *              - Standard:      %?????? or %??* (but not supported by older WebKit browsers)
      *              - Non-standard:  %u????%u???? (surrogate character pair, only in older WebKit browsers)
      *
+     *   - ESCAPED LINE FEED (strings only): These are Line Continuators. According to the CSS specification (see
+     *        https://www.w3.org/TR/CSS2/syndata.html#escaped-characters and
+     *        https://www.w3.org/TR/CSS2/syndata.html#strings), a backslash followed by a line feed should be ignored
+     *        in output (it is a way to span CSS literals over multiple lines).
      *
      */
 
@@ -199,6 +203,8 @@ final class CssUnescapeUtil {
                 final char c1 = text.charAt(i + 1);
 
                 switch (c1) {
+                        // line feed. When escaped, this is a line continuator
+                    case '\n': codepoint = -2; referenceOffset = i + 1; break;
                     case ' ':
                     case '!':
                     case '"':
@@ -264,9 +270,9 @@ final class CssUnescapeUtil {
                         // Don't continue here, just let the unescape code below do its job
 
 
-                    } else if (c1 == '\n' || c1 == '\r' || c1 == '\f') {
+                    } else if (c1 == '\r' || c1 == '\f') {
 
-                        // The only characters that cannot be escaped by means of a backslash are line feed,
+                        // The only characters that cannot be escaped by means of a backslash are
                         // carriage return and form feed (besides hexadecimal digits).
                         i++;
                         continue;
@@ -313,7 +319,7 @@ final class CssUnescapeUtil {
 
             if (codepoint > '\uFFFF') {
                 strBuilder.append(Character.toChars(codepoint));
-            } else {
+            } else if (codepoint != -2){ // We use -2 to signal the line continuator, which should be ignored in output
                 strBuilder.append((char)codepoint);
             }
 
@@ -381,6 +387,8 @@ final class CssUnescapeUtil {
             if (c1 == ESCAPE_PREFIX) {
 
                 switch (c2) {
+                        // line feed. When escaped, this is a line continuator
+                    case '\n': codepoint = -2; c1 = c2; c2 = reader.read(); break;
                     case ' ':
                     case '!':
                     case '"':
@@ -449,9 +457,9 @@ final class CssUnescapeUtil {
                         // Don't continue here, just let the unescape code below do its job
 
 
-                    } else if (c2 == '\n' || c2 == '\r' || c2 == '\f') {
+                    } else if (c2 == '\r' || c2 == '\f') {
 
-                        // The only characters that cannot be escaped by means of a backslash are line feed,
+                        // The only characters that cannot be escaped by means of a backslash are
                         // carriage return and form feed (besides hexadecimal digits).
                         writer.write(c1);
                         continue;
@@ -482,7 +490,7 @@ final class CssUnescapeUtil {
 
             if (codepoint > '\uFFFF') {
                 writer.write(Character.toChars(codepoint));
-            } else {
+            } else if (codepoint != -2){ // We use -2 to signal the line continuator, which should be ignored in output
                 writer.write((char)codepoint);
             }
 
@@ -529,6 +537,8 @@ final class CssUnescapeUtil {
                 final char c1 = text[i + 1];
 
                 switch (c1) {
+                        // line feed. When escaped, this is a line continuator
+                    case '\n': codepoint = -2; referenceOffset = i + 1; break;
                     case ' ':
                     case '!':
                     case '"':
@@ -594,9 +604,9 @@ final class CssUnescapeUtil {
                         // Don't continue here, just let the unescape code below do its job
 
 
-                    } else if (c1 == '\n' || c1 == '\r' || c1 == '\f') {
+                    } else if (c1 == '\r' || c1 == '\f') {
 
-                        // The only characters that cannot be escaped by means of a backslash are line feed,
+                        // The only characters that cannot be escaped by means of a backslash are
                         // carriage return and form feed (besides hexadecimal digits).
                         i++;
                         continue;
@@ -638,7 +648,7 @@ final class CssUnescapeUtil {
 
             if (codepoint > '\uFFFF') {
                 writer.write(Character.toChars(codepoint));
-            } else {
+            } else if (codepoint != -2){ // We use -2 to signal the line continuator, which should be ignored in output
                 writer.write((char) codepoint);
             }
 
