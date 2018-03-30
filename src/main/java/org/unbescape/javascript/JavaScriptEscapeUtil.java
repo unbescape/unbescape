@@ -69,6 +69,8 @@ final class JavaScriptEscapeUtil {
      *   - GENERAL ESCAPE: %* -> * ('%a' -> 'a')
      *                     (except the [%,%n] sequence, which is not an escape sequence but a line continuation)
      *
+     *   - ESCAPED LINE FEED: These are Line Continuators, allowed in ECMAScript 2015.
+     *
      */
 
 
@@ -837,6 +839,8 @@ final class JavaScriptEscapeUtil {
                     case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
                     case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
                     case '/': codepoint = 0x2F; referenceOffset = i + 1; break;
+                    // line feed. When escaped, this is a line continuator
+                    case '\n': codepoint = -2; referenceOffset = i + 1; break;
                 }
 
                 if (codepoint == -1) {
@@ -917,12 +921,11 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else if (c1 == '8' || c1 == '9' || c1 == '\n' || c1 == '\r' || c1 == '\u2028' || c1 == '\u2029') {
+                    } else if (c1 == '8' || c1 == '9' || c1 == '\r' || c1 == '\u2028' || c1 == '\u2029') {
 
                         // '8' and '9' are not valid octal escape sequences, and the other four characters
                         // are LineTerminators, which are not allowed as escape sequences. So we leave it as is
-                        // and expect the corresponding JavaScript engine to fail (except in the case of slash + '\n',
-                        // which is considered a LineContinuator).
+                        // and expect the corresponding JavaScript engine to fail.
                         i++;
                         continue;
 
@@ -968,7 +971,7 @@ final class JavaScriptEscapeUtil {
 
             if (codepoint > '\uFFFF') {
                 strBuilder.append(Character.toChars(codepoint));
-            } else {
+            } else if (codepoint != -2){ // We use -2 to signal the line continuator, which should be ignored in output
                 strBuilder.append((char)codepoint);
             }
 
@@ -1048,6 +1051,8 @@ final class JavaScriptEscapeUtil {
                     case '\'': codepoint = 0x27; c1 = c2; c2 = reader.read(); break;
                     case '\\': codepoint = 0x5C; c1 = c2; c2 = reader.read(); break;
                     case '/': codepoint = 0x2F; c1 = c2; c2 = reader.read(); break;
+                    // line feed. When escaped, this is a line continuator
+                    case '\n': codepoint = -2; c1 = c2; c2 = reader.read(); break;
                 }
 
                 if (codepoint == -1) {
@@ -1165,12 +1170,11 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else if (c2 == '8' || c2 == '9' || c2 == '\n' || c2 == '\r' || c2 == '\u2028' || c2 == '\u2029') {
+                    } else if (c2 == '8' || c2 == '9' || c2 == '\r' || c2 == '\u2028' || c2 == '\u2029') {
 
                         // '8' and '9' are not valid octal escape sequences, and the other four characters
                         // are LineTerminators, which are not allowed as escape sequences. So we leave it as is
-                        // and expect the corresponding JavaScript engine to fail (except in the case of slash + '\n',
-                        // which is considered a LineContinuator).
+                        // and expect the corresponding JavaScript engine to fail.
                         writer.write(c1);
                         writer.write(c2);
 
@@ -1207,7 +1211,7 @@ final class JavaScriptEscapeUtil {
 
             if (codepoint > '\uFFFF') {
                 writer.write(Character.toChars(codepoint));
-            } else {
+            } else if (codepoint != -2){ // We use -2 to signal the line continuator, which should be ignored in output
                 writer.write((char)codepoint);
             }
 
@@ -1276,6 +1280,8 @@ final class JavaScriptEscapeUtil {
                     case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
                     case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
                     case '/': codepoint = 0x2F; referenceOffset = i + 1; break;
+                    // line feed. When escaped, this is a line continuator
+                    case '\n': codepoint = -2; referenceOffset = i + 1; break;
                 }
 
                 if (codepoint == -1) {
@@ -1355,12 +1361,11 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else if (c1 == '8' || c1 == '9' || c1 == '\n' || c1 == '\r' || c1 == '\u2028' || c1 == '\u2029') {
+                    } else if (c1 == '8' || c1 == '9' || c1 == '\r' || c1 == '\u2028' || c1 == '\u2029') {
 
                         // '8' and '9' are not valid octal escape sequences, and the other four characters
                         // are LineTerminators, which are not allowed as escape sequences. So we leave it as is
-                        // and expect the corresponding JavaScript engine to fail (except in the case of slash + '\n',
-                        // which is considered a LineContinuator).
+                        // and expect the corresponding JavaScript engine to fail.
                         i++;
                         continue;
 
@@ -1401,7 +1406,7 @@ final class JavaScriptEscapeUtil {
 
             if (codepoint > '\uFFFF') {
                 writer.write(Character.toChars(codepoint));
-            } else {
+            } else if (codepoint != -2){ // We use -2 to signal the line continuator, which should be ignored in output
                 writer.write((char)codepoint);
             }
 
