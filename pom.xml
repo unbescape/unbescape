@@ -93,7 +93,7 @@
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
     <!-- A project-name-based approach is adopted for the module name (instead of a reverse-DNS one) -->
-    <module.name>${artifactId}</module.name>
+    <module.name>${project.artifactId}</module.name>
   </properties>
 
 
