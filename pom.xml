@@ -89,6 +89,7 @@
   <properties>
     <maven.compile.source>6</maven.compile.source>
     <maven.compile.target>6</maven.compile.target>
+    <project.build.sourceEncoding>US-ASCII</project.build.sourceEncoding>
     <!-- These are needed for showing the build timestamp correctly at the unbescape.properties file -->
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
@@ -142,7 +143,7 @@
         <configuration>
           <source>${maven.compile.source}</source>
           <target>${maven.compile.target}</target>
-          <encoding>US-ASCII</encoding>
+          <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
       </plugin>
       
@@ -151,7 +152,7 @@
         <artifactId>maven-resources-plugin</artifactId>
         <version>3.0.2</version>
         <configuration>
-          <encoding>US-ASCII</encoding>
+          <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
       </plugin>
       
@@ -223,6 +224,8 @@
               <!-- library users. See: http://commons.apache.org/releases/prepare.html                -->
               <X-Compile-Source-JDK>${maven.compile.source}</X-Compile-Source-JDK>
               <X-Compile-Target-JDK>${maven.compile.target}</X-Compile-Target-JDK>
+              <!-- Set the Built-By attribute in MANIFEST.MF to avoid displaying specific user names. -->
+              <Built-By>unbescape</Built-By>
               <!-- Setting this automatic module name will fix the module name used by unbescape even -->
               <!-- if the library is not yet fully modularised.                                       -->
               <Automatic-Module-Name>${module.name}</Automatic-Module-Name>
