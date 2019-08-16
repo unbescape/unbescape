@@ -348,8 +348,156 @@ final class JsonEscapeUtil {
         return strBuilder.toString();
 
     }
+    /*
+     * Perform an escape operation, based on String, according to the specified level and type.
+     */
+    public static void escapeTo(final String text,final Appendable strBuilder, final JsonEscapeType escapeType, final JsonEscapeLevel escapeLevel) {
+
+        if (text == null) {
+            return;
+        }
+
+        final int level = escapeLevel.getEscapeLevel();
+        final boolean useSECs = escapeType.getUseSECs();
+
+      
+        final int offset = 0;
+        final int max = text.length();
+
+        int readOffset = offset;
+        boolean notHaveEscapeChar = true;
+        try {
+        for (int i = offset; i < max; i++) {
+
+            final int codepoint = Character.codePointAt(text, i);
 
 
+            /*
+             * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
+             * all for them
+             */
+            if (codepoint <= (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[codepoint]) {
+                continue;
+            }
+
+            /*
+             * Check whether the character is a slash (solidus). In such case, only escape if it
+             * appears after a '<' ('</') or level >= 3 (non alphanumeric)
+             */
+            if (codepoint == '/' && level < 3 && (i == offset || text.charAt(i - 1) != '<')) {
+                continue;
+            }
+
+            /*
+             * Shortcut: we might not want to escape non-ASCII chars at all either.
+             */
+            if (codepoint > (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[ESCAPE_LEVELS_LEN - 1]) {
+
+                if (Character.charCount(codepoint) > 1) {
+                    // This is to compensate that we are actually escaping two char[] positions with a single codepoint.
+                    i++;
+                }
+
+                continue;
+
+            }
+
+
+            /*
+             * At this point we know for sure we will need some kind of escape, so we
+             * can increase the offset and initialize the string builder if needed, along with
+             * copying to it all the contents pending up to this point.
+             */
+
+            if (notHaveEscapeChar) {
+            	notHaveEscapeChar = false;
+                //strBuilder = new StringBuilder(max + 20);
+            }
+
+            if (i - readOffset > 0) {
+                strBuilder.append(text, readOffset, i);
+            }
+
+            if (Character.charCount(codepoint) > 1) {
+                // This is to compensate that we are actually reading two char[] positions with a single codepoint.
+                i++;
+            }
+
+            readOffset = i + 1;
+
+
+            /*
+             * -----------------------------------------------------------------------------------------
+             *
+             * Perform the real escape, attending the different combinations of SECs and UHEXA
+             *
+             * -----------------------------------------------------------------------------------------
+             */
+
+            if (useSECs && codepoint < SEC_CHARS_LEN) {
+                // We will try to use a SEC
+
+                final char sec = SEC_CHARS[codepoint];
+
+                if (sec != SEC_CHARS_NO_SEC) {
+                    // SEC found! just write it and go for the next char
+                    strBuilder.append(ESCAPE_PREFIX);
+                    strBuilder.append(sec);
+                    continue;
+                }
+
+            }
+
+            /*
+             * No SEC-escape was possible, so we need uhexa escape.
+             */
+
+            if (Character.charCount(codepoint) > 1) {
+                final char[] codepointChars = Character.toChars(codepoint);
+                writeTo(strBuilder,ESCAPE_UHEXA_PREFIX);
+                writeTo(strBuilder,toUHexa(codepointChars[0]));
+                writeTo(strBuilder,ESCAPE_UHEXA_PREFIX);
+                writeTo(strBuilder,toUHexa(codepointChars[1]));
+                continue;
+            }
+
+            writeTo(strBuilder,ESCAPE_UHEXA_PREFIX);
+            writeTo(strBuilder,toUHexa(codepoint));
+
+        }
+
+
+        /*
+         * -----------------------------------------------------------------------------------------------
+         * Final cleaning: return the original String object if no escape was actually needed. Otherwise
+         *                 append the remaining unescaped text to the string builder and return.
+         * -----------------------------------------------------------------------------------------------
+         */
+        if (notHaveEscapeChar) {
+        	strBuilder.append(text);
+            return;
+        }
+
+        if (max - readOffset > 0) {
+            strBuilder.append(text, readOffset, max);
+        }
+	    }catch(IOException ex) {
+			throw new IllegalStateException(ex);
+		}
+    }
+    private static void writeTo(final Appendable writer,final char[] chars){
+		if ( writer instanceof StringBuilder) { //fast way
+			((StringBuilder)writer).append(chars);
+			return;
+		}
+		try {
+	    	for(char c : chars) {
+	    		writer.append(c);
+	    	}
+    	}catch(IOException ex) {
+    		throw new IllegalStateException(ex);
+    	}
+    }
 
     /*
      * Perform an escape operation, based on a Reader, according to the specified level and type and writing the
