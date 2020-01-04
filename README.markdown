@@ -46,6 +46,13 @@ Maven info
   *   groupId: `org.unbescape`   
   *   artifactId: `unbescape`
   *   version: (see _Current Versions_ above)
+ 
+Example usage in gradle (replace `1.1.6.RELEASE` with the current version):
+```
+dependencies {
+    implementation 'org.unbescape:unbescape:1.1.6.RELEASE'
+}
+```
 
 
 Features
