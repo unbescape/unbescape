@@ -162,7 +162,7 @@ final class HtmlEscapeSymbols {
      * This constant will be used at the NCRS_BY_CODEPOINT array to specify there is no NCR associated with a
      * codepoint.
      */
-    static final short NO_NCR = (short) 0;
+    static final short NO_NCR = (short) -1;
 
 
 
