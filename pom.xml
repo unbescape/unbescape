@@ -2,7 +2,7 @@
 
 <!-- ========================================================================= -->
 <!--                                                                           -->
-<!--   Copyright (c) 2014-2017, The UNBESCAPE team (http://www.unbescape.org)  -->
+<!--   Copyright (c) 2014-2025 Unbescape (http://www.unbescape.org)            -->
 <!--                                                                           -->
 <!--   Licensed under the Apache License, Version 2.0 (the "License");         -->
 <!--   you may not use this file except in compliance with the License.        -->
@@ -39,7 +39,7 @@
   </licenses>
 
   <organization>
-    <name>The UNBESCAPE team</name>
+    <name>Unbescape</name>
     <url>http://www.unbescape.org</url>
   </organization>
   
