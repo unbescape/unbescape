@@ -1,67 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- ========================================================================= -->
-<!--                                                                           -->
-<!--   Copyright (c) 2014-2025 Unbescape (http://www.unbescape.org)            -->
-<!--                                                                           -->
-<!--   Licensed under the Apache License, Version 2.0 (the "License");         -->
-<!--   you may not use this file except in compliance with the License.        -->
-<!--   You may obtain a copy of the License at                                 -->
-<!--                                                                           -->
-<!--       http://www.apache.org/licenses/LICENSE-2.0                          -->
-<!--                                                                           -->
-<!--   Unless required by applicable law or agreed to in writing, software     -->
-<!--   distributed under the License is distributed on an "AS IS" BASIS,       -->
-<!--   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or         -->
-<!--   implied. See the License for the specific language governing            -->
-<!--   permissions and limitations under the License.                          -->
-<!--                                                                           -->
-<!-- ========================================================================= -->
+<!--
+  ~ =============================================================================
+  ~
+  ~   Copyright (c) 2012-2025 Unbescape (http://www.unbescape.org)
+  ~
+  ~   Licensed under the Apache License, Version 2.0 (the "License");
+  ~   you may not use this file except in compliance with the License.
+  ~   You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~   Unless required by applicable law or agreed to in writing, software
+  ~   distributed under the License is distributed on an "AS IS" BASIS,
+  ~   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~   See the License for the specific language governing permissions and
+  ~   limitations under the License.
+  ~
+  ~ =============================================================================
+  -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>org.unbescape</groupId>
   <artifactId>unbescape</artifactId>
   <packaging>jar</packaging>
   <version>1.1.7.BUILD-SNAPSHOT</version>
   <name>unbescape</name>
-  <url>http://www.unbescape.org</url>
-
   <description>Advanced yet easy-to-use escape/unescape library for Java</description>
+  <url>https://www.unbescape.org</url>
+
+  <organization>
+    <name>Unbescape</name>
+    <url>https://www.unbescape.org</url>
+  </organization>
 
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
 
-  <organization>
-    <name>Unbescape</name>
-    <url>http://www.unbescape.org</url>
-  </organization>
-  
-  <scm>
-    <url>scm:git:git@github.com:unbescape/unbescape.git</url>
-    <connection>scm:git:git@github.com:unbescape/unbescape.git</connection>
-    <developerConnection>scm:git:git@github.com:unbescape/unbescape.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
-  
   <developers>
     <developer>
-      <id>danielfernandez</id>
-      <name>Daniel Fernandez</name>
-      <email>daniel.fernandez AT 11thlabs DOT org</email>
-      <roles>
-        <role>Project Admin</role>
-        <role>Lead Developer</role>
-      </roles>
+      <name>Unbescape</name>
+      <organization>Unbescape</organization>
+      <organizationUrl>https://www.unbescape.org</organizationUrl>
     </developer>
   </developers>
-  
+
+  <scm>
+    <url>https://github.com/unbescape/unbescape</url>
+    <developerConnection>scm:git:git@github.com:unbescape/unbescape</developerConnection>
+  </scm>
+
   <distributionManagement>
     <snapshotRepository>
       <id>sonatype-nexus-snapshots</id>
@@ -75,26 +73,49 @@
     </repository>
   </distributionManagement>
 
-  <repositories>
-    <repository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
   <properties>
-    <maven.compile.source>6</maven.compile.source>
-    <maven.compile.target>6</maven.compile.target>
+    <java.version>8</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <maven.compiler.release>${java.version}</maven.compiler.release>
     <project.build.sourceEncoding>US-ASCII</project.build.sourceEncoding>
-    <!-- These are needed for showing the build timestamp correctly at the unbescape.properties file -->
+    <project.build.propertiesEncoding>ISO-8859-1</project.build.propertiesEncoding>
+    <resource.delimiter>@</resource.delimiter>
+    <!-- These are needed for showing the build timestamp correctly at unbescape.properties.    -->
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
-    <!-- A project-name-based approach is adopted for the module name (instead of a reverse-DNS one) -->
+    <!-- A project-name-based approach is adopted for the module name (instead of a reverse-DNS one)  -->
     <module.name>${project.artifactId}</module.name>
+    <!-- =========================  -->
+    <!-- Configure JavaDoc plugin   -->
+    <!-- (Avoids JPMS issues.)      -->
+    <!-- =========================  -->
+    <maven.javadoc.source>8</maven.javadoc.source>
+    <maven.javadoc.release>8</maven.javadoc.release>
+    <!-- ======================     -->
+    <!-- DEPENDENCY versions        -->
+    <!-- ======================     -->
+    <commons-lang3.version>3.17.0</commons-lang3.version>
+    <commons-io.version>2.18.0</commons-io.version>
+    <junit.version>5.11.3</junit.version>
+    <!-- ======================     -->
+    <!-- MAVEN PLUGIN versions      -->
+    <!-- ======================     -->
+    <maven-clean-plugin.version>3.4.0</maven-clean-plugin.version>
+    <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
+    <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+    <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+    <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
+    <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+    <maven-javadoc-plugin.version>3.11.1</maven-javadoc-plugin.version>
+    <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+    <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+    <maven-deploy-plugin.version>3.1.3</maven-deploy-plugin.version>
+    <maven-scm-plugin.version>2.1.0</maven-scm-plugin.version>
+    <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
+    <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
+    <maven-versions-plugin.version>2.18.0</maven-versions-plugin.version>
   </properties>
 
 
@@ -135,99 +156,91 @@
     </testResources>
     
     <plugins>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
-        <configuration>
-          <source>${maven.compile.source}</source>
-          <target>${maven.compile.target}</target>
-          <encoding>${project.build.sourceEncoding}</encoding>
-        </configuration>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.1.0</version>
-        <configuration>
-          <encoding>${project.build.sourceEncoding}</encoding>
-        </configuration>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.0.1</version>
-        <configuration>
-          <show>protected</show>
-          <noqualifier>java.lang</noqualifier>
-          <overview>${basedir}/src/main/javadoc/overview.html</overview>
-          <javadocDirectory>${basedir}/src/main/javadoc</javadocDirectory>
-          <reportOutputDirectory>${project.reporting.outputDirectory}/api/${project.artifactId}/apidocs</reportOutputDirectory>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.1</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>${maven-clean-plugin.version}</version>
       </plugin>
 
       <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <version>3.5.0</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${maven-dependency-plugin.version}</version>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <!-- This will generate metadata for reflection on method parameters (JDK8+)        -->
+          <parameters>true</parameters>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>${maven-resources-plugin.version}</version>
+        <configuration>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <propertiesEncoding>${project.build.propertiesEncoding}</propertiesEncoding>
+          <delimiters>
+            <!-- We set the resource delimiters to only @*@ in order to avoid the ${*} syntax -->
+            <!-- colliding with properties meant to be resolved by Spring.                    -->
+            <delimiter>${resource.delimiter}</delimiter>
+          </delimiters>
+          <useDefaultDelimiters>false</useDefaultDelimiters>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${maven-failsafe-plugin.version}</version>
         <executions>
           <execution>
-            <id>bundle-manifest</id>
-            <phase>process-classes</phase>
             <goals>
-              <goal>manifest</goal>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+        </configuration>
       </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>${maven-jar-plugin.version}</version>
         <configuration>
           <archive>
-            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
             <addMavenDescriptor>false</addMavenDescriptor>
             <manifest>
               <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
             <manifestEntries>
-              <!-- These two entries are non-standard, specified by the Apache Software Foundation in -->
-              <!-- their release preparation procedures as a way to pass this information on to the   -->
-              <!-- library users. See: http://commons.apache.org/releases/prepare.html                -->
-              <X-Compile-Source-JDK>${maven.compile.source}</X-Compile-Source-JDK>
-              <X-Compile-Target-JDK>${maven.compile.target}</X-Compile-Target-JDK>
-              <!-- Set the Built-By attribute in MANIFEST.MF to avoid displaying specific user names. -->
+              <!-- These two entries are non-standard, specified by the Apache Software       -->
+              <!-- Foundation in their release preparation procedures as a way to pass this   -->
+              <!-- information on to the library users. See:                                  -->
+              <!-- http://commons.apache.org/releases/prepare.html                            -->
+              <X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
+              <X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
+              <!-- Set the Built-By attribute to avoid displaying specific usernames.         -->
               <Built-By>unbescape</Built-By>
-              <!-- Setting this automatic module name will fix the module name used by unbescape even -->
-              <!-- if the library is not yet fully modularised.                                       -->
+              <!-- Setting this automatic module name will fix the module name used by        -->
+              <!-- unbescape even if the library is not yet fully modularised.                -->
               <Automatic-Module-Name>${module.name}</Automatic-Module-Name>
             </manifestEntries>
           </archive>
@@ -236,11 +249,51 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>3.2.7</version>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${maven-javadoc-plugin.version}</version>
+        <configuration>
+          <show>protected</show>
+          <noqualifier>java.lang</noqualifier>
+          <source>${maven.javadoc.source}</source>
+          <release>${maven.javadoc.release}</release>
+          <overview>${basedir}/src/main/javadoc/overview.html</overview>
+          <javadocDirectory>${basedir}/src/main/javadoc</javadocDirectory>
+          <outputDirectory>${project.build.directory}</outputDirectory>
+          <doclint>all,-missing</doclint>
+        </configuration>
         <executions>
           <execution>
-            <id>sign-artifacts</id>
+            <id>javadoc-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>${maven-source-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>source-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>${maven-gpg-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>gpg-sign</id>
             <phase>verify</phase>
             <goals>
               <goal>sign</goal>
@@ -251,31 +304,75 @@
           </execution>
         </executions>
       </plugin>
-      
+
+      <!-- NOTE releases will be performed by means of maven-deploy-plugin. This means that   -->
+      <!-- the maven-releases-plugin will not be needed as a part of the release cycle.       -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.5.3</version>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>${maven-deploy-plugin.version}</version>
       </plugin>
-	  
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-plugin</artifactId>
+        <version>${maven-scm-plugin.version}</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>${maven-antrun-plugin.version}</version>
+        <executions>
+          <!-- Copy javadoc's "element-list" file to "package-list" in order to allow         -->
+          <!-- projects using versions of the javadoc tool < JDK9 to properly link to         -->
+          <!-- the project's javadoc as an external link.                                     -->
+          <!-- NOTE this modifies the javadoc AFTER the creation of the jar as it is not      -->
+          <!-- possible to do so by previously configuring javadoc:javadoc in the             -->
+          <!-- prepare-package phase because this "package-list" modification would trigger a -->
+          <!-- second execution of the javadoc tool in the javadoc:jar goal.                  -->
+          <execution>
+            <id>copy-javadoc-element-list-to-package-list</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target name="copy javadocs element-list to package-list">
+                <copy file="${project.build.directory}/apidocs/element-list"
+                      tofile="${project.build.directory}/apidocs/package-list"
+                      failonerror="false" />
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.1.0</version>
-        <configuration>
-          <descriptors>
-            <descriptor>src/assembly/dist.xml</descriptor>
-          </descriptors>
-        </configuration>
         <executions>
           <execution>
-            <id>make-assembly-deps</id>
+            <id>make-assembly-dist</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>${project.basedir}/src/assembly/dist.xml</descriptor>
+              </descriptors>
+              <appendAssemblyId>true</appendAssemblyId>
+              <finalName>${project.artifactId}-${project.version}</finalName>
+            </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>${maven-versions-plugin.version}</version>
       </plugin>
 
     </plugins>
