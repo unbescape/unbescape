@@ -58,11 +58,11 @@ final class ClassLoaderUtils {
      * <p>
      *   First the <em>context class loader</em> will be used. If this class loader is not
      *   able to locate the resource, then the <em>class class loader</em>
-     *   (<tt>ClassLoaderUtils.class.getClassLoader()</tt>) will be used if it is different from
+     *   (<kbd>ClassLoaderUtils.class.getClassLoader()</kbd>) will be used if it is different from
      *   the thread context one. Last, the System class loader will be tried.
      * </p>
      * <p>
-     *   This method does never return <tt>null</tt>.
+     *   This method does never return <kbd>null</kbd>.
      * </p>
      *
      * @param resourceName the name of the resource to be obtained.
@@ -85,15 +85,15 @@ final class ClassLoaderUtils {
 
     /**
      * <p>
-     *   Try to obtain a resource by name, returning <tt>null</tt> if it could not be located.
+     *   Try to obtain a resource by name, returning <kbd>null</kbd> if it could not be located.
      * </p>
      * <p>
-     *   This method works very similarly to {@link #loadResourceAsStream(String)} but will just return <tt>null</tt>
+     *   This method works very similarly to {@link #loadResourceAsStream(String)} but will just return <kbd>null</kbd>
      *   if the resource cannot be located by the sequence of class loaders being tried.
      * </p>
      *
      * @param resourceName the name of the resource to be obtained.
-     * @return an input stream on the resource, or <tt>null</tt> if it could not be located.
+     * @return an input stream on the resource, or <kbd>null</kbd> if it could not be located.
      *
      */
     static InputStream findResourceAsStream(final String resourceName) {

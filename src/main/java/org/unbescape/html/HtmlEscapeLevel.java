@@ -26,18 +26,18 @@ package org.unbescape.html;
  *
  * <ul>
  *     <li><strong>Level 0</strong>: Escape only markup-significant characters, excluding the apostrophe. Therefore
- *         <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt> and <tt>&quot;</tt> will be escaped. This level can be
+ *         <kbd>&lt;</kbd>, <kbd>&gt;</kbd>, <kbd>&amp;</kbd> and <kbd>&quot;</kbd> will be escaped. This level can be
  *         used for escaping texts and also tag attributes that are always surrounded by double quotes, whenever the
- *         apostrophe (<tt>&#39;</tt>) is considered a <em>safe</em> character and the user prefers it not to be
+ *         apostrophe (<kbd>&#39;</kbd>) is considered a <em>safe</em> character and the user prefers it not to be
  *         escaped for legibility reasons (e.g. might denote literals in expression languages like OGNL).
  *         Note the result of a level-0 escape operation might still contain non-ASCII characters if they existed
  *         in input, and therefore you will still need to correctly manage your input/output character
  *         encoding settings.</li>
  *     <li><strong>Level 1</strong>: Escape only markup-significant characters (including the apostrophe). Therefore
- *         <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt> will be escaped.
+ *         <kbd>&lt;</kbd>, <kbd>&gt;</kbd>, <kbd>&amp;</kbd>, <kbd>&quot;</kbd> and <kbd>&#39;</kbd> will be escaped.
  *         This level is sometimes called <em>XML escape</em> or <strong><em>XML-style escape</em></strong>, though it
  *         is not exactly equivalent to XML due to some HTML specificities. It is equivalent to the JSP escape
- *         configured by the <tt>escapeXml</tt> attribute in JSTL's <tt>&lt;c:out ... /&gt;</tt> tags, and safe
+ *         configured by the <kbd>escapeXml</kbd> attribute in JSTL's <kbd>&lt;c:out ... /&gt;</kbd> tags, and safe
  *         for use in texts and also tag attributes that are always quoted &mdash;be it with single (apostrophe) or
  *         double quotes. Note the result of a level-1 escape operation might still contain non-ASCII characters if they
  *         existed in input, and therefore you will still need to correctly manage your input/output character
@@ -48,7 +48,7 @@ package org.unbescape.html;
  *         for escaping texts and also tag attributes that are always quoted &mdash;be it with single (apostrophe) or
  *         double quotes.</li>
  *     <li><strong>Level 3</strong>: Escape all non-alphanumeric characters, this is, all but those in the
- *         <tt>A</tt>-<tt>Z</tt>, <tt>a</tt>-<tt>z</tt> and <tt>0</tt>-<tt>9</tt> ranges. This level
+ *         <kbd>A</kbd>-<kbd>Z</kbd>, <kbd>a</kbd>-<kbd>z</kbd> and <kbd>0</kbd>-<kbd>9</kbd> ranges. This level
  *         can be safely used for escaping texts and also tag attributes, even when these tag attributes are
  *         unquoted.</li>
  *     <li><strong>Level 4</strong>: Escape all characters, even alphanumeric ones.</li>
@@ -68,13 +68,13 @@ public enum HtmlEscapeLevel {
 
     /**
      * Level 0 escape: escape only markup-significant characters, excluding the apostrophe:
-     * <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt> and <tt>&quot;</tt>
+     * <kbd>&lt;</kbd>, <kbd>&gt;</kbd>, <kbd>&amp;</kbd> and <kbd>&quot;</kbd>
      */
     LEVEL_0_ONLY_MARKUP_SIGNIFICANT_EXCEPT_APOS(0),
 
     /**
      * Level 1 escape (<em>XML-style</em>): escape only markup-significant characters (including the apostrophe):
-     * <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&amp;</tt>, <tt>&quot;</tt> and <tt>&#39;</tt>
+     * <kbd>&lt;</kbd>, <kbd>&gt;</kbd>, <kbd>&amp;</kbd>, <kbd>&quot;</kbd> and <kbd>&#39;</kbd>
      */
     LEVEL_1_ONLY_MARKUP_SIGNIFICANT(1),
 
@@ -85,7 +85,7 @@ public enum HtmlEscapeLevel {
 
     /**
      * Level 3 escape: escape all non-alphanumeric characteres (escape all but those in the
-     * <tt>A</tt>-<tt>Z</tt>, <tt>a</tt>-<tt>z</tt> and <tt>0</tt>-<tt>9</tt> ranges).
+     * <kbd>A</kbd>-<kbd>Z</kbd>, <kbd>a</kbd>-<kbd>z</kbd> and <kbd>0</kbd>-<kbd>9</kbd> ranges).
      */
     LEVEL_3_ALL_NON_ALPHANUMERIC(3),
 
@@ -102,11 +102,11 @@ public enum HtmlEscapeLevel {
 
     /**
      * <p>
-     *   Utility method for obtaining an enum value from its corresponding <tt>int</tt> level value.
+     *   Utility method for obtaining an enum value from its corresponding <kbd>int</kbd> level value.
      * </p>
      *
      * @param level the level
-     * @return the escape level enum constant, or <tt>IllegalArgumentException</tt> if level does not exist.
+     * @return the escape level enum constant, or <kbd>IllegalArgumentException</kbd> if level does not exist.
      */
     public static HtmlEscapeLevel forLevel(final int level) {
         switch (level) {
@@ -126,7 +126,7 @@ public enum HtmlEscapeLevel {
     }
 
     /**
-     * Return the <tt>int</tt> escape level.
+     * Return the <kbd>int</kbd> escape level.
      *
      * @return the escape level.
      */

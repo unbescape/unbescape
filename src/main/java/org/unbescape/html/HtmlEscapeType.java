@@ -25,29 +25,29 @@ package org.unbescape.html;
  * </p>
  *
  * <ul>
- *     <li><tt><strong>HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL</strong></tt>: Replace escaped characters
+ *     <li><kbd><strong>HTML4_NAMED_REFERENCES_DEFAULT_TO_DECIMAL</strong></kbd>: Replace escaped characters
  *         with HTML 4 <em>Named Character References</em> (<em>Character Entity References</em>) whenever
  *         possible (depending on the specified {@link org.unbescape.html.HtmlEscapeLevel}), and default to
  *         using <em>Decimal Character References</em> for escaped characters that do not have an associated
  *         NCR.</li>
- *     <li><tt><strong>HTML4_NAMED_REFERENCES_DEFAULT_TO_HEXA</strong></tt>: Replace escaped characters
+ *     <li><kbd><strong>HTML4_NAMED_REFERENCES_DEFAULT_TO_HEXA</strong></kbd>: Replace escaped characters
  *         with HTML 4 <em>Named Character References</em> (<em>Character Entity References</em>) whenever
  *         possible (depending on the specified {@link org.unbescape.html.HtmlEscapeLevel}), and default to
  *         using <em>Hexadecimal Character References</em> for escaped characters that do not have an associated
  *         NCR.</li>
- *     <li><tt><strong>HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL</strong></tt>: Replace escaped characters
+ *     <li><kbd><strong>HTML5_NAMED_REFERENCES_DEFAULT_TO_DECIMAL</strong></kbd>: Replace escaped characters
  *         with HTML5 <em>Named Character References</em> whenever
  *         possible (depending on the specified {@link org.unbescape.html.HtmlEscapeLevel}), and default to
  *         using <em>Decimal Character References</em> for escaped characters that do not have an associated
  *         NCR.</li>
- *     <li><tt><strong>HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA</strong></tt>: Replace escaped characters
+ *     <li><kbd><strong>HTML5_NAMED_REFERENCES_DEFAULT_TO_HEXA</strong></kbd>: Replace escaped characters
  *         with HTML5 <em>Named Character References</em> whenever
  *         possible (depending on the specified {@link org.unbescape.html.HtmlEscapeLevel}), and default to
  *         using <em>Hexadecimal Character References</em> for escaped characters that do not have an associated
  *         NCR.</li>
- *     <li><tt><strong>DECIMAL_REFERENCES</strong></tt>: Replace escaped characters with
+ *     <li><kbd><strong>DECIMAL_REFERENCES</strong></kbd>: Replace escaped characters with
  *         <em>Decimal Character References</em> (will never use NCRs).</li>
- *     <li><tt><strong>HEXADECIMAL_REFERENCES</strong></tt>: Replace escaped characters with
+ *     <li><kbd><strong>HEXADECIMAL_REFERENCES</strong></kbd>: Replace escaped characters with
  *         <em>Hexadecimal Character References</em> (will never use NCRs).</li>
  * </ul>
  *

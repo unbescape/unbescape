@@ -25,12 +25,12 @@ package org.unbescape.json;
  * </p>
  *
  * <ul>
- *     <li><tt><strong>SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA</strong></tt>: Use
+ *     <li><kbd><strong>SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA</strong></kbd>: Use
  *         Single Escape Chars whenever possible (depending on the specified
  *         {@link JsonEscapeLevel}). For escaped characters that do
- *         not have an associated SEC, default to using <tt>&#92;uFFFF</tt> Hexadecimal Escapes.</li>
- *     <li><tt><strong>UHEXA</strong></tt>: Replace escaped characters with
- *         <tt>&#92;uFFFF</tt> Hexadecimal Escapes.</li>
+ *         not have an associated SEC, default to using <kbd>&#92;uFFFF</kbd> Hexadecimal Escapes.</li>
+ *     <li><kbd><strong>UHEXA</strong></kbd>: Replace escaped characters with
+ *         <kbd>&#92;uFFFF</kbd> Hexadecimal Escapes.</li>
  * </ul>
  *
  * <p>

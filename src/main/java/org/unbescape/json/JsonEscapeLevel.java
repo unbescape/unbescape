@@ -31,29 +31,29 @@ package org.unbescape.json;
  *         <em>basic set</em> consists of:
  *         <ul>
  *           <li>The <em>Single Escape Characters</em>:
- *               <tt>&#92;b</tt> (<tt>U+0008</tt>),
- *               <tt>&#92;t</tt> (<tt>U+0009</tt>),
- *               <tt>&#92;n</tt> (<tt>U+000A</tt>),
- *               <tt>&#92;f</tt> (<tt>U+000C</tt>),
- *               <tt>&#92;r</tt> (<tt>U+000D</tt>),
- *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
- *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
- *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
- *               Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
- *               symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
- *               closing <tt>&lt;script&gt;</tt> tags in HTML.
+ *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
+ *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
+ *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
+ *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
+ *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+ *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
+ *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>) and
+ *               <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>).
+ *               Note that <kbd>&#92;&#47;</kbd> is optional, and will only be used when the <kbd>&#47;</kbd>
+ *               symbol appears after <kbd>&lt;</kbd>, as in <kbd>&lt;&#47;</kbd>. This is to avoid accidentally
+ *               closing <kbd>&lt;script&gt;</kbd> tags in HTML.
  *           </li>
  *           <li>
- *               The ampersand symbol (<tt>&amp;</tt>, <tt>U+0026</tt>), which will be escaped in order to protect from
+ *               The ampersand symbol (<kbd>&amp;</kbd>, <kbd>U+0026</kbd>), which will be escaped in order to protect from
  *               code injection in XHTML environments (browsers will parse XHTML escape codes inside
- *               literals in <tt>&lt;script&gt;</tt> tags). Note there is no <em>Single Escape Character</em>
+ *               literals in <kbd>&lt;script&gt;</kbd> tags). Note there is no <em>Single Escape Character</em>
  *               for this symbol, so it will be escaped using the sequence corresponding to the selected
- *               escape type (e.g. <tt>&#92;u0026</tt>).
+ *               escape type (e.g. <kbd>&#92;u0026</kbd>).
  *           </li>
  *           <li>
  *               Two ranges of non-displayable, control characters (some of which are already part of the
- *               <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
- *               by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+ *               <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd> (required
+ *               by the JSON spec) and <kbd>U+007F</kbd> to <kbd>U+009F</kbd> (additional).
  *           </li>
  *         </ul>
  *     </li>
@@ -61,7 +61,7 @@ package org.unbescape.json;
  *         non-ASCII characters. The result of a level-2 escape operation is therefore always ASCII-only text, and
  *         safer to use in complex scenarios with mixed input/output character encodings.</li>
  *     <li><strong>Level 3</strong>: Escape all non-alphanumeric characters, this is, all but those in the
- *         <tt>A</tt>-<tt>Z</tt>, <tt>a</tt>-<tt>z</tt> and <tt>0</tt>-<tt>9</tt> ranges. This level
+ *         <kbd>A</kbd>-<kbd>Z</kbd>, <kbd>a</kbd>-<kbd>z</kbd> and <kbd>0</kbd>-<kbd>9</kbd> ranges. This level
  *         can be safely used for completely escaping texts, including whitespace, line feeds, punctuation, etc. in
  *         scenarios where this adds an extra level of safety.</li>
  *     <li><strong>Level 4</strong>: Escape all characters, even alphanumeric ones.</li>
@@ -91,7 +91,7 @@ public enum JsonEscapeLevel {
 
     /**
      * Level 3 escape: escape all non-alphanumeric characteres (escape all but those in the
-     * <tt>A</tt>-<tt>Z</tt>, <tt>a</tt>-<tt>z</tt> and <tt>0</tt>-<tt>9</tt> ranges).
+     * <kbd>A</kbd>-<kbd>Z</kbd>, <kbd>a</kbd>-<kbd>z</kbd> and <kbd>0</kbd>-<kbd>9</kbd> ranges).
      */
     LEVEL_3_ALL_NON_ALPHANUMERIC(3),
 
@@ -108,11 +108,11 @@ public enum JsonEscapeLevel {
 
     /**
      * <p>
-     *   Utility method for obtaining an enum value from its corresponding <tt>int</tt> level value.
+     *   Utility method for obtaining an enum value from its corresponding <kbd>int</kbd> level value.
      * </p>
      *
      * @param level the level
-     * @return the escape level enum constant, or <tt>IllegalArgumentException</tt> if level does not exist.
+     * @return the escape level enum constant, or <kbd>IllegalArgumentException</kbd> if level does not exist.
      */
     public static JsonEscapeLevel forLevel(final int level) {
         switch (level) {
@@ -131,7 +131,7 @@ public enum JsonEscapeLevel {
     }
 
     /**
-     * Return the <tt>int</tt> escape level.
+     * Return the <kbd>int</kbd> escape level.
      *
      * @return the escape level.
      */

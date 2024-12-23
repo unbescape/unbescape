@@ -37,16 +37,16 @@ import java.io.Writer;
  *   <li>Support for percent-encoding-based escape operations (RFC3986) for diverse parts of an URI:
  *         <ul>
  *           <li><strong>Paths</strong>: Part of the URI path, might include several path levels/segments:
- *               <tt>/admin/users/list?x=1</tt> &rarr; <tt>users/list</tt></li>
+ *               <kbd>/admin/users/list?x=1</kbd> &rarr; <kbd>users/list</kbd></li>
  *           <li><strong>Path Segments</strong>: Part of the URI path, can include only one path level
- *               (<tt>/</tt> chars will be escaped): <tt>/admin/users/list?x=1</tt> &rarr; <tt>users</tt></li>
+ *               (<kbd>/</kbd> chars will be escaped): <kbd>/admin/users/list?x=1</kbd> &rarr; <kbd>users</kbd></li>
  *           <li><strong>Query Parameters</strong>: Names and values of the URI query parameters:
- *               <tt>/admin/users/list?x=1</tt> &rarr; <tt>x</tt> (name), <tt>1</tt> (value)</li>
- *           <li><strong>URI Fragment Identifiers</strong>: client-side part of URIs, specified after <tt>#</tt>:
- *               <tt>/admin/users/list?x=1#something</tt> &rarr; <tt>#something</tt></li>
+ *               <kbd>/admin/users/list?x=1</kbd> &rarr; <kbd>x</kbd> (name), <kbd>1</kbd> (value)</li>
+ *           <li><strong>URI Fragment Identifiers</strong>: client-side part of URIs, specified after <kbd>#</kbd>:
+ *               <kbd>/admin/users/list?x=1#something</kbd> &rarr; <kbd>#something</kbd></li>
  *         </ul>
  *   </li>
- *   <li>Support for both <em>percent-encoding</em> and <tt>+</tt> based unescaping of whitespace in query
+ *   <li>Support for both <em>percent-encoding</em> and <kbd>+</kbd> based unescaping of whitespace in query
  *       parameters.</li>
  * </ul>
  *
@@ -56,20 +56,20 @@ import java.io.Writer;
  *   There are four different input/output modes that can be used in escape/unescape operations:
  * </p>
  * <ul>
- *   <li><em><tt>String</tt> input, <tt>String</tt> output</em>: Input is specified as a <tt>String</tt> object
+ *   <li><em><kbd>String</kbd> input, <kbd>String</kbd> output</em>: Input is specified as a <kbd>String</kbd> object
  *       and output is returned as another. In order to improve memory performance, all escape and unescape
  *       operations <u>will return the exact same input object as output if no escape/unescape modifications
  *       are required</u>.</li>
- *   <li><em><tt>String</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a String
- *       and output will be written into the specified <tt>java.io.Writer</tt>.</li>
- *   <li><em><tt>java.io.Reader</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a Reader
- *       and output will be written into the specified <tt>java.io.Writer</tt>.</li>
- *   <li><em><tt>char[]</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a char array
- *       (<tt>char[]</tt>) and output will be written into the specified <tt>java.io.Writer</tt>.
- *       Two <tt>int</tt> arguments called <tt>offset</tt> and <tt>len</tt> will be
- *       used for specifying the part of the <tt>char[]</tt> that should be escaped/unescaped. These methods
- *       should be called with <tt>offset = 0</tt> and <tt>len = text.length</tt> in order to process
- *       the whole <tt>char[]</tt>.</li>
+ *   <li><em><kbd>String</kbd> input, <kbd>java.io.Writer</kbd> output</em>: Input will be read from a String
+ *       and output will be written into the specified <kbd>java.io.Writer</kbd>.</li>
+ *   <li><em><kbd>java.io.Reader</kbd> input, <kbd>java.io.Writer</kbd> output</em>: Input will be read from a Reader
+ *       and output will be written into the specified <kbd>java.io.Writer</kbd>.</li>
+ *   <li><em><kbd>char[]</kbd> input, <kbd>java.io.Writer</kbd> output</em>: Input will be read from a char array
+ *       (<kbd>char[]</kbd>) and output will be written into the specified <kbd>java.io.Writer</kbd>.
+ *       Two <kbd>int</kbd> arguments called <kbd>offset</kbd> and <kbd>len</kbd> will be
+ *       used for specifying the part of the <kbd>char[]</kbd> that should be escaped/unescaped. These methods
+ *       should be called with <kbd>offset = 0</kbd> and <kbd>len = text.length</kbd> in order to process
+ *       the whole <kbd>char[]</kbd>.</li>
  * </ul>
  *
  * <strong><u>Glossary</u></strong>
@@ -77,8 +77,8 @@ import java.io.Writer;
  * <dl>
  *   <dt>Percent encoding</dt>
  *     <dd>The percent-encoding technique for escaping consists of transforming the character that needs to be
- *         escaped into a sequence of bytes using a previously specified encoding (<tt>UTF-8</tt> by default), and
- *         then wrinting each byte as <tt>%HH</tt>, being <tt>HH</tt> its hexadecimal value (of the byte).
+ *         escaped into a sequence of bytes using a previously specified encoding (<kbd>UTF-8</kbd> by default), and
+ *         then wrinting each byte as <kbd>%HH</kbd>, being <kbd>HH</kbd> its hexadecimal value (of the byte).
  *     </dd>
  * </dl>
  *
@@ -104,7 +104,7 @@ public final class UriEscape {
 
 
     /**
-     * The default encoding for URI escaping/unescaping: <tt>UTF-8</tt>.
+     * The default encoding for URI escaping/unescaping: <kbd>UTF-8</kbd>.
      */
     public static final String DEFAULT_ENCODING = "UTF-8";
 
@@ -113,32 +113,32 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>escape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String escapeUriPath(final String text) {
         return escapeUriPath(text, DEFAULT_ENCODING);
@@ -148,33 +148,33 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>escape</strong> operation
-     *   on a <tt>String</tt> input.
+     *   on a <kbd>String</kbd> input.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
+     * @param text the <kbd>String</kbd> to be escaped.
      * @param encoding the encoding to be used for unescaping.
-     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String escapeUriPath(final String text, final String encoding) {
         if (encoding == null) {
@@ -188,31 +188,31 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>escape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path segment (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String escapeUriPathSegment(final String text) {
         return escapeUriPathSegment(text, DEFAULT_ENCODING);
@@ -222,32 +222,32 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>escape</strong> operation
-     *   on a <tt>String</tt> input.
+     *   on a <kbd>String</kbd> input.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path segment (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
+     * @param text the <kbd>String</kbd> to be escaped.
      * @param encoding the encoding to be used for escaping.
-     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String escapeUriPathSegment(final String text, final String encoding) {
         if (encoding == null) {
@@ -261,32 +261,32 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>escape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI query parameter (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ ' ( ) * , ;</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ ' ( ) * , ;</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String escapeUriQueryParam(final String text) {
         return escapeUriQueryParam(text, DEFAULT_ENCODING);
@@ -296,33 +296,33 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>escape</strong> operation
-     *   on a <tt>String</tt> input.
+     *   on a <kbd>String</kbd> input.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI query parameter (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ ' ( ) * , ;</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ ' ( ) * , ;</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
+     * @param text the <kbd>String</kbd> to be escaped.
      * @param encoding the encoding to be used for escaping.
-     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String escapeUriQueryParam(final String text, final String encoding) {
         if (encoding == null) {
@@ -336,32 +336,32 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>escape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI fragment identifier (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String escapeUriFragmentId(final String text) {
         return escapeUriFragmentId(text, DEFAULT_ENCODING);
@@ -371,33 +371,33 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>escape</strong> operation
-     *   on a <tt>String</tt> input.
+     *   on a <kbd>String</kbd> input.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI fragment identifier (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
+     * @param text the <kbd>String</kbd> to be escaped.
      * @param encoding the encoding to be used for escaping.
-     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String escapeUriFragmentId(final String text, final String encoding) {
         if (encoding == null) {
@@ -415,31 +415,31 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>escape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding,
-     *   writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding,
+     *   writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -453,30 +453,30 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>escape</strong> operation
-     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for escaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -502,30 +502,30 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>escape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding,
-     *   writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding,
+     *   writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path segment (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -539,29 +539,29 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>escape</strong> operation
-     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path segment (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for escaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -587,31 +587,31 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>escape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding,
-     *   writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding,
+     *   writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI query parameter (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ ' ( ) * , ;</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ ' ( ) * , ;</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -625,30 +625,30 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>escape</strong> operation
-     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI query parameter (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ ' ( ) * , ;</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ ' ( ) * , ;</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for escaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -674,31 +674,31 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>escape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding,
-     *   writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding,
+     *   writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI fragment identifier (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -712,30 +712,30 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>escape</strong> operation
-     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI fragment identifier (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for escaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -765,31 +765,31 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>escape</strong> operation
-     *   on a <tt>Reader</tt> input using <tt>UTF-8</tt> as encoding,
-     *   writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input using <kbd>UTF-8</kbd> as encoding,
+     *   writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -803,30 +803,30 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>escape</strong> operation
-     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for escaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -852,30 +852,30 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>escape</strong> operation
-     *   on a <tt>Reader</tt> input using <tt>UTF-8</tt> as encoding,
-     *   writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input using <kbd>UTF-8</kbd> as encoding,
+     *   writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path segment (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -889,29 +889,29 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>escape</strong> operation
-     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path segment (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for escaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -937,31 +937,31 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>escape</strong> operation
-     *   on a <tt>Reader</tt> input using <tt>UTF-8</tt> as encoding,
-     *   writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input using <kbd>UTF-8</kbd> as encoding,
+     *   writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI query parameter (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ ' ( ) * , ;</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ ' ( ) * , ;</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -975,30 +975,30 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>escape</strong> operation
-     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI query parameter (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ ' ( ) * , ;</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ ' ( ) * , ;</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for escaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -1024,31 +1024,31 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>escape</strong> operation
-     *   on a <tt>Reader</tt> input using <tt>UTF-8</tt> as encoding,
-     *   writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input using <kbd>UTF-8</kbd> as encoding,
+     *   writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI fragment identifier (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -1062,30 +1062,30 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>escape</strong> operation
-     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI fragment identifier (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for escaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -1115,32 +1115,32 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>escape</strong> operation
-     *   on a <tt>char[]</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>char[]</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be escaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeUriPath(final char[] text, final int offset, final int len, final Writer writer)
@@ -1152,32 +1152,32 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>escape</strong> operation
-     *   on a <tt>char[]</tt> input.
+     *   on a <kbd>char[]</kbd> input.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be escaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for escaping.
      * @throws IOException if an input/output exception occurs
      */
@@ -1213,31 +1213,31 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>escape</strong> operation
-     *   on a <tt>char[]</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>char[]</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path segment (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be escaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeUriPathSegment(final char[] text, final int offset, final int len, final Writer writer)
@@ -1249,31 +1249,31 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>escape</strong> operation
-     *   on a <tt>char[]</tt> input.
+     *   on a <kbd>char[]</kbd> input.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI path segment (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be escaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for escaping.
      * @throws IOException if an input/output exception occurs
      */
@@ -1307,32 +1307,32 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>escape</strong> operation
-     *   on a <tt>char[]</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>char[]</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI query parameter (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ ' ( ) * , ;</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ ' ( ) * , ;</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be escaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeUriQueryParam(final char[] text, final int offset, final int len, final Writer writer)
@@ -1344,32 +1344,32 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>escape</strong> operation
-     *   on a <tt>char[]</tt> input.
+     *   on a <kbd>char[]</kbd> input.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI query parameter (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ ' ( ) * , ;</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ ' ( ) * , ;</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be escaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for escaping.
      * @throws IOException if an input/output exception occurs
      */
@@ -1403,32 +1403,32 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>escape</strong> operation
-     *   on a <tt>char[]</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>char[]</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI fragment identifier (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
-     *   represents them in the <tt>UTF-8</tt> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   represents them in the <kbd>UTF-8</kbd> and then representing each byte
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be escaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeUriFragmentId(final char[] text, final int offset, final int len, final Writer writer)
@@ -1440,32 +1440,32 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>escape</strong> operation
-     *   on a <tt>char[]</tt> input.
+     *   on a <kbd>char[]</kbd> input.
      * </p>
      * <p>
      *   The following are the only allowed chars in an URI fragment identifier (will not be escaped):
      * </p>
      * <ul>
-     *   <li><tt>A-Z a-z 0-9</tt></li>
-     *   <li><tt>- . _ ~</tt></li>
-     *   <li><tt>! $ &amp; ' ( ) * + , ; =</tt></li>
-     *   <li><tt>: @</tt></li>
-     *   <li><tt>/ ?</tt></li>
+     *   <li><kbd>A-Z a-z 0-9</kbd></li>
+     *   <li><kbd>- . _ ~</kbd></li>
+     *   <li><kbd>! $ &amp; ' ( ) * + , ; =</kbd></li>
+     *   <li><kbd>: @</kbd></li>
+     *   <li><kbd>/ ?</kbd></li>
      * </ul>
      * <p>
      *   All other chars will be escaped by converting them to the sequence of bytes that
      *   represents them in the specified <em>encoding</em> and then representing each byte
-     *   in <tt>%HH</tt> syntax, being <tt>HH</tt> the hexadecimal representation of the byte.
+     *   in <kbd>%HH</kbd> syntax, being <kbd>HH</kbd> the hexadecimal representation of the byte.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be escaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for escaping.
      * @throws IOException if an input/output exception occurs
      */
@@ -1512,27 +1512,27 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String unescapeUriPath(final String text) {
         return unescapeUriPath(text, DEFAULT_ENCODING);
@@ -1542,28 +1542,28 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input.
+     *   on a <kbd>String</kbd> input.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use the specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use the specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
+     * @param text the <kbd>String</kbd> to be unescaped.
      * @param encoding the encoding to be used for unescaping.
-     * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String unescapeUriPath(final String text, final String encoding) {
         if (encoding == null) {
@@ -1577,27 +1577,27 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String unescapeUriPathSegment(final String text) {
         return unescapeUriPathSegment(text, DEFAULT_ENCODING);
@@ -1607,28 +1607,28 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input.
+     *   on a <kbd>String</kbd> input.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
+     * @param text the <kbd>String</kbd> to be unescaped.
      * @param encoding the encoding to be used for unescaping.
-     * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String unescapeUriPathSegment(final String text, final String encoding) {
         if (encoding == null) {
@@ -1642,27 +1642,27 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String unescapeUriQueryParam(final String text) {
         return unescapeUriQueryParam(text, DEFAULT_ENCODING);
@@ -1672,28 +1672,28 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input.
+     *   on a <kbd>String</kbd> input.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
+     * @param text the <kbd>String</kbd> to be unescaped.
      * @param encoding the encoding to be used for unescaping.
-     * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String unescapeUriQueryParam(final String text, final String encoding) {
         if (encoding == null) {
@@ -1707,27 +1707,27 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String unescapeUriFragmentId(final String text) {
         return unescapeUriFragmentId(text, DEFAULT_ENCODING);
@@ -1737,28 +1737,28 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input.
+     *   on a <kbd>String</kbd> input.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
+     * @param text the <kbd>String</kbd> to be unescaped.
      * @param encoding the encoding to be used for unescaping.
-     * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String unescapeUriFragmentId(final String text, final String encoding) {
         if (encoding == null) {
@@ -1776,25 +1776,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -1808,25 +1808,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use the specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use the specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for unescaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -1852,25 +1852,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -1884,25 +1884,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for unescaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -1928,25 +1928,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -1960,25 +1960,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for unescaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -2004,25 +2004,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input using <tt>UTF-8</tt> as encoding, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input using <kbd>UTF-8</kbd> as encoding, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -2036,25 +2036,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>unescape</strong> operation
-     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for unescaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -2084,25 +2084,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>unescape</strong> operation
-     *   on a <tt>Reader</tt> input using <tt>UTF-8</tt> as encoding, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input using <kbd>UTF-8</kbd> as encoding, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -2116,25 +2116,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>unescape</strong> operation
-     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use the specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use the specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for unescaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -2160,25 +2160,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>unescape</strong> operation
-     *   on a <tt>Reader</tt> input using <tt>UTF-8</tt> as encoding, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input using <kbd>UTF-8</kbd> as encoding, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -2192,25 +2192,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>unescape</strong> operation
-     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for unescaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -2236,25 +2236,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>unescape</strong> operation
-     *   on a <tt>Reader</tt> input using <tt>UTF-8</tt> as encoding, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input using <kbd>UTF-8</kbd> as encoding, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -2268,25 +2268,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>unescape</strong> operation
-     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for unescaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -2312,25 +2312,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>unescape</strong> operation
-     *   on a <tt>Reader</tt> input using <tt>UTF-8</tt> as encoding, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input using <kbd>UTF-8</kbd> as encoding, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -2344,25 +2344,25 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>unescape</strong> operation
-     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for unescaping.
      * @throws IOException if an input/output exception occurs
      *
@@ -2392,27 +2392,27 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>unescape</strong> operation
-     *   on a <tt>char[]</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>char[]</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be unescaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      */
     public static void unescapeUriPath(final char[] text, final int offset, final int len, final Writer writer)
@@ -2424,27 +2424,27 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path <strong>unescape</strong> operation
-     *   on a <tt>char[]</tt> input.
+     *   on a <kbd>char[]</kbd> input.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be unescaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for unescaping.
      * @throws IOException if an input/output exception occurs
      */
@@ -2480,27 +2480,27 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>unescape</strong> operation
-     *   on a <tt>char[]</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>char[]</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be unescaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      */
     public static void unescapeUriPathSegment(final char[] text, final int offset, final int len, final Writer writer)
@@ -2512,27 +2512,27 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI path segment <strong>unescape</strong> operation
-     *   on a <tt>char[]</tt> input.
+     *   on a <kbd>char[]</kbd> input.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be unescaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for unescaping.
      * @throws IOException if an input/output exception occurs
      */
@@ -2566,27 +2566,27 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>unescape</strong> operation
-     *   on a <tt>char[]</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>char[]</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be unescaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      */
     public static void unescapeUriQueryParam(final char[] text, final int offset, final int len, final Writer writer)
@@ -2598,27 +2598,27 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI query parameter (name or value) <strong>unescape</strong> operation
-     *   on a <tt>char[]</tt> input.
+     *   on a <kbd>char[]</kbd> input.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be unescaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for unescaping.
      * @throws IOException if an input/output exception occurs
      */
@@ -2652,27 +2652,27 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>unescape</strong> operation
-     *   on a <tt>char[]</tt> input using <tt>UTF-8</tt> as encoding.
+     *   on a <kbd>char[]</kbd> input using <kbd>UTF-8</kbd> as encoding.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use <tt>UTF-8</tt> in order to determine the characters specified in the
+     *   This method will use <kbd>UTF-8</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be unescaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      */
     public static void unescapeUriFragmentId(final char[] text, final int offset, final int len, final Writer writer)
@@ -2684,27 +2684,27 @@ public final class UriEscape {
     /**
      * <p>
      *   Perform am URI fragment identifier <strong>unescape</strong> operation
-     *   on a <tt>char[]</tt> input.
+     *   on a <kbd>char[]</kbd> input.
      * </p>
      * <p>
-     *   This method will unescape every percent-encoded (<tt>%HH</tt>) sequences present in input,
+     *   This method will unescape every percent-encoded (<kbd>%HH</kbd>) sequences present in input,
      *   even for those characters that do not need to be percent-encoded in this context (unreserved characters
      *   can be percent-encoded even if/when this is not required, though it is not generally considered a
      *   good practice).
      * </p>
      * <p>
-     *   This method will use specified <tt>encoding</tt> in order to determine the characters specified in the
+     *   This method will use specified <kbd>encoding</kbd> in order to determine the characters specified in the
      *   percent-encoded byte sequences.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be unescaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param encoding the encoding to be used for unescaping.
      * @throws IOException if an input/output exception occurs
      */

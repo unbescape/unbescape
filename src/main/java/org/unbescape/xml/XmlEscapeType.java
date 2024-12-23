@@ -25,17 +25,17 @@ package org.unbescape.xml;
  * </p>
  *
  * <ul>
- *     <li><tt><strong>CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_DECIMAL</strong></tt>: Replace escaped characters
+ *     <li><kbd><strong>CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_DECIMAL</strong></kbd>: Replace escaped characters
  *         with Character Entity References whenever possible (depending on the specified
  *         {@link org.unbescape.xml.XmlEscapeLevel}), and default to using <em>Decimal Character References</em>
  *         for escaped characters that do not have an associated CER.</li>
- *     <li><tt><strong>CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_DECIMAL</strong></tt>: Replace escaped characters
+ *     <li><kbd><strong>CHARACTER_ENTITY_REFERENCES_DEFAULT_TO_DECIMAL</strong></kbd>: Replace escaped characters
  *         with Character Entity References whenever possible (depending on the specified
  *         {@link org.unbescape.xml.XmlEscapeLevel}), and default to using <em>Hexadecimal Character References</em>
  *         for escaped characters that do not have an associated CER.</li>
- *     <li><tt><strong>DECIMAL_REFERENCES</strong></tt>: Replace escaped characters with
+ *     <li><kbd><strong>DECIMAL_REFERENCES</strong></kbd>: Replace escaped characters with
  *         <em>Decimal Character References</em> (will never use CER).</li>
- *     <li><tt><strong>HEXADECIMAL_REFERENCES</strong></tt>: Replace escaped characters with
+ *     <li><kbd><strong>HEXADECIMAL_REFERENCES</strong></kbd>: Replace escaped characters with
  *         <em>Hexadecimal Character References</em> (will never use CERs).</li>
  * </ul>
  *

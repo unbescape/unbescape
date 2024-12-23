@@ -25,20 +25,20 @@ package org.unbescape.css;
  * </p>
  *
  * <ul>
- *     <li><tt><strong>BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA</strong></tt>: Use
+ *     <li><kbd><strong>BACKSLASH_ESCAPES_DEFAULT_TO_COMPACT_HEXA</strong></kbd>: Use
  *         backslash escapes whenever possible (depending on the specified
  *         {@link CssStringEscapeLevel}). For escaped characters that do
  *         not have an associated backslash escape, default to using
- *         <tt>&#92;FF*</tt> variable-length hexadecimal escapes.</li>
- *     <li><tt><strong>BACKSLASH_ESCAPES_DEFAULT_TO_SIX_DIGIT_HEXA</strong></tt>: Use
+ *         <kbd>&#92;FF*</kbd> variable-length hexadecimal escapes.</li>
+ *     <li><kbd><strong>BACKSLASH_ESCAPES_DEFAULT_TO_SIX_DIGIT_HEXA</strong></kbd>: Use
  *         backslash escapes whenever possible (depending on the specified
  *         {@link CssStringEscapeLevel}). For escaped characters that do
  *         not have an associated backslash escape, default to using
- *         <tt>&#92;FFFFFF</tt> 6-digit hexadecimal escapes.</li>
- *     <li><tt><strong>COMPACT_HEXA</strong></tt>: Replace escaped characters with
- *         <tt>&#92;FF*</tt> variable-length hexadecimal escapes.</li>
- *     <li><tt><strong>SIX_DIGIT_HEXA</strong></tt>: Replace escaped characters with
- *         <tt>&#92;FFFFFF</tt> 6-digit hexadecimal escapes.</li>
+ *         <kbd>&#92;FFFFFF</kbd> 6-digit hexadecimal escapes.</li>
+ *     <li><kbd><strong>COMPACT_HEXA</strong></kbd>: Replace escaped characters with
+ *         <kbd>&#92;FF*</kbd> variable-length hexadecimal escapes.</li>
+ *     <li><kbd><strong>SIX_DIGIT_HEXA</strong></kbd>: Replace escaped characters with
+ *         <kbd>&#92;FFFFFF</kbd> 6-digit hexadecimal escapes.</li>
  * </ul>
  *
  * <p>

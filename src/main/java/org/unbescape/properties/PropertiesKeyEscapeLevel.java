@@ -31,19 +31,19 @@ package org.unbescape.properties;
  *         <em>basic set</em> consists of:
  *         <ul>
  *           <li>The <em>Single Escape Characters</em>:
- *               <tt>&#92;t</tt> (<tt>U+0009</tt>),
- *               <tt>&#92;n</tt> (<tt>U+000A</tt>),
- *               <tt>&#92;f</tt> (<tt>U+000C</tt>),
- *               <tt>&#92;r</tt> (<tt>U+000D</tt>),
- *               <tt>&#92;&nbsp;</tt> (<tt>U+0020</tt>),
- *               <tt>&#92;:</tt> (<tt>U+003A</tt>),
- *               <tt>&#92;=</tt> (<tt>U+003D</tt>),
- *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>).
+ *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
+ *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
+ *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
+ *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+ *               <kbd>&#92;&nbsp;</kbd> (<kbd>U+0020</kbd>),
+ *               <kbd>&#92;:</kbd> (<kbd>U+003A</kbd>),
+ *               <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>),
+ *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
  *           </li>
  *           <li>
  *               Two ranges of non-displayable, control characters (some of which are already part of the
- *               <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt>
- *               and <tt>U+007F</tt> to <tt>U+009F</tt>.
+ *               <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
+ *               and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
  *           </li>
  *         </ul>
  *     </li>
@@ -51,7 +51,7 @@ package org.unbescape.properties;
  *         non-ASCII characters. The result of a level-2 escape operation is therefore always ASCII-only text, and
  *         safer to use in complex scenarios with mixed input/output character encodings.</li>
  *     <li><strong>Level 3</strong>: Escape all non-alphanumeric characters, this is, all but those in the
- *         <tt>A</tt>-<tt>Z</tt>, <tt>a</tt>-<tt>z</tt> and <tt>0</tt>-<tt>9</tt> ranges. This level
+ *         <kbd>A</kbd>-<kbd>Z</kbd>, <kbd>a</kbd>-<kbd>z</kbd> and <kbd>0</kbd>-<kbd>9</kbd> ranges. This level
  *         can be safely used for completely escaping texts, including whitespace, line feeds, punctuation, etc. in
  *         scenarios where this adds an extra level of safety.</li>
  *     <li><strong>Level 4</strong>: Escape all characters, even alphanumeric ones.</li>
@@ -81,7 +81,7 @@ public enum PropertiesKeyEscapeLevel {
 
     /**
      * Level 3 escape: escape all non-alphanumeric characteres (escape all but those in the
-     * <tt>A</tt>-<tt>Z</tt>, <tt>a</tt>-<tt>z</tt> and <tt>0</tt>-<tt>9</tt> ranges).
+     * <kbd>A</kbd>-<kbd>Z</kbd>, <kbd>a</kbd>-<kbd>z</kbd> and <kbd>0</kbd>-<kbd>9</kbd> ranges).
      */
     LEVEL_3_ALL_NON_ALPHANUMERIC(3),
 
@@ -98,11 +98,11 @@ public enum PropertiesKeyEscapeLevel {
 
     /**
      * <p>
-     *   Utility method for obtaining an enum value from its corresponding <tt>int</tt> level value.
+     *   Utility method for obtaining an enum value from its corresponding <kbd>int</kbd> level value.
      * </p>
      *
      * @param level the level
-     * @return the escape level enum constant, or <tt>IllegalArgumentException</tt> if level does not exist.
+     * @return the escape level enum constant, or <kbd>IllegalArgumentException</kbd> if level does not exist.
      */
     public static PropertiesKeyEscapeLevel forLevel(final int level) {
         switch (level) {
@@ -121,7 +121,7 @@ public enum PropertiesKeyEscapeLevel {
     }
 
     /**
-     * Return the <tt>int</tt> escape level.
+     * Return the <kbd>int</kbd> escape level.
      *
      * @return the escape level.
      */

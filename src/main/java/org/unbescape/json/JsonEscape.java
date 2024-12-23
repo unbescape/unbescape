@@ -40,14 +40,14 @@ import java.io.Writer;
  *       needs of the scenario). Its values are defined by the {@link JsonEscapeLevel}
  *       enum.</li>
  *   <li><em>Type</em>, which defines whether escaping should be performed by means of SECs
- *       (Single Escape Characters like <tt>&#92;n</tt>) or additionally by means of u-based
- *       hexadecimal references (<tt>&#92;u00E1</tt>).
+ *       (Single Escape Characters like <kbd>&#92;n</kbd>) or additionally by means of u-based
+ *       hexadecimal references (<kbd>&#92;u00E1</kbd>).
  *       Its values are defined by the {@link JsonEscapeType} enum.</li>
  * </ul>
  * <p>
  *   <strong>Unescape</strong> operations need no configuration parameters. Unescape operations
- *   will always perform <em>complete</em> unescape of SECs (<tt>&#92;n</tt>)
- *   and u-based (<tt>&#92;u00E1</tt>) hexadecimal escapes.
+ *   will always perform <em>complete</em> unescape of SECs (<kbd>&#92;n</kbd>)
+ *   and u-based (<kbd>&#92;u00E1</kbd>) hexadecimal escapes.
  * </p>
  *
  * <strong><u>Features</u></strong>
@@ -59,29 +59,29 @@ import java.io.Writer;
  *   <li>The JSON basic escape set is supported. This <em>basic set</em> consists of:
  *         <ul>
  *           <li>The <em>Single Escape Characters</em>:
- *               <tt>&#92;b</tt> (<tt>U+0008</tt>),
- *               <tt>&#92;t</tt> (<tt>U+0009</tt>),
- *               <tt>&#92;n</tt> (<tt>U+000A</tt>),
- *               <tt>&#92;f</tt> (<tt>U+000C</tt>),
- *               <tt>&#92;r</tt> (<tt>U+000D</tt>),
- *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
- *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
- *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
- *               Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
- *               symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
- *               closing <tt>&lt;script&gt;</tt> tags in HTML.
+ *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
+ *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
+ *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
+ *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
+ *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+ *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
+ *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>) and
+ *               <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>).
+ *               Note that <kbd>&#92;&#47;</kbd> is optional, and will only be used when the <kbd>&#47;</kbd>
+ *               symbol appears after <kbd>&lt;</kbd>, as in <kbd>&lt;&#47;</kbd>. This is to avoid accidentally
+ *               closing <kbd>&lt;script&gt;</kbd> tags in HTML.
  *           </li>
  *           <li>
  *               Two ranges of non-displayable, control characters (some of which are already part of the
- *               <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
- *               by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+ *               <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd> (required
+ *               by the JSON spec) and <kbd>U+007F</kbd> to <kbd>U+009F</kbd> (additional).
  *           </li>
  *         </ul>
  *   </li>
  *   <li>U-based hexadecimal escapes (a.k.a. <em>unicode escapes</em>) are supported both in escape
- *       and unescape operations: <tt>&#92;u00E1</tt>.</li>
- *   <li>Support for the whole Unicode character set: <tt>&#92;u0000</tt> to <tt>&#92;u10FFFF</tt>, including
- *       characters not representable by only one <tt>char</tt> in Java (<tt>&gt;&#92;uFFFF</tt>).</li>
+ *       and unescape operations: <kbd>&#92;u00E1</kbd>.</li>
+ *   <li>Support for the whole Unicode character set: <kbd>&#92;u0000</kbd> to <kbd>&#92;u10FFFF</kbd>, including
+ *       characters not representable by only one <kbd>char</kbd> in Java (<kbd>&gt;&#92;uFFFF</kbd>).</li>
  * </ul>
  *
  * <strong><u>Input/Output</u></strong>
@@ -90,20 +90,20 @@ import java.io.Writer;
  *   There are four different input/output modes that can be used in escape/unescape operations:
  * </p>
  * <ul>
- *   <li><em><tt>String</tt> input, <tt>String</tt> output</em>: Input is specified as a <tt>String</tt> object
+ *   <li><em><kbd>String</kbd> input, <kbd>String</kbd> output</em>: Input is specified as a <kbd>String</kbd> object
  *       and output is returned as another. In order to improve memory performance, all escape and unescape
  *       operations <u>will return the exact same input object as output if no escape/unescape modifications
  *       are required</u>.</li>
- *   <li><em><tt>String</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a String
- *       and output will be written into the specified <tt>java.io.Writer</tt>.</li>
- *   <li><em><tt>java.io.Reader</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a Reader
- *       and output will be written into the specified <tt>java.io.Writer</tt>.</li>
- *   <li><em><tt>char[]</tt> input, <tt>java.io.Writer</tt> output</em>: Input will be read from a char array
- *       (<tt>char[]</tt>) and output will be written into the specified <tt>java.io.Writer</tt>.
- *       Two <tt>int</tt> arguments called <tt>offset</tt> and <tt>len</tt> will be
- *       used for specifying the part of the <tt>char[]</tt> that should be escaped/unescaped. These methods
- *       should be called with <tt>offset = 0</tt> and <tt>len = text.length</tt> in order to process
- *       the whole <tt>char[]</tt>.</li>
+ *   <li><em><kbd>String</kbd> input, <kbd>java.io.Writer</kbd> output</em>: Input will be read from a String
+ *       and output will be written into the specified <kbd>java.io.Writer</kbd>.</li>
+ *   <li><em><kbd>java.io.Reader</kbd> input, <kbd>java.io.Writer</kbd> output</em>: Input will be read from a Reader
+ *       and output will be written into the specified <kbd>java.io.Writer</kbd>.</li>
+ *   <li><em><kbd>char[]</kbd> input, <kbd>java.io.Writer</kbd> output</em>: Input will be read from a char array
+ *       (<kbd>char[]</kbd>) and output will be written into the specified <kbd>java.io.Writer</kbd>.
+ *       Two <kbd>int</kbd> arguments called <kbd>offset</kbd> and <kbd>len</kbd> will be
+ *       used for specifying the part of the <kbd>char[]</kbd> that should be escaped/unescaped. These methods
+ *       should be called with <kbd>offset = 0</kbd> and <kbd>len = text.length</kbd> in order to process
+ *       the whole <kbd>char[]</kbd>.</li>
  * </ul>
  *
  * <strong><u>Glossary</u></strong>
@@ -111,27 +111,27 @@ import java.io.Writer;
  * <dl>
  *   <dt>SEC</dt>
  *     <dd>Single Escape Character:
- *               <tt>&#92;b</tt> (<tt>U+0008</tt>),
- *               <tt>&#92;t</tt> (<tt>U+0009</tt>),
- *               <tt>&#92;n</tt> (<tt>U+000A</tt>),
- *               <tt>&#92;f</tt> (<tt>U+000C</tt>),
- *               <tt>&#92;r</tt> (<tt>U+000D</tt>),
- *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
- *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
- *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>) (optional, only in <tt>&lt;&#47;</tt>).
+ *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
+ *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
+ *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
+ *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
+ *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+ *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
+ *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>) and
+ *               <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>) (optional, only in <kbd>&lt;&#47;</kbd>).
  *     </dd>
  *   <dt>UHEXA escapes</dt>
  *     <dd>Also called <em>u-based hexadecimal escapes</em> or simply <em>unicode escapes</em>:
- *         complete representation of unicode codepoints up to <tt>U+FFFF</tt>, with <tt>&#92;u</tt>
- *         followed by exactly four hexadecimal figures: <tt>&#92;u00E1</tt>. Unicode codepoints &gt;
- *         <tt>U+FFFF</tt> can be represented in JSON by mean of two UHEXA escapes (a
+ *         complete representation of unicode codepoints up to <kbd>U+FFFF</kbd>, with <kbd>&#92;u</kbd>
+ *         followed by exactly four hexadecimal figures: <kbd>&#92;u00E1</kbd>. Unicode codepoints &gt;
+ *         <kbd>U+FFFF</kbd> can be represented in JSON by mean of two UHEXA escapes (a
  *         <em>surrogate pair</em>).</dd>
  *   <dt>Unicode Codepoint</dt>
- *     <dd>Each of the <tt>int</tt> values conforming the Unicode code space.
- *         Normally corresponding to a Java <tt>char</tt> primitive value (codepoint &lt;= <tt>&#92;uFFFF</tt>),
- *         but might be two <tt>char</tt>s for codepoints <tt>&#92;u10000</tt> to <tt>&#92;u10FFFF</tt> if the
- *         first <tt>char</tt> is a high surrogate (<tt>&#92;uD800</tt> to <tt>&#92;uDBFF</tt>) and the
- *         second is a low surrogate (<tt>&#92;uDC00</tt> to <tt>&#92;uDFFF</tt>).</dd>
+ *     <dd>Each of the <kbd>int</kbd> values conforming the Unicode code space.
+ *         Normally corresponding to a Java <kbd>char</kbd> primitive value (codepoint &lt;= <kbd>&#92;uFFFF</kbd>),
+ *         but might be two <kbd>char</kbd>s for codepoints <kbd>&#92;u10000</kbd> to <kbd>&#92;u10FFFF</kbd> if the
+ *         first <kbd>char</kbd> is a high surrogate (<kbd>&#92;uD800</kbd> to <kbd>&#92;uDBFF</kbd>) and the
+ *         second is a low surrogate (<kbd>&#92;uDC00</kbd> to <kbd>&#92;uDFFF</kbd>).</dd>
  * </dl>
  *
  * <strong><u>References</u></strong>
@@ -161,29 +161,29 @@ public final class JsonEscape {
     /**
      * <p>
      *   Perform a JSON level 1 (only basic set) <strong>escape</strong> operation
-     *   on a <tt>String</tt> input.
+     *   on a <kbd>String</kbd> input.
      * </p>
      * <p>
      *   <em>Level 1</em> means this method will only escape the JSON basic escape set:
      * </p>
      * <ul>
      *   <li>The <em>Single Escape Characters</em>:
-     *       <tt>&#92;b</tt> (<tt>U+0008</tt>),
-     *       <tt>&#92;t</tt> (<tt>U+0009</tt>),
-     *       <tt>&#92;n</tt> (<tt>U+000A</tt>),
-     *       <tt>&#92;f</tt> (<tt>U+000C</tt>),
-     *       <tt>&#92;r</tt> (<tt>U+000D</tt>),
-     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
-     *       <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
-     *       <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
-     *       Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
-     *       symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
-     *       closing <tt>&lt;script&gt;</tt> tags in HTML.
+     *       <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
+     *       <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
+     *       <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
+     *       <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
+     *       <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+     *       <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
+     *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>) and
+     *       <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>).
+     *       Note that <kbd>&#92;&#47;</kbd> is optional, and will only be used when the <kbd>&#47;</kbd>
+     *       symbol appears after <kbd>&lt;</kbd>, as in <kbd>&lt;&#47;</kbd>. This is to avoid accidentally
+     *       closing <kbd>&lt;script&gt;</kbd> tags in HTML.
      *   </li>
      *   <li>
      *       Two ranges of non-displayable, control characters (some of which are already part of the
-     *       <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
-     *       by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+     *       <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd> (required
+     *       by the JSON spec) and <kbd>U+007F</kbd> to <kbd>U+009F</kbd> (additional).
      *   </li>
      * </ul>
      * <p>
@@ -191,20 +191,20 @@ public final class JsonEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><tt>type</tt>:
+     *   <li><kbd>type</kbd>:
      *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
-     *   <li><tt>level</tt>:
+     *   <li><kbd>level</kbd>:
      *       {@link JsonEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String escapeJsonMinimal(final String text) {
         return escapeJson(text,
@@ -216,7 +216,7 @@ public final class JsonEscape {
     /**
      * <p>
      *   Perform a JSON level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
-     *   on a <tt>String</tt> input.
+     *   on a <kbd>String</kbd> input.
      * </p>
      * <p>
      *   <em>Level 2</em> means this method will escape:
@@ -225,22 +225,22 @@ public final class JsonEscape {
      *   <li>The JSON basic escape set:
      *         <ul>
      *           <li>The <em>Single Escape Characters</em>:
-     *               <tt>&#92;b</tt> (<tt>U+0008</tt>),
-     *               <tt>&#92;t</tt> (<tt>U+0009</tt>),
-     *               <tt>&#92;n</tt> (<tt>U+000A</tt>),
-     *               <tt>&#92;f</tt> (<tt>U+000C</tt>),
-     *               <tt>&#92;r</tt> (<tt>U+000D</tt>),
-     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
-     *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
-     *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
-     *               Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
-     *               symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
-     *               closing <tt>&lt;script&gt;</tt> tags in HTML.
+     *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
+     *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
+     *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
+     *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
+     *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+     *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
+     *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>) and
+     *               <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>).
+     *               Note that <kbd>&#92;&#47;</kbd> is optional, and will only be used when the <kbd>&#47;</kbd>
+     *               symbol appears after <kbd>&lt;</kbd>, as in <kbd>&lt;&#47;</kbd>. This is to avoid accidentally
+     *               closing <kbd>&lt;script&gt;</kbd> tags in HTML.
      *           </li>
      *           <li>
      *               Two ranges of non-displayable, control characters (some of which are already part of the
-     *               <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
-     *               by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+     *               <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd> (required
+     *               by the JSON spec) and <kbd>U+007F</kbd> to <kbd>U+009F</kbd> (additional).
      *           </li>
      *         </ul>
      *   </li>
@@ -248,7 +248,7 @@ public final class JsonEscape {
      * </ul>
      * <p>
      *   This escape will be performed by using the Single Escape Chars whenever possible. For escaped
-     *   characters that do not have an associated SEC, default to <tt>&#92;uFFFF</tt>
+     *   characters that do not have an associated SEC, default to <kbd>&#92;uFFFF</kbd>
      *   Hexadecimal Escapes.
      * </p>
      * <p>
@@ -256,20 +256,20 @@ public final class JsonEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><tt>type</tt>:
+     *   <li><kbd>type</kbd>:
      *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
-     *   <li><tt>level</tt>:
+     *   <li><kbd>level</kbd>:
      *       {@link JsonEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String escapeJson(final String text) {
         return escapeJson(text,
@@ -280,7 +280,7 @@ public final class JsonEscape {
 
     /**
      * <p>
-     *   Perform a (configurable) JSON <strong>escape</strong> operation on a <tt>String</tt> input.
+     *   Perform a (configurable) JSON <strong>escape</strong> operation on a <kbd>String</kbd> input.
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
@@ -288,21 +288,21 @@ public final class JsonEscape {
      *   {@link JsonEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <tt>String</tt>-based <tt>escapeJson*(...)</tt> methods call this one with preconfigured
-     *   <tt>type</tt> and <tt>level</tt> values.
+     *   All other <kbd>String</kbd>-based <kbd>escapeJson*(...)</kbd> methods call this one with preconfigured
+     *   <kbd>type</kbd> and <kbd>level</kbd> values.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
+     * @param text the <kbd>String</kbd> to be escaped.
      * @param type the type of escape operation to be performed, see
      *             {@link JsonEscapeType}.
      * @param level the escape level to be applied, see {@link JsonEscapeLevel}.
-     * @return The escaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no escaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @return The escaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no escaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String escapeJson(final String text,
                                     final JsonEscapeType type, final JsonEscapeLevel level) {
@@ -325,29 +325,29 @@ public final class JsonEscape {
     /**
      * <p>
      *   Perform a JSON level 1 (only basic set) <strong>escape</strong> operation
-     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   <em>Level 1</em> means this method will only escape the JSON basic escape set:
      * </p>
      * <ul>
      *   <li>The <em>Single Escape Characters</em>:
-     *       <tt>&#92;b</tt> (<tt>U+0008</tt>),
-     *       <tt>&#92;t</tt> (<tt>U+0009</tt>),
-     *       <tt>&#92;n</tt> (<tt>U+000A</tt>),
-     *       <tt>&#92;f</tt> (<tt>U+000C</tt>),
-     *       <tt>&#92;r</tt> (<tt>U+000D</tt>),
-     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
-     *       <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
-     *       <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
-     *       Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
-     *       symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
-     *       closing <tt>&lt;script&gt;</tt> tags in HTML.
+     *       <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
+     *       <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
+     *       <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
+     *       <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
+     *       <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+     *       <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
+     *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>) and
+     *       <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>).
+     *       Note that <kbd>&#92;&#47;</kbd> is optional, and will only be used when the <kbd>&#47;</kbd>
+     *       symbol appears after <kbd>&lt;</kbd>, as in <kbd>&lt;&#47;</kbd>. This is to avoid accidentally
+     *       closing <kbd>&lt;script&gt;</kbd> tags in HTML.
      *   </li>
      *   <li>
      *       Two ranges of non-displayable, control characters (some of which are already part of the
-     *       <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
-     *       by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+     *       <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd> (required
+     *       by the JSON spec) and <kbd>U+007F</kbd> to <kbd>U+009F</kbd> (additional).
      *   </li>
      * </ul>
      * <p>
@@ -355,18 +355,18 @@ public final class JsonEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><tt>type</tt>:
+     *   <li><kbd>type</kbd>:
      *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
-     *   <li><tt>level</tt>:
+     *   <li><kbd>level</kbd>:
      *       {@link JsonEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -382,7 +382,7 @@ public final class JsonEscape {
     /**
      * <p>
      *   Perform a JSON level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
-     *   on a <tt>String</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>String</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   <em>Level 2</em> means this method will escape:
@@ -391,22 +391,22 @@ public final class JsonEscape {
      *   <li>The JSON basic escape set:
      *         <ul>
      *           <li>The <em>Single Escape Characters</em>:
-     *               <tt>&#92;b</tt> (<tt>U+0008</tt>),
-     *               <tt>&#92;t</tt> (<tt>U+0009</tt>),
-     *               <tt>&#92;n</tt> (<tt>U+000A</tt>),
-     *               <tt>&#92;f</tt> (<tt>U+000C</tt>),
-     *               <tt>&#92;r</tt> (<tt>U+000D</tt>),
-     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
-     *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
-     *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
-     *               Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
-     *               symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
-     *               closing <tt>&lt;script&gt;</tt> tags in HTML.
+     *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
+     *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
+     *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
+     *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
+     *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+     *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
+     *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>) and
+     *               <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>).
+     *               Note that <kbd>&#92;&#47;</kbd> is optional, and will only be used when the <kbd>&#47;</kbd>
+     *               symbol appears after <kbd>&lt;</kbd>, as in <kbd>&lt;&#47;</kbd>. This is to avoid accidentally
+     *               closing <kbd>&lt;script&gt;</kbd> tags in HTML.
      *           </li>
      *           <li>
      *               Two ranges of non-displayable, control characters (some of which are already part of the
-     *               <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
-     *               by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+     *               <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd> (required
+     *               by the JSON spec) and <kbd>U+007F</kbd> to <kbd>U+009F</kbd> (additional).
      *           </li>
      *         </ul>
      *   </li>
@@ -414,7 +414,7 @@ public final class JsonEscape {
      * </ul>
      * <p>
      *   This escape will be performed by using the Single Escape Chars whenever possible. For escaped
-     *   characters that do not have an associated SEC, default to <tt>&#92;uFFFF</tt>
+     *   characters that do not have an associated SEC, default to <kbd>&#92;uFFFF</kbd>
      *   Hexadecimal Escapes.
      * </p>
      * <p>
@@ -422,18 +422,18 @@ public final class JsonEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><tt>type</tt>:
+     *   <li><kbd>type</kbd>:
      *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
-     *   <li><tt>level</tt>:
+     *   <li><kbd>level</kbd>:
      *       {@link JsonEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -448,8 +448,8 @@ public final class JsonEscape {
 
     /**
      * <p>
-     *   Perform a (configurable) JSON <strong>escape</strong> operation on a <tt>String</tt> input,
-     *   writing results to a <tt>Writer</tt>.
+     *   Perform a (configurable) JSON <strong>escape</strong> operation on a <kbd>String</kbd> input,
+     *   writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
@@ -457,16 +457,16 @@ public final class JsonEscape {
      *   {@link JsonEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <tt>String</tt>/<tt>Writer</tt>-based <tt>escapeJson*(...)</tt> methods call this one with preconfigured
-     *   <tt>type</tt> and <tt>level</tt> values.
+     *   All other <kbd>String</kbd>/<kbd>Writer</kbd>-based <kbd>escapeJson*(...)</kbd> methods call this one with preconfigured
+     *   <kbd>type</kbd> and <kbd>level</kbd> values.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param type the type of escape operation to be performed, see
      *             {@link JsonEscapeType}.
      * @param level the escape level to be applied, see {@link JsonEscapeLevel}.
@@ -500,29 +500,29 @@ public final class JsonEscape {
     /**
      * <p>
      *   Perform a JSON level 1 (only basic set) <strong>escape</strong> operation
-     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   <em>Level 1</em> means this method will only escape the JSON basic escape set:
      * </p>
      * <ul>
      *   <li>The <em>Single Escape Characters</em>:
-     *       <tt>&#92;b</tt> (<tt>U+0008</tt>),
-     *       <tt>&#92;t</tt> (<tt>U+0009</tt>),
-     *       <tt>&#92;n</tt> (<tt>U+000A</tt>),
-     *       <tt>&#92;f</tt> (<tt>U+000C</tt>),
-     *       <tt>&#92;r</tt> (<tt>U+000D</tt>),
-     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
-     *       <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
-     *       <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
-     *       Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
-     *       symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
-     *       closing <tt>&lt;script&gt;</tt> tags in HTML.
+     *       <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
+     *       <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
+     *       <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
+     *       <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
+     *       <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+     *       <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
+     *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>) and
+     *       <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>).
+     *       Note that <kbd>&#92;&#47;</kbd> is optional, and will only be used when the <kbd>&#47;</kbd>
+     *       symbol appears after <kbd>&lt;</kbd>, as in <kbd>&lt;&#47;</kbd>. This is to avoid accidentally
+     *       closing <kbd>&lt;script&gt;</kbd> tags in HTML.
      *   </li>
      *   <li>
      *       Two ranges of non-displayable, control characters (some of which are already part of the
-     *       <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
-     *       by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+     *       <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd> (required
+     *       by the JSON spec) and <kbd>U+007F</kbd> to <kbd>U+009F</kbd> (additional).
      *   </li>
      * </ul>
      * <p>
@@ -530,18 +530,18 @@ public final class JsonEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><tt>type</tt>:
+     *   <li><kbd>type</kbd>:
      *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
-     *   <li><tt>level</tt>:
+     *   <li><kbd>level</kbd>:
      *       {@link JsonEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -557,7 +557,7 @@ public final class JsonEscape {
     /**
      * <p>
      *   Perform a JSON level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
-     *   on a <tt>Reader</tt> input, writing results to a <tt>Writer</tt>.
+     *   on a <kbd>Reader</kbd> input, writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   <em>Level 2</em> means this method will escape:
@@ -566,22 +566,22 @@ public final class JsonEscape {
      *   <li>The JSON basic escape set:
      *         <ul>
      *           <li>The <em>Single Escape Characters</em>:
-     *               <tt>&#92;b</tt> (<tt>U+0008</tt>),
-     *               <tt>&#92;t</tt> (<tt>U+0009</tt>),
-     *               <tt>&#92;n</tt> (<tt>U+000A</tt>),
-     *               <tt>&#92;f</tt> (<tt>U+000C</tt>),
-     *               <tt>&#92;r</tt> (<tt>U+000D</tt>),
-     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
-     *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
-     *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
-     *               Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
-     *               symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
-     *               closing <tt>&lt;script&gt;</tt> tags in HTML.
+     *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
+     *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
+     *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
+     *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
+     *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+     *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
+     *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>) and
+     *               <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>).
+     *               Note that <kbd>&#92;&#47;</kbd> is optional, and will only be used when the <kbd>&#47;</kbd>
+     *               symbol appears after <kbd>&lt;</kbd>, as in <kbd>&lt;&#47;</kbd>. This is to avoid accidentally
+     *               closing <kbd>&lt;script&gt;</kbd> tags in HTML.
      *           </li>
      *           <li>
      *               Two ranges of non-displayable, control characters (some of which are already part of the
-     *               <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
-     *               by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+     *               <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd> (required
+     *               by the JSON spec) and <kbd>U+007F</kbd> to <kbd>U+009F</kbd> (additional).
      *           </li>
      *         </ul>
      *   </li>
@@ -589,7 +589,7 @@ public final class JsonEscape {
      * </ul>
      * <p>
      *   This escape will be performed by using the Single Escape Chars whenever possible. For escaped
-     *   characters that do not have an associated SEC, default to <tt>&#92;uFFFF</tt>
+     *   characters that do not have an associated SEC, default to <kbd>&#92;uFFFF</kbd>
      *   Hexadecimal Escapes.
      * </p>
      * <p>
@@ -597,18 +597,18 @@ public final class JsonEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><tt>type</tt>:
+     *   <li><kbd>type</kbd>:
      *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
-     *   <li><tt>level</tt>:
+     *   <li><kbd>level</kbd>:
      *       {@link JsonEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -623,8 +623,8 @@ public final class JsonEscape {
 
     /**
      * <p>
-     *   Perform a (configurable) JSON <strong>escape</strong> operation on a <tt>Reader</tt> input,
-     *   writing results to a <tt>Writer</tt>.
+     *   Perform a (configurable) JSON <strong>escape</strong> operation on a <kbd>Reader</kbd> input,
+     *   writing results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
@@ -632,16 +632,16 @@ public final class JsonEscape {
      *   {@link JsonEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <tt>Reader</tt>/<tt>Writer</tt>-based <tt>escapeJson*(...)</tt> methods call this one with preconfigured
-     *   <tt>type</tt> and <tt>level</tt> values.
+     *   All other <kbd>Reader</kbd>/<kbd>Writer</kbd>-based <kbd>escapeJson*(...)</kbd> methods call this one with preconfigured
+     *   <kbd>type</kbd> and <kbd>level</kbd> values.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param type the type of escape operation to be performed, see
      *             {@link JsonEscapeType}.
      * @param level the escape level to be applied, see {@link JsonEscapeLevel}.
@@ -675,29 +675,29 @@ public final class JsonEscape {
     /**
      * <p>
      *   Perform a JSON level 1 (only basic set) <strong>escape</strong> operation
-     *   on a <tt>char[]</tt> input.
+     *   on a <kbd>char[]</kbd> input.
      * </p>
      * <p>
      *   <em>Level 1</em> means this method will only escape the JSON basic escape set:
      * </p>
      * <ul>
      *   <li>The <em>Single Escape Characters</em>:
-     *       <tt>&#92;b</tt> (<tt>U+0008</tt>),
-     *       <tt>&#92;t</tt> (<tt>U+0009</tt>),
-     *       <tt>&#92;n</tt> (<tt>U+000A</tt>),
-     *       <tt>&#92;f</tt> (<tt>U+000C</tt>),
-     *       <tt>&#92;r</tt> (<tt>U+000D</tt>),
-     *       <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
-     *       <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
-     *       <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
-     *       Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
-     *       symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
-     *       closing <tt>&lt;script&gt;</tt> tags in HTML.
+     *       <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
+     *       <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
+     *       <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
+     *       <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
+     *       <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+     *       <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
+     *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>) and
+     *       <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>).
+     *       Note that <kbd>&#92;&#47;</kbd> is optional, and will only be used when the <kbd>&#47;</kbd>
+     *       symbol appears after <kbd>&lt;</kbd>, as in <kbd>&lt;&#47;</kbd>. This is to avoid accidentally
+     *       closing <kbd>&lt;script&gt;</kbd> tags in HTML.
      *   </li>
      *   <li>
      *       Two ranges of non-displayable, control characters (some of which are already part of the
-     *       <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
-     *       by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+     *       <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd> (required
+     *       by the JSON spec) and <kbd>U+007F</kbd> to <kbd>U+009F</kbd> (additional).
      *   </li>
      * </ul>
      * <p>
@@ -706,20 +706,20 @@ public final class JsonEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><tt>type</tt>:
+     *   <li><kbd>type</kbd>:
      *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
-     *   <li><tt>level</tt>:
+     *   <li><kbd>level</kbd>:
      *       {@link JsonEscapeLevel#LEVEL_1_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be escaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeJsonMinimal(final char[] text, final int offset, final int len, final Writer writer)
@@ -733,7 +733,7 @@ public final class JsonEscape {
     /**
      * <p>
      *   Perform a JSON level 2 (basic set and all non-ASCII chars) <strong>escape</strong> operation
-     *   on a <tt>char[]</tt> input.
+     *   on a <kbd>char[]</kbd> input.
      * </p>
      * <p>
      *   <em>Level 2</em> means this method will escape:
@@ -742,22 +742,22 @@ public final class JsonEscape {
      *   <li>The JSON basic escape set:
      *         <ul>
      *           <li>The <em>Single Escape Characters</em>:
-     *               <tt>&#92;b</tt> (<tt>U+0008</tt>),
-     *               <tt>&#92;t</tt> (<tt>U+0009</tt>),
-     *               <tt>&#92;n</tt> (<tt>U+000A</tt>),
-     *               <tt>&#92;f</tt> (<tt>U+000C</tt>),
-     *               <tt>&#92;r</tt> (<tt>U+000D</tt>),
-     *               <tt>&#92;&quot;</tt> (<tt>U+0022</tt>),
-     *               <tt>&#92;&#92;</tt> (<tt>U+005C</tt>) and
-     *               <tt>&#92;&#47;</tt> (<tt>U+002F</tt>).
-     *               Note that <tt>&#92;&#47;</tt> is optional, and will only be used when the <tt>&#47;</tt>
-     *               symbol appears after <tt>&lt;</tt>, as in <tt>&lt;&#47;</tt>. This is to avoid accidentally
-     *               closing <tt>&lt;script&gt;</tt> tags in HTML.
+     *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
+     *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
+     *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
+     *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
+     *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
+     *               <kbd>&#92;&quot;</kbd> (<kbd>U+0022</kbd>),
+     *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>) and
+     *               <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>).
+     *               Note that <kbd>&#92;&#47;</kbd> is optional, and will only be used when the <kbd>&#47;</kbd>
+     *               symbol appears after <kbd>&lt;</kbd>, as in <kbd>&lt;&#47;</kbd>. This is to avoid accidentally
+     *               closing <kbd>&lt;script&gt;</kbd> tags in HTML.
      *           </li>
      *           <li>
      *               Two ranges of non-displayable, control characters (some of which are already part of the
-     *               <em>single escape characters</em> list): <tt>U+0000</tt> to <tt>U+001F</tt> (required
-     *               by the JSON spec) and <tt>U+007F</tt> to <tt>U+009F</tt> (additional).
+     *               <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd> (required
+     *               by the JSON spec) and <kbd>U+007F</kbd> to <kbd>U+009F</kbd> (additional).
      *           </li>
      *         </ul>
      *   </li>
@@ -765,7 +765,7 @@ public final class JsonEscape {
      * </ul>
      * <p>
      *   This escape will be performed by using the Single Escape Chars whenever possible. For escaped
-     *   characters that do not have an associated SEC, default to <tt>&#92;uFFFF</tt>
+     *   characters that do not have an associated SEC, default to <kbd>&#92;uFFFF</kbd>
      *   Hexadecimal Escapes.
      * </p>
      * <p>
@@ -774,20 +774,20 @@ public final class JsonEscape {
      *   with the following preconfigured values:
      * </p>
      * <ul>
-     *   <li><tt>type</tt>:
+     *   <li><kbd>type</kbd>:
      *       {@link JsonEscapeType#SINGLE_ESCAPE_CHARS_DEFAULT_TO_UHEXA}</li>
-     *   <li><tt>level</tt>:
+     *   <li><kbd>level</kbd>:
      *       {@link JsonEscapeLevel#LEVEL_2_ALL_NON_ASCII_PLUS_BASIC_ESCAPE_SET}</li>
      * </ul>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be escaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      */
     public static void escapeJson(final char[] text, final int offset, final int len, final Writer writer)
@@ -800,7 +800,7 @@ public final class JsonEscape {
 
     /**
      * <p>
-     *   Perform a (configurable) JSON <strong>escape</strong> operation on a <tt>char[]</tt> input.
+     *   Perform a (configurable) JSON <strong>escape</strong> operation on a <kbd>char[]</kbd> input.
      * </p>
      * <p>
      *   This method will perform an escape operation according to the specified
@@ -808,18 +808,18 @@ public final class JsonEscape {
      *   {@link JsonEscapeLevel} argument values.
      * </p>
      * <p>
-     *   All other <tt>char[]</tt>-based <tt>escapeJson*(...)</tt> methods call this one with preconfigured
-     *   <tt>type</tt> and <tt>level</tt> values.
+     *   All other <kbd>char[]</kbd>-based <kbd>escapeJson*(...)</kbd> methods call this one with preconfigured
+     *   <kbd>type</kbd> and <kbd>level</kbd> values.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be escaped.
-     * @param offset the position in <tt>text</tt> at which the escape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be escaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the escaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be escaped.
+     * @param offset the position in <kbd>text</kbd> at which the escape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be escaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the escaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @param type the type of escape operation to be performed, see
      *             {@link JsonEscapeType}.
      * @param level the escape level to be applied, see {@link JsonEscapeLevel}.
@@ -866,7 +866,7 @@ public final class JsonEscape {
 
     /**
      * <p>
-     *   Perform a JSON <strong>unescape</strong> operation on a <tt>String</tt> input.
+     *   Perform a JSON <strong>unescape</strong> operation on a <kbd>String</kbd> input.
      * </p>
      * <p>
      *   No additional configuration arguments are required. Unescape operations
@@ -876,11 +876,11 @@ public final class JsonEscape {
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @return The unescaped result <tt>String</tt>. As a memory-performance improvement, will return the exact
-     *         same object as the <tt>text</tt> input argument if no unescaping modifications were required (and
-     *         no additional <tt>String</tt> objects will be created during processing). Will
-     *         return <tt>null</tt> if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @return The unescaped result <kbd>String</kbd>. As a memory-performance improvement, will return the exact
+     *         same object as the <kbd>text</kbd> input argument if no unescaping modifications were required (and
+     *         no additional <kbd>String</kbd> objects will be created during processing). Will
+     *         return <kbd>null</kbd> if input is <kbd>null</kbd>.
      */
     public static String unescapeJson(final String text) {
         if (text == null) {
@@ -896,8 +896,8 @@ public final class JsonEscape {
 
     /**
      * <p>
-     *   Perform a JSON <strong>unescape</strong> operation on a <tt>String</tt> input, writing
-     *   results to a <tt>Writer</tt>.
+     *   Perform a JSON <strong>unescape</strong> operation on a <kbd>String</kbd> input, writing
+     *   results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   No additional configuration arguments are required. Unescape operations
@@ -907,9 +907,9 @@ public final class JsonEscape {
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>String</tt> to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>String</kbd> to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -936,8 +936,8 @@ public final class JsonEscape {
 
     /**
      * <p>
-     *   Perform a JSON <strong>unescape</strong> operation on a <tt>Reader</tt> input, writing
-     *   results to a <tt>Writer</tt>.
+     *   Perform a JSON <strong>unescape</strong> operation on a <kbd>Reader</kbd> input, writing
+     *   results to a <kbd>Writer</kbd>.
      * </p>
      * <p>
      *   No additional configuration arguments are required. Unescape operations
@@ -947,9 +947,9 @@ public final class JsonEscape {
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param reader the <tt>Reader</tt> reading the text to be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param reader the <kbd>Reader</kbd> reading the text to be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      *
      * @since 1.1.2
@@ -968,7 +968,7 @@ public final class JsonEscape {
 
     /**
      * <p>
-     *   Perform a JSON <strong>unescape</strong> operation on a <tt>char[]</tt> input.
+     *   Perform a JSON <strong>unescape</strong> operation on a <kbd>char[]</kbd> input.
      * </p>
      * <p>
      *   No additional configuration arguments are required. Unescape operations
@@ -978,11 +978,11 @@ public final class JsonEscape {
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
-     * @param text the <tt>char[]</tt> to be unescaped.
-     * @param offset the position in <tt>text</tt> at which the unescape operation should start.
-     * @param len the number of characters in <tt>text</tt> that should be unescaped.
-     * @param writer the <tt>java.io.Writer</tt> to which the unescaped result will be written. Nothing will
-     *               be written at all to this writer if input is <tt>null</tt>.
+     * @param text the <kbd>char[]</kbd> to be unescaped.
+     * @param offset the position in <kbd>text</kbd> at which the unescape operation should start.
+     * @param len the number of characters in <kbd>text</kbd> that should be unescaped.
+     * @param writer the <kbd>java.io.Writer</kbd> to which the unescaped result will be written. Nothing will
+     *               be written at all to this writer if input is <kbd>null</kbd>.
      * @throws IOException if an input/output exception occurs
      */
     public static void unescapeJson(final char[] text, final int offset, final int len, final Writer writer)
