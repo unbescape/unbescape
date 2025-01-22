@@ -320,7 +320,16 @@ public final class JsonEscape {
     }
 
 
-
+    public static void escapeJson(final String text,final Appendable writer, 
+            final JsonEscapeType type, final JsonEscapeLevel level) {
+       if (type == null) {
+           throw new IllegalArgumentException("The 'type' argument cannot be null");
+       }
+       if (level == null) {
+          throw new IllegalArgumentException("The 'level' argument cannot be null");
+       }
+       JsonEscapeUtil.escapeTo(text,writer, type, level);
+    }
 
     /**
      * <p>
