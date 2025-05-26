@@ -62,19 +62,15 @@
 
   <distributionManagement>
     <snapshotRepository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <id>central-portal-snapshots</id>
+      <name>Central Portal Snapshots</name>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
     </snapshotRepository>
-    <repository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
   </distributionManagement>
 
   <properties>
     <java.version>8</java.version>
+    <javadoc.version>${java.version}</javadoc.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.release>${java.version}</maven.compiler.release>
@@ -84,14 +80,20 @@
     <!-- These are needed for showing the build timestamp correctly at unbescape.properties.    -->
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
-    <!-- A project-name-based approach is adopted for the module name (instead of a reverse-DNS one)  -->
+    <!-- ======================     -->
+    <!-- OPERATIONAL flags          -->
+    <!-- ======================     -->
+    <!-- Deploy will only execute during release by enabling the 'releases' profile.  -->
+    <maven.deploy.skip>true</maven.deploy.skip>
+    <!-- ======================     -->
+    <!-- MODULE configuration       -->
+    <!-- ======================     -->
     <module.name>${project.artifactId}</module.name>
     <!-- =========================  -->
     <!-- Configure JavaDoc plugin   -->
-    <!-- (Avoids JPMS issues.)      -->
     <!-- =========================  -->
-    <maven.javadoc.source>8</maven.javadoc.source>
-    <maven.javadoc.release>8</maven.javadoc.release>
+    <maven.javadoc.source>${javadoc.version}</maven.javadoc.source>
+    <maven.javadoc.release>${javadoc.version}</maven.javadoc.release>
     <!-- ======================     -->
     <!-- MAVEN PLUGIN versions      -->
     <!-- ======================     -->
@@ -110,6 +112,7 @@
     <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
     <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
     <maven-versions-plugin.version>2.18.0</maven-versions-plugin.version>
+    <maven-central-publishing-plugin.version>0.7.0</maven-central-publishing-plugin.version>
   </properties>
 
 
@@ -148,7 +151,31 @@
         <directory>src/test/resources</directory>
       </testResource>
     </testResources>
-    
+
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>${maven-gpg-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>gpg-sign</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+              <configuration>
+                <keyname>releases@unbescape.org</keyname>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
     <plugins>
 
       <plugin>
@@ -281,24 +308,6 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>${maven-gpg-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>gpg-sign</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-            <configuration>
-              <keyname>releases@unbescape.org</keyname>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
       <!-- NOTE releases will be performed by means of maven-deploy-plugin. This means that   -->
       <!-- the maven-releases-plugin will not be needed as a part of the release cycle.       -->
       <plugin>
@@ -378,5 +387,30 @@
 
   </dependencies>
 
-  
+  <profiles>
+    <profile>
+      <id>releases</id>
+      <properties>
+        <maven.deploy.skip>false</maven.deploy.skip>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>${maven-central-publishing-plugin.version}</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
