@@ -88,6 +88,18 @@ final class HtmlEscapeUtil {
     }
 
 
+    /*
+     * NUL and lone (unpaired) surrogate values must always be escaped, regardless of the requested escape
+     * level: a lone surrogate cannot be validly encoded as UTF-8, and a raw NUL char is unsafe for many
+     * non-HTML consumers of the escaped text. This check is therefore applied unconditionally, ahead of the
+     * normal level-based shortcuts. Properly-paired surrogates (forming a valid supplementary codepoint, and
+     * therefore resolving to a value > 0xFFFF) are not affected and remain subject to the normal level rules.
+     */
+    private static boolean isSurrogateRange(final int codeUnit) {
+        return codeUnit >= Character.MIN_SURROGATE && codeUnit <= Character.MAX_SURROGATE;
+    }
+
+
 
 
 
@@ -122,17 +134,21 @@ final class HtmlEscapeUtil {
 
             /*
              * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
-             * all for them
+             * all for them. NUL is excluded because it must always be escaped (see isSurrogateRange(...)).
              */
-            if (c <= HtmlEscapeSymbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[c]) {
+            if (c <= HtmlEscapeSymbols.MAX_ASCII_CHAR && c != 0x0 && level < symbols.ESCAPE_LEVELS[c]) {
                 continue;
             }
 
 
             /*
-             * Shortcut: we might not want to escape non-ASCII chars at all either.
+             * Shortcut: we might not want to escape non-ASCII chars at all either. Surrogate chars are excluded
+             * from this shortcut because a lone (unpaired) surrogate must always be escaped, and at this point
+             * we cannot yet tell a lone surrogate from one half of a valid pair -- that is resolved below once
+             * the codepoint has been computed.
              */
             if (c > HtmlEscapeSymbols.MAX_ASCII_CHAR
+                    && !isSurrogateRange(c)
                     && level < symbols.ESCAPE_LEVELS[HtmlEscapeSymbols.MAX_ASCII_CHAR + 1]) {
                 continue;
             }
@@ -142,6 +158,18 @@ final class HtmlEscapeUtil {
              * Compute the codepoint. This will be used instead of the char for the rest of the process.
              */
             final int codepoint = Character.codePointAt(text, i);
+
+
+            /*
+             * If this is a valid (correctly-paired) surrogate pair forming a supplementary codepoint, and the
+             * escape level does not require escaping non-ASCII chars, then there is nothing to escape after all
+             * -- skip both chars now that we know for sure they are a valid pair.
+             */
+            if (Character.charCount(codepoint) > 1
+                    && level < symbols.ESCAPE_LEVELS[HtmlEscapeSymbols.MAX_ASCII_CHAR + 1]) {
+                i++;
+                continue;
+            }
 
 
             /*
@@ -274,18 +302,22 @@ final class HtmlEscapeUtil {
 
             /*
              * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
-             * all for them
+             * all for them. NUL is excluded because it must always be escaped (see isSurrogateRange(...)).
              */
-            if (c1 <= HtmlEscapeSymbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[c1]) {
+            if (c1 <= HtmlEscapeSymbols.MAX_ASCII_CHAR && c1 != 0x0 && level < symbols.ESCAPE_LEVELS[c1]) {
                 writer.write(c1);
                 continue;
             }
 
 
             /*
-             * Shortcut: we might not want to escape non-ASCII chars at all either.
+             * Shortcut: we might not want to escape non-ASCII chars at all either. Surrogate chars are excluded
+             * from this shortcut because a lone (unpaired) surrogate must always be escaped, and at this point
+             * we cannot yet tell a lone surrogate from one half of a valid pair -- that is resolved below once
+             * the codepoint has been computed.
              */
             if (c1 > HtmlEscapeSymbols.MAX_ASCII_CHAR
+                    && !isSurrogateRange(c1)
                     && level < symbols.ESCAPE_LEVELS[HtmlEscapeSymbols.MAX_ASCII_CHAR + 1]) {
                 writer.write(c1);
                 continue;
@@ -296,6 +328,21 @@ final class HtmlEscapeUtil {
              * Compute the codepoint. This will be used instead of the char for the rest of the process.
              */
             final int codepoint = codePointAt((char)c1, (char)c2);
+
+
+            /*
+             * If this is a valid (correctly-paired) surrogate pair forming a supplementary codepoint, and the
+             * escape level does not require escaping non-ASCII chars, then there is nothing to escape after all
+             * -- write both chars as-is and advance past the whole pair.
+             */
+            if (Character.charCount(codepoint) > 1
+                    && level < symbols.ESCAPE_LEVELS[HtmlEscapeSymbols.MAX_ASCII_CHAR + 1]) {
+                writer.write(c1);
+                writer.write(c2);
+                c1 = c2;
+                c2 = reader.read();
+                continue;
+            }
 
 
             /*
@@ -395,17 +442,22 @@ final class HtmlEscapeUtil {
 
             /*
              * Shortcut: most characters will be ASCII/Alphanumeric, and we won't need to do anything at
-             * all for them
+             * all for them. NUL is excluded because it must always be escaped (see isSurrogateRange(...)).
              */
-            if (c <= symbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[c]) {
+            if (c <= symbols.MAX_ASCII_CHAR && c != 0x0 && level < symbols.ESCAPE_LEVELS[c]) {
                 continue;
             }
 
 
             /*
-             * Shortcut: we might not want to escape non-ASCII chars at all either.
+             * Shortcut: we might not want to escape non-ASCII chars at all either. Surrogate chars are excluded
+             * from this shortcut because a lone (unpaired) surrogate must always be escaped, and at this point
+             * we cannot yet tell a lone surrogate from one half of a valid pair -- that is resolved below once
+             * the codepoint has been computed.
              */
-            if (c > symbols.MAX_ASCII_CHAR && level < symbols.ESCAPE_LEVELS[symbols.MAX_ASCII_CHAR + 1]) {
+            if (c > symbols.MAX_ASCII_CHAR
+                    && !isSurrogateRange(c)
+                    && level < symbols.ESCAPE_LEVELS[symbols.MAX_ASCII_CHAR + 1]) {
                 continue;
             }
 
@@ -414,6 +466,18 @@ final class HtmlEscapeUtil {
              * Compute the codepoint. This will be used instead of the char for the rest of the process.
              */
             final int codepoint = Character.codePointAt(text, i);
+
+
+            /*
+             * If this is a valid (correctly-paired) surrogate pair forming a supplementary codepoint, and the
+             * escape level does not require escaping non-ASCII chars, then there is nothing to escape after all
+             * -- skip both chars now that we know for sure they are a valid pair.
+             */
+            if (Character.charCount(codepoint) > 1
+                    && level < symbols.ESCAPE_LEVELS[symbols.MAX_ASCII_CHAR + 1]) {
+                i++;
+                continue;
+            }
 
 
             /*
