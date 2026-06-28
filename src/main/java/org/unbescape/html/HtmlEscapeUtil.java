@@ -74,12 +74,6 @@ final class HtmlEscapeUtil {
     private static final char[] REFERENCE_HEXA_PREFIX = "&#x".toCharArray();
     private static final char REFERENCE_SUFFIX = ';';
 
-    /*
-     * Small utility char arrays for hexadecimal conversion
-     */
-    private static char[] HEXA_CHARS_UPPER = "0123456789ABCDEF".toCharArray();
-    private static char[] HEXA_CHARS_LOWER = "0123456789abcdef".toCharArray();
-
 
 
 
@@ -613,22 +607,36 @@ final class HtmlEscapeUtil {
 
 
     /*
-     * This methods (the two versions) are used instead of Integer.parseInt(str,radix) in order to avoid the need
-     * to create substrings of the text being unescaped to feed such method.
-     * -  No need to check all chars are within the radix limits - reference parsing code will already have done so.
+     * Computes the numeric value (0..15) of a hexadecimal-digit char (0-9, A-F, a-f), returning -1 for any
+     * other char. Used by the parseIntFromReference methods below. This replaces a previous per-char linear
+     * scan over the HEXA_CHARS_* arrays with a direct branch, while returning exactly the same values
+     * (including -1 for any non-hexadecimal char).
+     */
+    private static int hexaValue(final char c) {
+        if (c >= '0' && c <= '9') {
+            return (int) c - (int) '0';
+        }
+        if (c >= 'A' && c <= 'F') {
+            return (int) c - (int) 'A' + 10;
+        }
+        if (c >= 'a' && c <= 'f') {
+            return (int) c - (int) 'a' + 10;
+        }
+        return -1;
+    }
+
+
+    /*
+     * These methods (the two versions) are used instead of Integer.parseInt(str,radix) in order to avoid the need
+     * to create substrings of the text being unescaped to feed such a method.
+     * - No need to check all chars are within the radix limits - reference parsing code will already have done so.
      */
 
     static int parseIntFromReference(final String text, final int start, final int end, final int radix) {
         int result = 0;
         for (int i = start; i < end; i++) {
             final char c = text.charAt(i);
-            int n = -1;
-            for (int j = 0; j < HEXA_CHARS_UPPER.length; j++) {
-                if (c == HEXA_CHARS_UPPER[j] || c == HEXA_CHARS_LOWER[j]) {
-                    n = j;
-                    break;
-                }
-            }
+            final int n = hexaValue(c);
             result *= radix;
             if (result < 0) {
                 return 0xFFFD;
@@ -645,13 +653,7 @@ final class HtmlEscapeUtil {
         int result = 0;
         for (int i = start; i < end; i++) {
             final char c = text[i];
-            int n = -1;
-            for (int j = 0; j < HEXA_CHARS_UPPER.length; j++) {
-                if (c == HEXA_CHARS_UPPER[j] || c == HEXA_CHARS_LOWER[j]) {
-                    n = j;
-                    break;
-                }
-            }
+            final int n = hexaValue(c);
             result *= radix;
             if (result < 0) {
                 return 0xFFFD;

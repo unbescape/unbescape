@@ -193,10 +193,9 @@ final class UriEscapeUtil {
     private static final char ESCAPE_PREFIX = '%';
 
     /*
-     * Small utility char arrays for hexadecimal conversion.
+     * Small utility char array for hexadecimal conversion.
      */
     private static char[] HEXA_CHARS_UPPER = "0123456789ABCDEF".toCharArray();
-    private static char[] HEXA_CHARS_LOWER = "0123456789abcdef".toCharArray();
 
 
 
@@ -218,20 +217,37 @@ final class UriEscapeUtil {
     }
 
 
+    /*
+     * Computes the numeric value (0..15) of a hexadecimal-digit char (0-9, A-F, a-f), returning -1 for any
+     * other char. This replaces a previous per-char linear scan over the HEXA_CHARS_* arrays with a direct
+     * branch, while returning exactly the same values (including -1 for any non-hexadecimal char).
+     */
+    private static int hexaValue(final char c) {
+        if (c >= '0' && c <= '9') {
+            return (int) c - (int) '0';
+        }
+        if (c >= 'A' && c <= 'F') {
+            return (int) c - (int) 'A' + 10;
+        }
+        if (c >= 'a' && c <= 'f') {
+            return (int) c - (int) 'a' + 10;
+        }
+        return -1;
+    }
+
+
     static byte parseHexa(final char c1, final char c2) {
 
+        // A non-hexadecimal char contributes nothing to its nibble, exactly as the previous per-nibble
+        // linear scan did when it found no match.
         byte result = 0;
-        for (int j = 0; j < HEXA_CHARS_UPPER.length; j++) {
-            if (c1 == HEXA_CHARS_UPPER[j] || c1 == HEXA_CHARS_LOWER[j]) {
-                result += (j << 4);
-                break;
-            }
+        final int h1 = hexaValue(c1);
+        if (h1 >= 0) {
+            result += (h1 << 4);
         }
-        for (int j = 0; j < HEXA_CHARS_UPPER.length; j++) {
-            if (c2 == HEXA_CHARS_UPPER[j] || c2 == HEXA_CHARS_LOWER[j]) {
-                result += j;
-                break;
-            }
+        final int h2 = hexaValue(c2);
+        if (h2 >= 0) {
+            result += h2;
         }
         return result;
 

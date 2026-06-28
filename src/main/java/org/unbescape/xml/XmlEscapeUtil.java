@@ -80,14 +80,6 @@ final class XmlEscapeUtil {
     private static final char[] REFERENCE_HEXA_PREFIX = "&#x".toCharArray();
     private static final char REFERENCE_SUFFIX = ';';
 
-    /*
-     * Small utility char arrays for hexadecimal conversion.
-     * Even if XML does not allow a lower-case 'x' for specifying hexadecimal entity references, it does not
-     * force hexadecimal digits themselves to be lower-case.
-     */
-    private static char[] HEXA_CHARS_UPPER = "0123456789ABCDEF".toCharArray();
-    private static char[] HEXA_CHARS_LOWER = "0123456789abcdef".toCharArray();
-
 
 
 
@@ -524,7 +516,27 @@ final class XmlEscapeUtil {
 
 
     /*
-     * This methods (the two versions) are used instead of Integer.parseInt(str,radix) in order to avoid the need
+     * Computes the numeric value (0..15) of a hexadecimal-digit char (0-9, A-F, a-f), returning -1 for any
+     * other char. Used by the parseIntFromReference methods below. This replaces a previous per-char linear
+     * scan over the HEXA_CHARS_* arrays with a direct branch, while returning exactly the same values
+     * (including -1 for any non-hexadecimal char).
+     */
+    private static int hexaValue(final char c) {
+        if (c >= '0' && c <= '9') {
+            return (int) c - (int) '0';
+        }
+        if (c >= 'A' && c <= 'F') {
+            return (int) c - (int) 'A' + 10;
+        }
+        if (c >= 'a' && c <= 'f') {
+            return (int) c - (int) 'a' + 10;
+        }
+        return -1;
+    }
+
+
+    /*
+     * These methods (the two versions) are used instead of Integer.parseInt(str,radix) in order to avoid the need
      * to create substrings of the text being unescaped to feed such method.
      * -  No need to check all chars are within the radix limits - reference parsing code will already have done so.
      */
@@ -533,14 +545,7 @@ final class XmlEscapeUtil {
         int result = 0;
         for (int i = start; i < end; i++) {
             final char c = text.charAt(i);
-            int n = -1;
-            for (int j = 0; j < HEXA_CHARS_UPPER.length; j++) {
-                if (c == HEXA_CHARS_UPPER[j] || c == HEXA_CHARS_LOWER[j]) {
-                    n = j;
-                    break;
-                }
-            }
-            result = (radix * result) + n;
+            result = (radix * result) + hexaValue(c);
         }
         return result;
     }
@@ -549,14 +554,7 @@ final class XmlEscapeUtil {
         int result = 0;
         for (int i = start; i < end; i++) {
             final char c = text[i];
-            int n = -1;
-            for (int j = 0; j < HEXA_CHARS_UPPER.length; j++) {
-                if (c == HEXA_CHARS_UPPER[j] || c == HEXA_CHARS_LOWER[j]) {
-                    n = j;
-                    break;
-                }
-            }
-            result = (radix * result) + n;
+            result = (radix * result) + hexaValue(c);
         }
         return result;
     }
