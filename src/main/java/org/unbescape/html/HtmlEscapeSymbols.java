@@ -257,45 +257,50 @@ final class HtmlEscapeSymbols {
             }
         });
 
+        // Map each distinct NCR (by value) to its first position in the 'ncrs' list, which keeps the order in
+        // which references were specified. This position gives both the codepoint for each (sorted) NCR and
+        // the specification order that decides which NCR is preferred for escaping a codepoint.
+        final Map<String,Integer> firstNcrPosition = new HashMap<String, Integer>(ncrs.size() * 2);
+        for (int j = 0; j < ncrs.size(); j++) {
+            final String key = new String(ncrs.get(j));
+            if (!firstNcrPosition.containsKey(key)) {
+                // Only the first occurrence of each NCR value is kept.
+                firstNcrPosition.put(key, Integer.valueOf(j));
+            }
+        }
+
         for (short i = 0; i < SORTED_NCRS.length; i++) {
 
             final char[] ncr = ncrsOrdered.get(i);
             SORTED_NCRS[i] = ncr;
 
-            for (short j = 0; j  < SORTED_NCRS.length; j++) {
+            final int j = firstNcrPosition.get(new String(ncr)).intValue();
 
-                if (Arrays.equals(ncr,ncrs.get(j))) {
+            final int cp = codepoints.get(j);
+            SORTED_CODEPOINTS[i] = cp;
 
-                    final int cp = codepoints.get(j);
-                    SORTED_CODEPOINTS[i] = cp;
-
-                    if (cp > 0) {
-                        // Not negative (i.e. not double-codepoint)
-                        if (cp < NCRS_BY_CODEPOINT_LEN) {
-                            // Not overflown
-                            if (NCRS_BY_CODEPOINT[cp] == NO_NCR) {
-                                // Only the first NCR for each codepoint will be used for escaping.
-                                NCRS_BY_CODEPOINT[cp] = i;
-                            } else {
-                                final int positionOfCurrent = positionInList(ncrs, SORTED_NCRS[NCRS_BY_CODEPOINT[cp]]);
-                                final int positionOfNew = positionInList(ncrs, ncr);
-                                if (positionOfNew < positionOfCurrent) {
-                                    // The order in which NCRs were originally specified in the references argument
-                                    // marks which NCR should be used for escaping (the first one), if several NCRs
-                                    // have the same codepoint.
-                                    NCRS_BY_CODEPOINT[cp] = i;
-                                }
-                            }
-                        } else {
-                            // Codepoint should be overflown
-                            ncrsByCodepointOverflow.put(Integer.valueOf(cp), Short.valueOf(i));
+            if (cp > 0) {
+                // Not negative (i.e. not double-codepoint)
+                if (cp < NCRS_BY_CODEPOINT_LEN) {
+                    // Not overflown
+                    if (NCRS_BY_CODEPOINT[cp] == NO_NCR) {
+                        // Only the first NCR for each codepoint will be used for escaping.
+                        NCRS_BY_CODEPOINT[cp] = i;
+                    } else {
+                        final int positionOfCurrent =
+                                firstNcrPosition.get(new String(SORTED_NCRS[NCRS_BY_CODEPOINT[cp]])).intValue();
+                        final int positionOfNew = j;
+                        if (positionOfNew < positionOfCurrent) {
+                            // The order in which NCRs were originally specified in the references argument
+                            // marks which NCR should be used for escaping (the first one), if several NCRs
+                            // have the same codepoint.
+                            NCRS_BY_CODEPOINT[cp] = i;
                         }
                     }
-
-                    break;
-
+                } else {
+                    // Codepoint should be overflown
+                    ncrsByCodepointOverflow.put(Integer.valueOf(cp), Short.valueOf(i));
                 }
-
             }
 
         }
@@ -319,24 +324,6 @@ final class HtmlEscapeSymbols {
             DOUBLE_CODEPOINTS = null;
         }
 
-    }
-
-
-    /*
-     * Utility method, used for determining which of the different NCRs for the same
-     * codepoint (when there are many) was specified first, because that is the one
-     * we should be using for escaping.
-     * (Note all of the NCRs will be available for unescaping, obviously)
-     */
-    private static int positionInList(final List<char[]> list, final char[] element) {
-        int i = 0;
-        for (final char[] e : list) {
-            if (Arrays.equals(e, element)) {
-                return i;
-            }
-            i++;
-        }
-        return -1;
     }
 
 

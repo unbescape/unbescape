@@ -20,10 +20,11 @@
 package org.unbescape.xml;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -223,32 +224,37 @@ final class XmlEscapeSymbols {
         final List<Integer> codepointsOrdered = new ArrayList<Integer>(codepoints);
         Collections.sort(codepointsOrdered);
 
-        // Order the CODEPOINT -> CERs (escape)structures
-        for (short i = 0; i < structureLen; i++) {
-
-            final int codepoint = codepointsOrdered.get(i);
-            SORTED_CODEPOINTS[i] = codepoint;
-            for (short j = 0; j  < structureLen; j++) {
-                if (codepoint == codepoints.get(j)) {
-                    SORTED_CERS_BY_CODEPOINT[i] = cers.get(j);
-                    break;
+        // Map, in the order in which references were specified, the first CER for each codepoint (escape) and
+        // the codepoint for each CER (unescape). When a key appears more than once, its first occurrence wins.
+        final Map<Integer,char[]> firstCerByCodepoint = new HashMap<Integer, char[]>(structureLen * 2);
+        final Map<String,Integer> codepointByCer = new HashMap<String, Integer>(structureLen * 2);
+        for (int j = 0; j < structureLen; j++) {
+            final Integer codepoint = codepoints.get(j);
+            final char[] cer = cers.get(j);
+            if (!firstCerByCodepoint.containsKey(codepoint)) {
+                // The CER may be null (codepoint with no CER).
+                firstCerByCodepoint.put(codepoint, cer);
+            }
+            if (cer != null) {
+                final String key = new String(cer);
+                if (!codepointByCer.containsKey(key)) {
+                    codepointByCer.put(key, codepoint);
                 }
             }
+        }
 
+        // Order the CODEPOINT -> CERs (escape)structures
+        for (short i = 0; i < structureLen; i++) {
+            final int codepoint = codepointsOrdered.get(i);
+            SORTED_CODEPOINTS[i] = codepoint;
+            SORTED_CERS_BY_CODEPOINT[i] = firstCerByCodepoint.get(Integer.valueOf(codepoint));
         }
 
         // Order the CERs -> CODEPOINT (unescape)structures
         for (short i = 0; i < structureLen; i++) {
-
             final char[] cer = cersOrdered.get(i);
             SORTED_CERS[i] = cer;
-            for (short j = 0; j  < structureLen; j++) {
-                if (Arrays.equals(cer, cers.get(j))) {
-                    SORTED_CODEPOINTS_BY_CER[i] = codepoints.get(j);
-                    break;
-                }
-            }
-
+            SORTED_CODEPOINTS_BY_CER[i] = codepointByCer.get(new String(cer)).intValue();
         }
 
     }
