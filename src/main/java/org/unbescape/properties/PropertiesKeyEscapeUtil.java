@@ -124,7 +124,7 @@ final class PropertiesKeyEscapeUtil {
         SEC_CHARS[0x0D] = 'r';
         SEC_CHARS[0x20] = ' ';
         SEC_CHARS[0x3A] = ':';
-        SEC_CHARS[0x3B] = '=';
+        SEC_CHARS[0x3D] = '=';
         SEC_CHARS[0x5C] = '\\';
 
 
@@ -175,7 +175,7 @@ final class PropertiesKeyEscapeUtil {
         ESCAPE_LEVELS[0x0D] = 1;
         ESCAPE_LEVELS[0x20] = 1;
         ESCAPE_LEVELS[0x3A] = 1;
-        ESCAPE_LEVELS[0x3B] = 1;
+        ESCAPE_LEVELS[0x3D] = 1;
         ESCAPE_LEVELS[0x5C] = 1;
 
         /*
