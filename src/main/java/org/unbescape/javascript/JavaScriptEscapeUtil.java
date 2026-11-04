@@ -707,15 +707,6 @@ final class JavaScriptEscapeUtil {
         return result;
     }
 
-    static int parseIntFromReference(final int[] text, final int start, final int end, final int radix) {
-        int result = 0;
-        for (int i = start; i < end; i++) {
-            final char c = (char) text[i];
-            result = (radix * result) + hexaValue(c);
-        }
-        return result;
-    }
-
 
 
 
