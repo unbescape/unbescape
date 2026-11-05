@@ -664,25 +664,17 @@ final class JavaEscapeUtil {
             return false;
         }
 
+        if (c1 != '0') {
+            return true;
+        }
+
+        // A '0' followed by more octal digits is an octal escape (so \00 and \000 are a single U+0000).
+        // If it is not, this is the U+0000 escape sequence on its own.
         if (start + 1 >= end) {
-            return (c1 != '0'); // It would not be an octal escape, but the U+0000 escape sequence.
+            return false;
         }
-
         final char c2 = text.charAt(start + 1);
-        if (c2 < '0' || c2 > '7') {
-            return (c1 != '0'); // It would not be an octal escape, but the U+0000 escape sequence.
-        }
-
-        if (start + 2 >= end) {
-            return (c1 != '0' || c2 != '0'); // It would not be an octal escape, but the U+0000 escape sequence + '0'.
-        }
-
-        final char c3 = text.charAt(start + 2);
-        if (c3 < '0' || c3 > '7') {
-            return (c1 != '0' || c2 != '0'); // It would not be an octal escape, but the U+0000 escape sequence + '0'.
-        }
-
-        return (c1 != '0' || c2 != '0' || c3 != '0'); // Check it's not U+0000 (escaped) + '00'
+        return (c2 >= '0' && c2 <= '7');
 
     }
 
@@ -698,25 +690,17 @@ final class JavaEscapeUtil {
             return false;
         }
 
+        if (c1 != '0') {
+            return true;
+        }
+
+        // A '0' followed by more octal digits is an octal escape (so \00 and \000 are a single U+0000).
+        // If it is not, this is the U+0000 escape sequence on its own.
         if (start + 1 >= end) {
-            return (c1 != '0'); // It would not be an octal escape, but the U+0000 escape sequence.
+            return false;
         }
-
         final char c2 = text[start + 1];
-        if (c2 < '0' || c2 > '7') {
-            return (c1 != '0'); // It would not be an octal escape, but the U+0000 escape sequence.
-        }
-
-        if (start + 2 >= end) {
-            return (c1 != '0' || c2 != '0'); // It would not be an octal escape, but the U+0000 escape sequence + '0'.
-        }
-
-        final char c3 = text[start + 2];
-        if (c3 < '0' || c3 > '7') {
-            return (c1 != '0' || c2 != '0'); // It would not be an octal escape, but the U+0000 escape sequence + '0'.
-        }
-
-        return (c1 != '0' || c2 != '0' || c3 != '0'); // Check it's not U+0000 (escaped) + '00'
+        return (c2 >= '0' && c2 <= '7');
 
     }
 
