@@ -462,7 +462,11 @@ final class CsvEscapeUtil {
                         if (c1 == DOUBLE_QUOTE) {
                             // This is an escaped double-quote: skip one of the chars (= unescape)
                             referenceOffset = i + 1;
-                        } // else just write the quotes anyway (lenient behaviour). Not the last char, so don't remove.
+                        } else {
+                            // Non-escaped double-quote in the middle of a quoted value. This is not valid CSV,
+                            // but we will be lenient and just consider it a normal char.
+                            continue;
+                        }
 
                     } else if (isQuoted && i + 1 >= max) {
 
@@ -683,7 +687,11 @@ final class CsvEscapeUtil {
                         if (c1 == DOUBLE_QUOTE) {
                             // This is an escaped double-quote: skip one of the chars (= unescape)
                             referenceOffset = i + 1;
-                        } // else just write the quotes anyway (lenient behaviour). Not the last char, so don't remove.
+                        } else {
+                            // Non-escaped double-quote in the middle of a quoted value. This is not valid CSV,
+                            // but we will be lenient and just consider it a normal char.
+                            continue;
+                        }
 
                     } else if (isQuoted && i + 1 >= max) {
 
