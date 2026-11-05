@@ -238,18 +238,13 @@ final class UriEscapeUtil {
 
     static byte parseHexa(final char c1, final char c2) {
 
-        // A non-hexadecimal char contributes nothing to its nibble, exactly as the previous per-nibble
-        // linear scan did when it found no match.
-        byte result = 0;
         final int h1 = hexaValue(c1);
-        if (h1 >= 0) {
-            result += (h1 << 4);
-        }
         final int h2 = hexaValue(c2);
-        if (h2 >= 0) {
-            result += h2;
+        if (h1 < 0 || h2 < 0) {
+            // Not a percent-encoded byte: both chars after the '%' must be hexadecimal digits
+            throw new IllegalArgumentException("Invalid escaping sequence in input");
         }
-        return result;
+        return (byte) ((h1 << 4) + h2);
 
     }
 
@@ -699,7 +694,7 @@ final class UriEscapeUtil {
              * Check the need for an unescape operation at this point
              */
 
-            if ((c1 != ESCAPE_PREFIX || c2 < 0) && (c1 != '+' || !escapeType.canPlusEscapeWhitespace())) {
+            if (c1 != ESCAPE_PREFIX && (c1 != '+' || !escapeType.canPlusEscapeWhitespace())) {
                 writer.write(c1);
                 continue;
             }
