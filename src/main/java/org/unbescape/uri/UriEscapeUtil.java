@@ -219,8 +219,7 @@ final class UriEscapeUtil {
 
     /*
      * Computes the numeric value (0..15) of a hexadecimal-digit char (0-9, A-F, a-f), returning -1 for any
-     * other char. This replaces a previous per-char linear scan over the HEXA_CHARS_* arrays with a direct
-     * branch, while returning exactly the same values (including -1 for any non-hexadecimal char).
+     * other char.
      */
     private static int hexaValue(final char c) {
         if (c >= '0' && c <= '9') {
