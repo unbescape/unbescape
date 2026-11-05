@@ -69,7 +69,8 @@ final class JavaScriptEscapeUtil {
      *   - GENERAL ESCAPE: %* -> * ('%a' -> 'a')
      *                     (except the [%,%n] sequence, which is not an escape sequence but a line continuation)
      *
-     *   - ESCAPED LINE FEED: These are Line Continuators, allowed in ECMAScript 2015.
+     *   - ESCAPED LINE TERMINATORS (LF, CR, CR LF, U+2028, U+2029): These are Line Continuators, allowed in
+     *        ECMAScript 2015, and are ignored in output.
      *
      */
 
@@ -812,8 +813,15 @@ final class JavaScriptEscapeUtil {
                     case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
                     case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
                     case '/': codepoint = 0x2F; referenceOffset = i + 1; break;
-                    // line feed. When escaped, this is a line continuator
-                    case '\n': codepoint = -2; referenceOffset = i + 1; break;
+                    // line terminators (LF, CR, LS, PS). When escaped, these are line continuators
+                    case '\n':
+                    case '\u2028':
+                    case '\u2029': codepoint = -2; referenceOffset = i + 1; break;
+                    // carriage return, which may be followed by a line feed (CR LF is a single line terminator)
+                    case '\r':
+                        codepoint = -2;
+                        referenceOffset = ((i + 2) < max && text.charAt(i + 2) == '\n') ? (i + 2) : (i + 1);
+                        break;
                 }
 
                 if (codepoint == -1) {
@@ -894,18 +902,11 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else if (c1 == '\r' || c1 == '\u2028' || c1 == '\u2029') {
-
-                        // These are LineTerminators, which are not allowed as escape sequences. So we leave it as is
-                        // and expect the corresponding JavaScript engine to fail. Note '8' and '9' are not octal
-                        // digits, so they are just considered normal chars below (NonEscapeCharacter).
-                        i++;
-                        continue;
-
                     } else {
 
                         // We weren't able to consume any valid escape chars, just consider it a normal char,
-                        // which is allowed by the JavaScript specification (NonEscapeCharacter)
+                        // which is allowed by the JavaScript specification (NonEscapeCharacter). This includes
+                        // '8' and '9', which are not octal digits.
 
                         codepoint = (int) c1;
                         referenceOffset = i + 1;
@@ -1024,8 +1025,20 @@ final class JavaScriptEscapeUtil {
                     case '\'': codepoint = 0x27; c1 = c2; c2 = reader.read(); break;
                     case '\\': codepoint = 0x5C; c1 = c2; c2 = reader.read(); break;
                     case '/': codepoint = 0x2F; c1 = c2; c2 = reader.read(); break;
-                    // line feed. When escaped, this is a line continuator
-                    case '\n': codepoint = -2; c1 = c2; c2 = reader.read(); break;
+                    // line terminators (LF, CR, LS, PS). When escaped, these are line continuators
+                    case '\n':
+                    case '\u2028':
+                    case '\u2029': codepoint = -2; c1 = c2; c2 = reader.read(); break;
+                    // carriage return, which may be followed by a line feed (CR LF is a single line terminator)
+                    case '\r':
+                        codepoint = -2;
+                        c1 = c2;
+                        c2 = reader.read();
+                        if (c2 == '\n') {
+                            c1 = c2;
+                            c2 = reader.read();
+                        }
+                        break;
                 }
 
                 if (codepoint == -1) {
@@ -1136,23 +1149,11 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else if (c2 == '\r' || c2 == '\u2028' || c2 == '\u2029') {
-
-                        // These are LineTerminators, which are not allowed as escape sequences. So we leave it as is
-                        // and expect the corresponding JavaScript engine to fail. Note '8' and '9' are not octal
-                        // digits, so they are just considered normal chars below (NonEscapeCharacter).
-                        writer.write(c1);
-                        writer.write(c2);
-
-                        c1 = c2;
-                        c2 = reader.read();
-
-                        continue;
-
                     } else {
 
                         // We weren't able to consume any valid escape chars, just consider it a normal char,
-                        // which is allowed by the JavaScript specification (NonEscapeCharacter)
+                        // which is allowed by the JavaScript specification (NonEscapeCharacter). This includes
+                        // '8' and '9', which are not octal digits.
 
                         codepoint = c2;
 
@@ -1246,8 +1247,15 @@ final class JavaScriptEscapeUtil {
                     case '\'': codepoint = 0x27; referenceOffset = i + 1; break;
                     case '\\': codepoint = 0x5C; referenceOffset = i + 1; break;
                     case '/': codepoint = 0x2F; referenceOffset = i + 1; break;
-                    // line feed. When escaped, this is a line continuator
-                    case '\n': codepoint = -2; referenceOffset = i + 1; break;
+                    // line terminators (LF, CR, LS, PS). When escaped, these are line continuators
+                    case '\n':
+                    case '\u2028':
+                    case '\u2029': codepoint = -2; referenceOffset = i + 1; break;
+                    // carriage return, which may be followed by a line feed (CR LF is a single line terminator)
+                    case '\r':
+                        codepoint = -2;
+                        referenceOffset = ((i + 2) < max && text[i + 2] == '\n') ? (i + 2) : (i + 1);
+                        break;
                 }
 
                 if (codepoint == -1) {
@@ -1327,18 +1335,11 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else if (c1 == '\r' || c1 == '\u2028' || c1 == '\u2029') {
-
-                        // These are LineTerminators, which are not allowed as escape sequences. So we leave it as is
-                        // and expect the corresponding JavaScript engine to fail. Note '8' and '9' are not octal
-                        // digits, so they are just considered normal chars below (NonEscapeCharacter).
-                        i++;
-                        continue;
-
                     } else {
 
                         // We weren't able to consume any valid escape chars, just consider it a normal char,
-                        // which is allowed by the JavaScript specification (NonEscapeCharacter)
+                        // which is allowed by the JavaScript specification (NonEscapeCharacter). This includes
+                        // '8' and '9', which are not octal digits.
 
                         codepoint = (int) c1;
                         referenceOffset = i + 1;
