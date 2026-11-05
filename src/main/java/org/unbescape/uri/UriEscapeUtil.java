@@ -642,6 +642,10 @@ final class UriEscapeUtil {
 
             readOffset = i;
 
+            // i now points to the first char after the escaped sequences, which still needs to be examined (it
+            // could be a '+'), so step back before the loop increments it.
+            i--;
+
         }
 
 
@@ -847,6 +851,10 @@ final class UriEscapeUtil {
 
 
             readOffset = i;
+
+            // i now points to the first char after the escaped sequences, which still needs to be examined (it
+            // could be a '+'), so step back before the loop increments it.
+            i--;
 
         }
 
