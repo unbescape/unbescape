@@ -451,6 +451,10 @@ public final class CssEscape {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
         }
 
+        if (text == null) {
+            return;
+        }
+
         CssStringEscapeUtil.escape(new InternalStringReader(text), writer, type, level);
 
     }
@@ -1235,6 +1239,10 @@ public final class CssEscape {
 
         if (level == null) {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
+        }
+
+        if (text == null) {
+            return;
         }
 
         CssIdentifierEscapeUtil.escape(new InternalStringReader(text), writer, type, level);

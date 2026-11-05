@@ -161,6 +161,10 @@ public final class CsvEscape {
             throw new IllegalArgumentException("Argument 'writer' cannot be null");
         }
 
+        if (text == null) {
+            return;
+        }
+
         CsvEscapeUtil.escape(new InternalStringReader(text), writer);
     }
 
@@ -277,6 +281,10 @@ public final class CsvEscape {
 
         if (writer == null) {
             throw new IllegalArgumentException("Argument 'writer' cannot be null");
+        }
+
+        if (text == null) {
+            return;
         }
 
         CsvEscapeUtil.unescape(new InternalStringReader(text), writer);

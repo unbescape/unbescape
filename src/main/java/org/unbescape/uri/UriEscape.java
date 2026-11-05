@@ -493,6 +493,10 @@ public final class UriEscape {
             throw new IllegalArgumentException("Argument 'encoding' cannot be null");
         }
 
+        if (text == null) {
+            return;
+        }
+
         UriEscapeUtil.escape(new InternalStringReader(text), writer, UriEscapeUtil.UriEscapeType.PATH, encoding);
 
     }
@@ -576,6 +580,10 @@ public final class UriEscape {
 
         if (encoding == null) {
             throw new IllegalArgumentException("Argument 'encoding' cannot be null");
+        }
+
+        if (text == null) {
+            return;
         }
 
         UriEscapeUtil.escape(new InternalStringReader(text), writer, UriEscapeUtil.UriEscapeType.PATH_SEGMENT, encoding);
@@ -665,6 +673,10 @@ public final class UriEscape {
             throw new IllegalArgumentException("Argument 'encoding' cannot be null");
         }
 
+        if (text == null) {
+            return;
+        }
+
         UriEscapeUtil.escape(new InternalStringReader(text), writer, UriEscapeUtil.UriEscapeType.QUERY_PARAM, encoding);
 
     }
@@ -750,6 +762,10 @@ public final class UriEscape {
 
         if (encoding == null) {
             throw new IllegalArgumentException("Argument 'encoding' cannot be null");
+        }
+
+        if (text == null) {
+            return;
         }
 
         UriEscapeUtil.escape(new InternalStringReader(text), writer, UriEscapeUtil.UriEscapeType.FRAGMENT_ID, encoding);
@@ -1843,6 +1859,10 @@ public final class UriEscape {
             throw new IllegalArgumentException("Argument 'encoding' cannot be null");
         }
 
+        if (text == null) {
+            return;
+        }
+
         UriEscapeUtil.unescape(new InternalStringReader(text), writer, UriEscapeUtil.UriEscapeType.PATH, encoding);
 
     }
@@ -1917,6 +1937,10 @@ public final class UriEscape {
 
         if (encoding == null) {
             throw new IllegalArgumentException("Argument 'encoding' cannot be null");
+        }
+
+        if (text == null) {
+            return;
         }
 
         UriEscapeUtil.unescape(new InternalStringReader(text), writer, UriEscapeUtil.UriEscapeType.PATH_SEGMENT, encoding);
@@ -1995,6 +2019,10 @@ public final class UriEscape {
             throw new IllegalArgumentException("Argument 'encoding' cannot be null");
         }
 
+        if (text == null) {
+            return;
+        }
+
         UriEscapeUtil.unescape(new InternalStringReader(text), writer, UriEscapeUtil.UriEscapeType.QUERY_PARAM, encoding);
 
     }
@@ -2069,6 +2097,10 @@ public final class UriEscape {
 
         if (encoding == null) {
             throw new IllegalArgumentException("Argument 'encoding' cannot be null");
+        }
+
+        if (text == null) {
+            return;
         }
 
         UriEscapeUtil.unescape(new InternalStringReader(text), writer, UriEscapeUtil.UriEscapeType.FRAGMENT_ID, encoding);

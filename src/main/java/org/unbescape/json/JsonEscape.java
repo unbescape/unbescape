@@ -490,6 +490,10 @@ public final class JsonEscape {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
         }
 
+        if (text == null) {
+            return;
+        }
+
         JsonEscapeUtil.escape(new InternalStringReader(text), writer, type, level);
 
     }

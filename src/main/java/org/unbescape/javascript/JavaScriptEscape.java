@@ -537,6 +537,10 @@ public final class JavaScriptEscape {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
         }
 
+        if (text == null) {
+            return;
+        }
+
         JavaScriptEscapeUtil.escape(new InternalStringReader(text), writer, type, level);
 
     }

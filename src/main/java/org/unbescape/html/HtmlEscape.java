@@ -585,6 +585,10 @@ public final class HtmlEscape {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
         }
 
+        if (text == null) {
+            return;
+        }
+
         HtmlEscapeUtil.escape(new InternalStringReader(text), writer, type, level);
 
     }

@@ -432,6 +432,10 @@ public final class PropertiesEscape {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
         }
 
+        if (text == null) {
+            return;
+        }
+
         PropertiesValueEscapeUtil.escape(new InternalStringReader(text), writer, level);
 
     }
@@ -1029,6 +1033,10 @@ public final class PropertiesEscape {
 
         if (level == null) {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
+        }
+
+        if (text == null) {
+            return;
         }
 
         PropertiesKeyEscapeUtil.escape(new InternalStringReader(text), writer, level);

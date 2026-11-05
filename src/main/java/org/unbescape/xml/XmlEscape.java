@@ -1187,6 +1187,10 @@ public final class XmlEscape {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
         }
 
+        if (text == null) {
+            return;
+        }
+
         XmlEscapeUtil.escape(new InternalStringReader(text), writer, symbols, type, level);
 
     }

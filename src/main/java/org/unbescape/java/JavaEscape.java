@@ -492,6 +492,10 @@ public final class JavaEscape {
             throw new IllegalArgumentException("The 'level' argument cannot be null");
         }
 
+        if (text == null) {
+            return;
+        }
+
         JavaEscapeUtil.escape(new InternalStringReader(text), writer, level);
 
     }
