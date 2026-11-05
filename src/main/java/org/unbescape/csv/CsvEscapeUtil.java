@@ -584,17 +584,15 @@ final class CsvEscapeUtil {
             /*
              * Shortcut: from an unescape point of view, we will ignore most characters
              */
-            if (c1 != DOUBLE_QUOTE) {
+            if (c1 != DOUBLE_QUOTE || !isQuoted) {
+                // Double-quotes are only unescaped in quoted values: if not quoted, write them anyway (lenient)
                 writer.write(c1);
                 continue;
             }
 
             if (c2 < 0) {
 
-                if (!isQuoted) {
-                    // Last char is double-quote. If last and value is quoted, ignore - if not, write.
-                    writer.write(c1);
-                }
+                // Last char is the closing double-quote of a quoted value: ignore it
                 continue;
 
             } else if (c2 == DOUBLE_QUOTE) {
