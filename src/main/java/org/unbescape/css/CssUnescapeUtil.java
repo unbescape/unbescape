@@ -20,6 +20,7 @@
 package org.unbescape.css;
 
 import java.io.IOException;
+import java.io.PushbackReader;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -86,6 +87,9 @@ final class CssUnescapeUtil {
      *   - UNICODE ESCAPE [HEXA]
      *        Compact representation: %??* (variable-length. Optionally followed by a whitespace U+0020 - required
      *                                      if after escape comes a hexadecimal char (0-9a-f) or a whitespace U+0020)
+     *        When unescaping, a single whitespace after the escape (space, tab, line feed, form feed, carriage
+     *        return or CR LF) ends it and is ignored. Escapes for U+0000, for surrogates or for values above
+     *        U+10FFFF are unescaped as U+FFFD (see https://www.w3.org/TR/css-syntax-3/#consume-escaped-code-point).
      *        6-digit representation: %?????? (fixed-length. Not required to be followed by whitespace, unless after
      *                                        escape comes a whitespace U+0020)
      *
@@ -95,8 +99,9 @@ final class CssUnescapeUtil {
      *
      *   - ESCAPED LINE FEED (strings only): These are Line Continuators. According to the CSS specification (see
      *        https://www.w3.org/TR/CSS2/syndata.html#escaped-characters and
-     *        https://www.w3.org/TR/CSS2/syndata.html#strings), a backslash followed by a line feed should be ignored
-     *        in output (it is a way to span CSS literals over multiple lines).
+     *        https://www.w3.org/TR/CSS2/syndata.html#strings), a backslash followed by a newline (line feed,
+     *        form feed, carriage return or CR LF) should be ignored in output (it is a way to span CSS literals over
+     *        multiple lines).
      *
      */
 
@@ -136,6 +141,67 @@ final class CssUnescapeUtil {
             return (int) c - (int) 'a' + 10;
         }
         return -1;
+    }
+
+
+    /*
+     * As established by the CSS Syntax specification, a hexadecimal escape for U+0000, for a surrogate or for a
+     * value out of the Unicode range is unescaped as U+FFFD (REPLACEMENT CHARACTER).
+     */
+    private static int replaceInvalidCodepoint(final int codepoint) {
+        if (codepoint == 0x0 || (codepoint >= 0xD800 && codepoint <= 0xDFFF) || codepoint > Character.MAX_CODE_POINT) {
+            return 0xFFFD;
+        }
+        return codepoint;
+    }
+
+
+    /*
+     * Helpers for hexadecimal escapes (two versions each): the end (exclusive) of the up to six hexadecimal digits
+     * starting at 'start', and the length of the whitespace that may follow them (CR LF counts as one).
+     */
+    private static int hexaEnd(final String text, final int start, final int max) {
+        int f = start;
+        while (f < (start + 6) && f < max && hexaValue(text.charAt(f)) >= 0) {
+            f++;
+        }
+        return f;
+    }
+
+    private static int hexaEnd(final char[] text, final int start, final int max) {
+        int f = start;
+        while (f < (start + 6) && f < max && hexaValue(text[f]) >= 0) {
+            f++;
+        }
+        return f;
+    }
+
+    private static int whitespaceLength(final String text, final int start, final int max) {
+        if (start >= max) {
+            return 0;
+        }
+        final char c = text.charAt(start);
+        if (c == ' ' || c == '\t' || c == '\n' || c == '\f') {
+            return 1;
+        }
+        if (c == '\r') {
+            return ((start + 1) < max && text.charAt(start + 1) == '\n') ? 2 : 1;
+        }
+        return 0;
+    }
+
+    private static int whitespaceLength(final char[] text, final int start, final int max) {
+        if (start >= max) {
+            return 0;
+        }
+        final char c = text[start];
+        if (c == ' ' || c == '\t' || c == '\n' || c == '\f') {
+            return 1;
+        }
+        if (c == '\r') {
+            return ((start + 1) < max && text[start + 1] == '\n') ? 2 : 1;
+        }
+        return 0;
     }
 
 
@@ -203,8 +269,14 @@ final class CssUnescapeUtil {
                 final char c1 = text.charAt(i + 1);
 
                 switch (c1) {
-                        // line feed. When escaped, this is a line continuator
-                    case '\n': codepoint = -2; referenceOffset = i + 1; break;
+                        // newlines (line feed, form feed, carriage return). When escaped, these are line continuators
+                    case '\n':
+                    case '\f': codepoint = -2; referenceOffset = i + 1; break;
+                        // carriage return, which may be followed by a line feed (CR LF is a single newline)
+                    case '\r':
+                        codepoint = -2;
+                        referenceOffset = ((i + 2) < max && text.charAt(i + 2) == '\n') ? (i + 2) : (i + 1);
+                        break;
                     case ' ':
                     case '!':
                     case '"':
@@ -248,34 +320,31 @@ final class CssUnescapeUtil {
                     if ((c1 >= '0' && c1 <= '9') || (c1 >= 'A' && c1 <= 'F') || (c1 >= 'a' && c1 <= 'f')) {
                         // This is a hexa escape
 
-                        int f = i + 2;
-                        while (f < (i + 7) && f < max) {
-                            final char cf = text.charAt(f);
-                            if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
-                                break;
-                            }
-                            f++;
-                        }
-
+                        final int f = hexaEnd(text, i + 1, max);
                         codepoint = parseIntFromReference(text, i + 1, f, 16);
 
-                        // Fast-forward to the first char after the parsed codepoint
-                        referenceOffset = f - 1;
+                        // Fast-forward to the last char of the escape. If there is a whitespace after it (CR LF
+                        // counting as one), it is part of the escape and will be ignored.
+                        referenceOffset = f - 1 + whitespaceLength(text, f, max);
 
-                        // If there is a whitespace after the escape, just ignore it.
-                        if (f < max && text.charAt(f) == ' ') {
-                            referenceOffset++;
+                        if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
+                            // Non-standard (older WebKit) syntax for chars > U+FFFF: a high surrogate escape
+                            // directly followed by a low surrogate escape. Combine them into a single char.
+                            final int s = referenceOffset + 1;
+                            if ((s + 1) < max && text.charAt(s) == ESCAPE_PREFIX && hexaValue(text.charAt(s + 1)) >= 0) {
+                                final int f2 = hexaEnd(text, s + 1, max);
+                                final int low = parseIntFromReference(text, s + 1, f2, 16);
+                                if (low >= 0xDC00 && low <= 0xDFFF) {
+                                    codepoint = Character.toCodePoint((char) codepoint, (char) low);
+                                    referenceOffset = f2 - 1 + whitespaceLength(text, f2, max);
+                                }
+                            }
                         }
+
+                        codepoint = replaceInvalidCodepoint(codepoint);
 
                         // Don't continue here, just let the unescape code below do its job
 
-
-                    } else if (c1 == '\r' || c1 == '\f') {
-
-                        // The only characters that cannot be escaped by means of a backslash are
-                        // carriage return and form feed (besides hexadecimal digits).
-                        i++;
-                        continue;
 
                     } else {
 
@@ -356,14 +425,18 @@ final class CssUnescapeUtil {
      * Note this reader is going to be read char-by-char, so some kind of buffering might be appropriate if this
      * is an inconvenience for the specific Reader implementation.
      */
-    static void unescape(final Reader reader, final Writer writer) throws IOException {
+    static void unescape(final Reader originalReader, final Writer writer) throws IOException {
 
-        if (reader == null) {
+        if (originalReader == null) {
             return;
         }
 
+        Reader reader = originalReader;
+        PushbackReader pushbackReader = null;
+
         int escapei = 0;
         final char[] escapes = new char[6];
+        final char[] lowEscapes = new char[6];
         int c1, c2, ce; // c1: current char, c2: next char, ce: current escape char
 
         c2 = reader.read();
@@ -387,8 +460,19 @@ final class CssUnescapeUtil {
             if (c1 == ESCAPE_PREFIX) {
 
                 switch (c2) {
-                        // line feed. When escaped, this is a line continuator
-                    case '\n': codepoint = -2; c1 = c2; c2 = reader.read(); break;
+                        // newlines (line feed, form feed, carriage return). When escaped, these are line continuators
+                    case '\n':
+                    case '\f': codepoint = -2; c1 = c2; c2 = reader.read(); break;
+                        // carriage return, which may be followed by a line feed (CR LF is a single newline)
+                    case '\r':
+                        codepoint = -2;
+                        c1 = c2;
+                        c2 = reader.read();
+                        if (c2 == '\n') {
+                            c1 = c2;
+                            c2 = reader.read();
+                        }
+                        break;
                     case ' ':
                     case '!':
                     case '"':
@@ -448,21 +532,77 @@ final class CssUnescapeUtil {
 
                         codepoint = parseIntFromReference(escapes, 0, escapei, 16);
 
-                        // If there is a whitespace after the escape, just ignore it.
-                        if (c2 == ' ') {
+                        // If there is a whitespace after the escape, just ignore it (CR LF counts as one).
+                        if (c2 == ' ' || c2 == '\t' || c2 == '\n' || c2 == '\f') {
                             c1 = c2;
                             c2 = reader.read();
+                        } else if (c2 == '\r') {
+                            c1 = c2;
+                            c2 = reader.read();
+                            if (c2 == '\n') {
+                                c1 = c2;
+                                c2 = reader.read();
+                            }
                         }
+
+                        if (codepoint >= 0xD800 && codepoint <= 0xDBFF && c2 == ESCAPE_PREFIX) {
+
+                            // Non-standard (older WebKit) syntax for chars > U+FFFF: a high surrogate escape
+                            // directly followed by a low surrogate escape. Combine them into a single char.
+                            // If what follows is not a low surrogate escape, it will be pushed back to be
+                            // processed normally (pushback is only needed here, so it is only set up here).
+
+                            if (pushbackReader == null) {
+                                pushbackReader = new PushbackReader(reader, 8);
+                                reader = pushbackReader;
+                            }
+
+                            int lowi = 0;
+                            ce = reader.read();
+                            while (ce >= 0 && lowi < 6 && hexaValue((char) ce) >= 0) {
+                                lowEscapes[lowi] = (char) ce;
+                                ce = reader.read();
+                                lowi++;
+                            }
+
+                            final int low = parseIntFromReference(lowEscapes, 0, lowi, 16);
+
+                            if (lowi > 0 && low >= 0xDC00 && low <= 0xDFFF) {
+
+                                codepoint = Character.toCodePoint((char) codepoint, (char) low);
+
+                                c1 = lowEscapes[lowi - 1];
+                                c2 = ce;
+
+                            // If there is a whitespace after the escape, just ignore it (CR LF counts as one).
+                            if (c2 == ' ' || c2 == '\t' || c2 == '\n' || c2 == '\f') {
+                                c1 = c2;
+                                c2 = reader.read();
+                            } else if (c2 == '\r') {
+                                c1 = c2;
+                                c2 = reader.read();
+                                if (c2 == '\n') {
+                                    c1 = c2;
+                                    c2 = reader.read();
+                                }
+                            }
+
+                            } else {
+
+                                if (ce >= 0) {
+                                    pushbackReader.unread(ce);
+                                }
+                                pushbackReader.unread(lowEscapes, 0, lowi);
+
+                            }
+
+                        }
+
+                        codepoint = replaceInvalidCodepoint(codepoint);
+
 
                         // Don't continue here, just let the unescape code below do its job
 
-
-                    } else if (c2 == '\r' || c2 == '\f') {
-
-                        // The only characters that cannot be escaped by means of a backslash are
-                        // carriage return and form feed (besides hexadecimal digits).
-                        writer.write(c1);
-                        continue;
 
                     } else {
 
@@ -537,8 +677,14 @@ final class CssUnescapeUtil {
                 final char c1 = text[i + 1];
 
                 switch (c1) {
-                        // line feed. When escaped, this is a line continuator
-                    case '\n': codepoint = -2; referenceOffset = i + 1; break;
+                        // newlines (line feed, form feed, carriage return). When escaped, these are line continuators
+                    case '\n':
+                    case '\f': codepoint = -2; referenceOffset = i + 1; break;
+                        // carriage return, which may be followed by a line feed (CR LF is a single newline)
+                    case '\r':
+                        codepoint = -2;
+                        referenceOffset = ((i + 2) < max && text[i + 2] == '\n') ? (i + 2) : (i + 1);
+                        break;
                     case ' ':
                     case '!':
                     case '"':
@@ -582,34 +728,31 @@ final class CssUnescapeUtil {
                     if ((c1 >= '0' && c1 <= '9') || (c1 >= 'A' && c1 <= 'F') || (c1 >= 'a' && c1 <= 'f')) {
                         // This is a hexa escape
 
-                        int f = i + 2;
-                        while (f < (i + 7) && f < max) {
-                            final char cf = text[f];
-                            if (!((cf >= '0' && cf <= '9') || (cf >= 'A' && cf <= 'F') || (cf >= 'a' && cf <= 'f'))) {
-                                break;
-                            }
-                            f++;
-                        }
-
+                        final int f = hexaEnd(text, i + 1, max);
                         codepoint = parseIntFromReference(text, i + 1, f, 16);
 
-                        // Fast-forward to the first char after the parsed codepoint
-                        referenceOffset = f - 1;
+                        // Fast-forward to the last char of the escape. If there is a whitespace after it (CR LF
+                        // counting as one), it is part of the escape and will be ignored.
+                        referenceOffset = f - 1 + whitespaceLength(text, f, max);
 
-                        // If there is a whitespace after the escape, just ignore it.
-                        if (f < max && text[f] == ' ') {
-                            referenceOffset++;
+                        if (codepoint >= 0xD800 && codepoint <= 0xDBFF) {
+                            // Non-standard (older WebKit) syntax for chars > U+FFFF: a high surrogate escape
+                            // directly followed by a low surrogate escape. Combine them into a single char.
+                            final int s = referenceOffset + 1;
+                            if ((s + 1) < max && text[s] == ESCAPE_PREFIX && hexaValue(text[s + 1]) >= 0) {
+                                final int f2 = hexaEnd(text, s + 1, max);
+                                final int low = parseIntFromReference(text, s + 1, f2, 16);
+                                if (low >= 0xDC00 && low <= 0xDFFF) {
+                                    codepoint = Character.toCodePoint((char) codepoint, (char) low);
+                                    referenceOffset = f2 - 1 + whitespaceLength(text, f2, max);
+                                }
+                            }
                         }
+
+                        codepoint = replaceInvalidCodepoint(codepoint);
 
                         // Don't continue here, just let the unescape code below do its job
 
-
-                    } else if (c1 == '\r' || c1 == '\f') {
-
-                        // The only characters that cannot be escaped by means of a backslash are
-                        // carriage return and form feed (besides hexadecimal digits).
-                        i++;
-                        continue;
 
                     } else {
 
