@@ -894,11 +894,11 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else if (c1 == '8' || c1 == '9' || c1 == '\r' || c1 == '\u2028' || c1 == '\u2029') {
+                    } else if (c1 == '\r' || c1 == '\u2028' || c1 == '\u2029') {
 
-                        // '8' and '9' are not valid octal escape sequences, and the other four characters
-                        // are LineTerminators, which are not allowed as escape sequences. So we leave it as is
-                        // and expect the corresponding JavaScript engine to fail.
+                        // These are LineTerminators, which are not allowed as escape sequences. So we leave it as is
+                        // and expect the corresponding JavaScript engine to fail. Note '8' and '9' are not octal
+                        // digits, so they are just considered normal chars below (NonEscapeCharacter).
                         i++;
                         continue;
 
@@ -1136,11 +1136,11 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else if (c2 == '8' || c2 == '9' || c2 == '\r' || c2 == '\u2028' || c2 == '\u2029') {
+                    } else if (c2 == '\r' || c2 == '\u2028' || c2 == '\u2029') {
 
-                        // '8' and '9' are not valid octal escape sequences, and the other four characters
-                        // are LineTerminators, which are not allowed as escape sequences. So we leave it as is
-                        // and expect the corresponding JavaScript engine to fail.
+                        // These are LineTerminators, which are not allowed as escape sequences. So we leave it as is
+                        // and expect the corresponding JavaScript engine to fail. Note '8' and '9' are not octal
+                        // digits, so they are just considered normal chars below (NonEscapeCharacter).
                         writer.write(c1);
                         writer.write(c2);
 
@@ -1327,11 +1327,11 @@ final class JavaScriptEscapeUtil {
 
                         // Don't continue here, just let the unescape code below do its job
 
-                    } else if (c1 == '8' || c1 == '9' || c1 == '\r' || c1 == '\u2028' || c1 == '\u2029') {
+                    } else if (c1 == '\r' || c1 == '\u2028' || c1 == '\u2029') {
 
-                        // '8' and '9' are not valid octal escape sequences, and the other four characters
-                        // are LineTerminators, which are not allowed as escape sequences. So we leave it as is
-                        // and expect the corresponding JavaScript engine to fail.
+                        // These are LineTerminators, which are not allowed as escape sequences. So we leave it as is
+                        // and expect the corresponding JavaScript engine to fail. Note '8' and '9' are not octal
+                        // digits, so they are just considered normal chars below (NonEscapeCharacter).
                         i++;
                         continue;
 
