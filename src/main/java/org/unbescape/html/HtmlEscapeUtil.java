@@ -635,14 +635,10 @@ final class HtmlEscapeUtil {
     static int parseIntFromReference(final String text, final int start, final int end, final int radix) {
         int result = 0;
         for (int i = start; i < end; i++) {
-            final char c = text.charAt(i);
-            final int n = hexaValue(c);
-            result *= radix;
-            if (result < 0) {
-                return 0xFFFD;
-            }
-            result += n;
-            if (result < 0) {
+            result = (radix * result) + hexaValue(text.charAt(i));
+            if (result > Character.MAX_CODE_POINT) {
+                // Out of the Unicode range. More digits can only make it larger (and eventually overflow the
+                // int), so stop here: HTML5 replaces any out-of-range reference with U+FFFD.
                 return 0xFFFD;
             }
         }
@@ -652,14 +648,10 @@ final class HtmlEscapeUtil {
     static int parseIntFromReference(final char[] text, final int start, final int end, final int radix) {
         int result = 0;
         for (int i = start; i < end; i++) {
-            final char c = text[i];
-            final int n = hexaValue(c);
-            result *= radix;
-            if (result < 0) {
-                return 0xFFFD;
-            }
-            result += n;
-            if (result < 0) {
+            result = (radix * result) + hexaValue(text[i]);
+            if (result > Character.MAX_CODE_POINT) {
+                // Out of the Unicode range. More digits can only make it larger (and eventually overflow the
+                // int), so stop here: HTML5 replaces any out-of-range reference with U+FFFD.
                 return 0xFFFD;
             }
         }

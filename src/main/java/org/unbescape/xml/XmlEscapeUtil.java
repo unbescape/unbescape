@@ -544,8 +544,12 @@ final class XmlEscapeUtil {
     static int parseIntFromReference(final String text, final int start, final int end, final int radix) {
         int result = 0;
         for (int i = start; i < end; i++) {
-            final char c = text.charAt(i);
-            result = (radix * result) + hexaValue(c);
+            result = (radix * result) + hexaValue(text.charAt(i));
+            if (result > Character.MAX_CODE_POINT) {
+                // Out of the Unicode range. More digits can only make it larger (and eventually overflow the
+                // int), so stop here and return a value that is still out of range.
+                return Character.MAX_CODE_POINT + 1;
+            }
         }
         return result;
     }
@@ -553,8 +557,12 @@ final class XmlEscapeUtil {
     static int parseIntFromReference(final char[] text, final int start, final int end, final int radix) {
         int result = 0;
         for (int i = start; i < end; i++) {
-            final char c = text[i];
-            result = (radix * result) + hexaValue(c);
+            result = (radix * result) + hexaValue(text[i]);
+            if (result > Character.MAX_CODE_POINT) {
+                // Out of the Unicode range. More digits can only make it larger (and eventually overflow the
+                // int), so stop here and return a value that is still out of range.
+                return Character.MAX_CODE_POINT + 1;
+            }
         }
         return result;
     }
