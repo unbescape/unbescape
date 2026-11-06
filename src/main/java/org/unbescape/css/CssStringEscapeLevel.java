@@ -49,6 +49,10 @@ package org.unbescape.css;
  *                   parse XHTML escape codes inside literals in <kbd>&lt;style&gt;</kbd> tags, therefore allowing
  *                   the closing of the literal and the <kbd>&lt;style&gt;</kbd> tag itself.
  *               </li>
+ *               <li>
+ *                   The less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>), which will always be escaped as a
+ *                   hexadecimal escape (e.g. <kbd>&#92;3C&nbsp;</kbd>), so that escaped text never contains it.
+ *               </li>
  *             </ul>
  *           </li>
  *           <li>

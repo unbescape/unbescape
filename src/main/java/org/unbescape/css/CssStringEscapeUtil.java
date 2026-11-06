@@ -123,7 +123,9 @@ final class CssStringEscapeUtil {
         // colon: will not be used for escaping: not recognized by IE < 8
         // BACKSLASH_CHARS[0x3A] = ':';
         BACKSLASH_CHARS[0x3B] = ';';
-        BACKSLASH_CHARS[0x3C] = '<';
+        // less-than: will not be used for escaping, as it is escaped as hexadecimal instead (so that no '<'
+        // appears in escaped text)
+        // BACKSLASH_CHARS[0x3C] = '<';
         BACKSLASH_CHARS[0x3D] = '=';
         BACKSLASH_CHARS[0x3E] = '>';
         BACKSLASH_CHARS[0x3F] = '?';
@@ -191,6 +193,11 @@ final class CssStringEscapeUtil {
         ESCAPE_LEVELS[0x2F] = 1;
         ESCAPE_LEVELS[0x26] = 1;
         ESCAPE_LEVELS[0x3B] = 1;
+
+        /*
+         * Less-than (<) will be level 1 (always escaped), so that no '<' appears in escaped text
+         */
+        ESCAPE_LEVELS[0x3C] = 1;
 
         /*
          * Two ranges of non-displayable, control characters:
