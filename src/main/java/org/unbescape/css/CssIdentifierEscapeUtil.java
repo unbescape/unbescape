@@ -147,7 +147,7 @@ final class CssIdentifierEscapeUtil {
         BACKSLASH_CHARS[0x2A] = '*';
         BACKSLASH_CHARS[0x2B] = '+';
         BACKSLASH_CHARS[0x2C] = ',';
-        // hyphen: will only be escaped when identifer starts with '--' or '-{digit}'
+        // hyphen: will only be escaped when identifer starts with '--' or '-{digit}', or is just '-'
         BACKSLASH_CHARS[0x2D] = '-';
         BACKSLASH_CHARS[0x2E] = '.';
         BACKSLASH_CHARS[0x2F] = '/';
@@ -226,7 +226,7 @@ final class CssIdentifierEscapeUtil {
         ESCAPE_LEVELS[0x2A] = 1;
         ESCAPE_LEVELS[0x2B] = 1;
         ESCAPE_LEVELS[0x2C] = 1;
-        // hyphen: will only be escaped when identifer starts with '--' or '-{digit}'
+        // hyphen: will only be escaped when identifer starts with '--' or '-{digit}', or is just '-'
         ESCAPE_LEVELS[0x2D] = 1;
         ESCAPE_LEVELS[0x2E] = 1;
         ESCAPE_LEVELS[0x2F] = 1;
@@ -362,15 +362,18 @@ final class CssIdentifierEscapeUtil {
 
 
             /*
-             * Hyphen check: only escape when it's the first char and it's followed by '-' or a digit.
+             * Hyphen check: only escape when it's the first char and it's either the only char or followed by
+             * '-' or a digit.
              */
             if (codepoint == '-' && level < 3) {
-                if (i > offset || i + 1 >= max) {
+                if (i > offset) {
                     continue;
                 }
-                final char c1 = text.charAt(i + 1);
-                if (c1 != '-' && (c1 < '0' || c1 > '9')) {
-                    continue;
+                if (i + 1 < max) {
+                    final char c1 = text.charAt(i + 1);
+                    if (c1 != '-' && (c1 < '0' || c1 > '9')) {
+                        continue;
+                    }
                 }
             }
 
@@ -528,14 +531,15 @@ final class CssIdentifierEscapeUtil {
 
 
             /*
-             * Hyphen check: only escape when it's the first char and it's followed by '-' or a digit.
+             * Hyphen check: only escape when it's the first char and it's either the only char or followed by
+             * '-' or a digit.
              */
             if (codepoint == '-' && level < 3) {
-                if (c0 >= 0 || c2 < 0) { // not first or last
+                if (c0 >= 0) { // not first
                     writer.write(c1);
                     continue;
                 }
-                if (c2 != '-' && (c2 < '0' || c2 > '9')) {
+                if (c2 >= 0 && c2 != '-' && (c2 < '0' || c2 > '9')) { // not last, and not followed by '-' or digit
                     writer.write(c1);
                     continue;
                 }
@@ -668,15 +672,18 @@ final class CssIdentifierEscapeUtil {
 
 
             /*
-             * Hyphen check: only escape when it's the first char and it's followed by '-' or a digit.
+             * Hyphen check: only escape when it's the first char and it's either the only char or followed by
+             * '-' or a digit.
              */
             if (codepoint == '-' && level < 3) {
-                if (i > offset || i + 1 >= max) {
+                if (i > offset) {
                     continue;
                 }
-                final char c1 = text[i + 1];
-                if (c1 != '-' && (c1 < '0' || c1 > '9')) {
-                    continue;
+                if (i + 1 < max) {
+                    final char c1 = text[i + 1];
+                    if (c1 != '-' && (c1 < '0' || c1 > '9')) {
+                        continue;
+                    }
                 }
             }
 

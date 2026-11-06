@@ -842,8 +842,9 @@ public final class CssEscape {
      *       <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
      *       <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
      *       Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
-     *       when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
-     *       (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
+     *       when an identifier starts with two hyphens or hyphen + digit, or is just a hyphen.
+     *       Also, the <kbd>&#92;_</kbd> (<kbd>U+005F</kbd>) escape will only be used at the beginning of
+     *       an identifier to avoid
      *       problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
      *       (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
      *       used for escaping as Internet Explorer &lt; 8 does not recognize it.
@@ -928,8 +929,9 @@ public final class CssEscape {
      *               <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
      *               <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
      *               Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
-     *               when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
-     *               (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
+     *               when an identifier starts with two hyphens or hyphen + digit, or is just a hyphen.
+     *               Also, the <kbd>&#92;_</kbd> (<kbd>U+005F</kbd>) escape will only be used at the beginning of
+     *               an identifier to avoid
      *               problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
      *               (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
      *               used for escaping as Internet Explorer &lt; 8 does not recognize it.
@@ -1060,8 +1062,9 @@ public final class CssEscape {
      *       <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
      *       <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
      *       Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
-     *       when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
-     *       (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
+     *       when an identifier starts with two hyphens or hyphen + digit, or is just a hyphen.
+     *       Also, the <kbd>&#92;_</kbd> (<kbd>U+005F</kbd>) escape will only be used at the beginning of
+     *       an identifier to avoid
      *       problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
      *       (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
      *       used for escaping as Internet Explorer &lt; 8 does not recognize it.
@@ -1148,8 +1151,9 @@ public final class CssEscape {
      *               <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
      *               <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
      *               Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
-     *               when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
-     *               (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
+     *               when an identifier starts with two hyphens or hyphen + digit, or is just a hyphen.
+     *               Also, the <kbd>&#92;_</kbd> (<kbd>U+005F</kbd>) escape will only be used at the beginning of
+     *               an identifier to avoid
      *               problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
      *               (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
      *               used for escaping as Internet Explorer &lt; 8 does not recognize it.
@@ -1293,8 +1297,9 @@ public final class CssEscape {
      *       <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
      *       <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
      *       Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
-     *       when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
-     *       (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
+     *       when an identifier starts with two hyphens or hyphen + digit, or is just a hyphen.
+     *       Also, the <kbd>&#92;_</kbd> (<kbd>U+005F</kbd>) escape will only be used at the beginning of
+     *       an identifier to avoid
      *       problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
      *       (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
      *       used for escaping as Internet Explorer &lt; 8 does not recognize it.
@@ -1381,8 +1386,9 @@ public final class CssEscape {
      *               <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
      *               <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
      *               Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
-     *               when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
-     *               (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
+     *               when an identifier starts with two hyphens or hyphen + digit, or is just a hyphen.
+     *               Also, the <kbd>&#92;_</kbd> (<kbd>U+005F</kbd>) escape will only be used at the beginning of
+     *               an identifier to avoid
      *               problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
      *               (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
      *               used for escaping as Internet Explorer &lt; 8 does not recognize it.
@@ -1522,8 +1528,9 @@ public final class CssEscape {
      *       <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
      *       <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
      *       Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
-     *       when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
-     *       (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
+     *       when an identifier starts with two hyphens or hyphen + digit, or is just a hyphen.
+     *       Also, the <kbd>&#92;_</kbd> (<kbd>U+005F</kbd>) escape will only be used at the beginning of
+     *       an identifier to avoid
      *       problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
      *       (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
      *       used for escaping as Internet Explorer &lt; 8 does not recognize it.
@@ -1611,8 +1618,9 @@ public final class CssEscape {
      *               <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
      *               <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
      *               Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
-     *               when an identifier starts with two hypens or hyphen + digit. Also, the <kbd>&#92;_</kbd>
-     *               (<kbd>U+005F</kbd>) escape will only be used at the beginning of an identifier to avoid
+     *               when an identifier starts with two hyphens or hyphen + digit, or is just a hyphen.
+     *               Also, the <kbd>&#92;_</kbd> (<kbd>U+005F</kbd>) escape will only be used at the beginning of
+     *               an identifier to avoid
      *               problems with Internet Explorer 6. In the same sense, note that the <kbd>&#92;:</kbd>
      *               (<kbd>U+003A</kbd>) escape sequence is also defined in the standard, but will not be
      *               used for escaping as Internet Explorer &lt; 8 does not recognize it.
