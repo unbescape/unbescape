@@ -94,7 +94,7 @@ final class JavaScriptEscapeUtil {
     /*
      * Structures for holding the Single Escape Characters
      */
-    private static int SEC_CHARS_LEN = '\\' + 1; // 0x5C + 1 = 0x5D
+    private static int SEC_CHARS_LEN = '{' + 1; // 0x7B + 1 = 0x7C
     private static char SEC_CHARS_NO_SEC = '*';
     private static char[] SEC_CHARS;
 
@@ -126,6 +126,12 @@ final class JavaScriptEscapeUtil {
         SEC_CHARS[0x5C] = '\\';
         // slash (solidus) character: will only be escaped if in '</'
         SEC_CHARS[0x2F] = '/';
+        // dollar sign: will only be escaped if followed by '{' or at the end of the text
+        SEC_CHARS[0x24] = '$';
+        // grave accent (backtick): always escaped
+        SEC_CHARS[0x60] = '`';
+        // opening curly bracket: will only be escaped if at the beginning of the text
+        SEC_CHARS[0x7B] = '{';
 
 
 
@@ -180,6 +186,15 @@ final class JavaScriptEscapeUtil {
         ESCAPE_LEVELS[0x5C] = 1;
         // slash (solidus) character: will only be escaped if in '</', but we signal it as level 1 anyway
         ESCAPE_LEVELS[0x2F] = 1;
+
+        /*
+         * Grave accent (backtick) will be level 1 (always escaped). Dollar sign and opening curly bracket will only
+         * be escaped in specific positions (see escape methods), but we signal them as level 1 anyway. All three are
+         * needed for escaped text to be placed inside template literals.
+         */
+        ESCAPE_LEVELS[0x60] = 1;
+        ESCAPE_LEVELS[0x24] = 1;
+        ESCAPE_LEVELS[0x7B] = 1;
 
         /*
          * Ampersand (&) will be level 1 (always escaped) in order to protect from code injection in XHTML
@@ -279,6 +294,23 @@ final class JavaScriptEscapeUtil {
              * appears after a '<' ('</') or level >= 3 (non alphanumeric)
              */
             if (codepoint == '/' && level < 3 && (i == 0 || text.charAt(i - 1) != '<')) {
+                continue;
+            }
+
+            /*
+             * Check whether the character is a dollar sign. In such case, only escape if it is followed by '{' (which
+             * would start a substitution in a template literal), if it is the last char (as code right after the
+             * escaped text might start with '{'), or if level >= 3 (non alphanumeric)
+             */
+            if (codepoint == '$' && level < 3 && (i + 1) < max && text.charAt(i + 1) != '{') {
+                continue;
+            }
+
+            /*
+             * Check whether the character is an opening curly bracket. In such case, only escape if it is the first
+             * char (as code right before the escaped text might end with '$'), or if level >= 3 (non alphanumeric)
+             */
+            if (codepoint == '{' && level < 3 && i > offset) {
                 continue;
             }
 
@@ -447,6 +479,25 @@ final class JavaScriptEscapeUtil {
             }
 
             /*
+             * Check whether the character is a dollar sign. In such case, only escape if it is followed by '{' (which
+             * would start a substitution in a template literal), if it is the last char (as code right after the
+             * escaped text might start with '{'), or if level >= 3 (non alphanumeric)
+             */
+            if (codepoint == '$' && level < 3 && c2 >= 0 && c2 != '{') {
+                writer.write(c1);
+                continue;
+            }
+
+            /*
+             * Check whether the character is an opening curly bracket. In such case, only escape if it is the first
+             * char (as code right before the escaped text might end with '$'), or if level >= 3 (non alphanumeric)
+             */
+            if (codepoint == '{' && level < 3 && c0 >= 0) {
+                writer.write(c1);
+                continue;
+            }
+
+            /*
              * Shortcut: we might not want to escape non-ASCII chars at all either.
              * We also check we are not dealing with U+2028 or U+2029, which the JavaScript spec considers
              * LineTerminators and therefore should be escaped always.
@@ -576,6 +627,23 @@ final class JavaScriptEscapeUtil {
              * appears after a '<' ('</') or level >= 3 (non alphanumeric)
              */
             if (codepoint == '/' && level < 3 && (i == 0 || text[i - 1] != '<')) {
+                continue;
+            }
+
+            /*
+             * Check whether the character is a dollar sign. In such case, only escape if it is followed by '{' (which
+             * would start a substitution in a template literal), if it is the last char (as code right after the
+             * escaped text might start with '{'), or if level >= 3 (non alphanumeric)
+             */
+            if (codepoint == '$' && level < 3 && (i + 1) < max && text[i + 1] != '{') {
+                continue;
+            }
+
+            /*
+             * Check whether the character is an opening curly bracket. In such case, only escape if it is the first
+             * char (as code right before the escaped text might end with '$'), or if level >= 3 (non alphanumeric)
+             */
+            if (codepoint == '{' && level < 3 && i > offset) {
                 continue;
             }
 

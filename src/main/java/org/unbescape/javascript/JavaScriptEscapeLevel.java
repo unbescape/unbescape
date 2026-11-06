@@ -56,6 +56,15 @@ package org.unbescape.javascript;
  *               escape type (e.g. <kbd>&#92;u0026</kbd>).
  *           </li>
  *           <li>
+ *               The grave accent or backtick (<kbd>&#96;</kbd>, <kbd>U+0060</kbd>), which will always be escaped; the
+ *               dollar sign (<kbd>$</kbd>, <kbd>U+0024</kbd>), which will be escaped when followed by <kbd>{</kbd> or
+ *               at the end of the text; and the opening curly bracket (<kbd>{</kbd>, <kbd>U+007B</kbd>), which will
+ *               be escaped at the beginning of the text. They will be escaped as <kbd>&#92;&#96;</kbd>,
+ *               <kbd>&#92;$</kbd> and <kbd>&#92;{</kbd> (or using the hexadecimal sequence corresponding to the
+ *               selected escape type, if it does not use Single Escape Characters), so that escaped text can also be
+ *               placed inside template literals.
+ *           </li>
+ *           <li>
  *               The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>,
  *               <kbd>U+003E</kbd>) symbols, which will always be escaped so that escaped text never contains them,
  *               and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in HTML. Note there are no

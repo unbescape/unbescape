@@ -78,6 +78,15 @@ import java.io.Writer;
  *               is not supported by Microsoft Internet Explorer versions &lt; 9.
  *           </li>
  *           <li>
+ *               The grave accent or backtick (<kbd>&#96;</kbd>, <kbd>U+0060</kbd>), which will always be escaped; the
+ *               dollar sign (<kbd>$</kbd>, <kbd>U+0024</kbd>), which will be escaped when followed by <kbd>{</kbd> or
+ *               at the end of the text; and the opening curly bracket (<kbd>{</kbd>, <kbd>U+007B</kbd>), which will
+ *               be escaped at the beginning of the text. They will be escaped as <kbd>&#92;&#96;</kbd>,
+ *               <kbd>&#92;$</kbd> and <kbd>&#92;{</kbd> (or using the hexadecimal sequence corresponding to the
+ *               selected escape type, if it does not use Single Escape Characters), so that escaped text can also be
+ *               placed inside template literals.
+ *           </li>
+ *           <li>
  *               The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>,
  *               <kbd>U+003E</kbd>) symbols, which will always be escaped so that escaped text never contains them,
  *               and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in HTML. Note there are no
@@ -102,6 +111,11 @@ import java.io.Writer;
  *       characters not representable by only one <kbd>char</kbd> in Java (<kbd>&gt;&#92;uFFFF</kbd>).</li>
  * </ul>
  *
+ * <p>
+ *   Escaped text can be placed inside single-quoted, double-quoted and template literals
+ *   (<kbd>&#39;...&#39;</kbd>, <kbd>&quot;...&quot;</kbd> or <kbd>&#96;...&#96;</kbd>). Tagged templates (such as
+ *   <kbd>String.raw&#96;...&#96;</kbd>) are not supported, as their tag functions can access the escaped (raw) text.
+ * </p>
  * <p>
  *   Note that escaping only applies to the escaped text itself: when escaped JavaScript literals are placed
  *   inside <kbd>&lt;script&gt;</kbd> tags in HTML, the (non-escaped) code around them must also be adequate
@@ -221,6 +235,14 @@ public final class JavaScriptEscape {
      *       is not supported by Microsoft Internet Explorer versions &lt; 9.
      *   </li>
      *   <li>
+     *       The grave accent or backtick (<kbd>&#96;</kbd>, <kbd>U+0060</kbd>), which will always be escaped; the
+     *       dollar sign (<kbd>$</kbd>, <kbd>U+0024</kbd>), which will be escaped when followed by <kbd>{</kbd> or at
+     *       the end of the text; and the opening curly bracket (<kbd>{</kbd>, <kbd>U+007B</kbd>), which will be
+     *       escaped at the beginning of the text. They will be escaped as <kbd>&#92;&#96;</kbd>, <kbd>&#92;$</kbd>
+     *       and <kbd>&#92;{</kbd> (or using the hexadecimal sequence corresponding to the selected escape type, if it
+     *       does not use Single Escape Characters), so that escaped text can also be placed inside template literals.
+     *   </li>
+     *   <li>
      *       The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>, <kbd>U+003E</kbd>)
      *       symbols, which will always be escaped so that escaped text never contains them, and can therefore be
      *       placed inside <kbd>&lt;script&gt;</kbd> tags in HTML. Note there are no <em>Single Escape Characters</em>
@@ -289,6 +311,15 @@ public final class JavaScriptEscape {
      *               (<kbd>U+000B</kbd>) is actually included as a Single Escape
      *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
      *               is not supported by Microsoft Internet Explorer versions &lt; 9.
+     *           </li>
+     *           <li>
+     *               The grave accent or backtick (<kbd>&#96;</kbd>, <kbd>U+0060</kbd>), which will always be escaped;
+     *               the dollar sign (<kbd>$</kbd>, <kbd>U+0024</kbd>), which will be escaped when followed by
+     *               <kbd>{</kbd> or at the end of the text; and the opening curly bracket (<kbd>{</kbd>,
+     *               <kbd>U+007B</kbd>), which will be escaped at the beginning of the text. They will be escaped as
+     *               <kbd>&#92;&#96;</kbd>, <kbd>&#92;$</kbd> and <kbd>&#92;{</kbd> (or using the hexadecimal sequence
+     *               corresponding to the selected escape type, if it does not use Single Escape Characters), so that
+     *               escaped text can also be placed inside template literals.
      *           </li>
      *           <li>
      *               The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>,
@@ -413,6 +444,14 @@ public final class JavaScriptEscape {
      *       is not supported by Microsoft Internet Explorer versions &lt; 9.
      *   </li>
      *   <li>
+     *       The grave accent or backtick (<kbd>&#96;</kbd>, <kbd>U+0060</kbd>), which will always be escaped; the
+     *       dollar sign (<kbd>$</kbd>, <kbd>U+0024</kbd>), which will be escaped when followed by <kbd>{</kbd> or at
+     *       the end of the text; and the opening curly bracket (<kbd>{</kbd>, <kbd>U+007B</kbd>), which will be
+     *       escaped at the beginning of the text. They will be escaped as <kbd>&#92;&#96;</kbd>, <kbd>&#92;$</kbd>
+     *       and <kbd>&#92;{</kbd> (or using the hexadecimal sequence corresponding to the selected escape type, if it
+     *       does not use Single Escape Characters), so that escaped text can also be placed inside template literals.
+     *   </li>
+     *   <li>
      *       The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>, <kbd>U+003E</kbd>)
      *       symbols, which will always be escaped so that escaped text never contains them, and can therefore be
      *       placed inside <kbd>&lt;script&gt;</kbd> tags in HTML. Note there are no <em>Single Escape Characters</em>
@@ -483,6 +522,15 @@ public final class JavaScriptEscape {
      *               (<kbd>U+000B</kbd>) is actually included as a Single Escape
      *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
      *               is not supported by Microsoft Internet Explorer versions &lt; 9.
+     *           </li>
+     *           <li>
+     *               The grave accent or backtick (<kbd>&#96;</kbd>, <kbd>U+0060</kbd>), which will always be escaped;
+     *               the dollar sign (<kbd>$</kbd>, <kbd>U+0024</kbd>), which will be escaped when followed by
+     *               <kbd>{</kbd> or at the end of the text; and the opening curly bracket (<kbd>{</kbd>,
+     *               <kbd>U+007B</kbd>), which will be escaped at the beginning of the text. They will be escaped as
+     *               <kbd>&#92;&#96;</kbd>, <kbd>&#92;$</kbd> and <kbd>&#92;{</kbd> (or using the hexadecimal sequence
+     *               corresponding to the selected escape type, if it does not use Single Escape Characters), so that
+     *               escaped text can also be placed inside template literals.
      *           </li>
      *           <li>
      *               The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>,
@@ -620,6 +668,14 @@ public final class JavaScriptEscape {
      *       is not supported by Microsoft Internet Explorer versions &lt; 9.
      *   </li>
      *   <li>
+     *       The grave accent or backtick (<kbd>&#96;</kbd>, <kbd>U+0060</kbd>), which will always be escaped; the
+     *       dollar sign (<kbd>$</kbd>, <kbd>U+0024</kbd>), which will be escaped when followed by <kbd>{</kbd> or at
+     *       the end of the text; and the opening curly bracket (<kbd>{</kbd>, <kbd>U+007B</kbd>), which will be
+     *       escaped at the beginning of the text. They will be escaped as <kbd>&#92;&#96;</kbd>, <kbd>&#92;$</kbd>
+     *       and <kbd>&#92;{</kbd> (or using the hexadecimal sequence corresponding to the selected escape type, if it
+     *       does not use Single Escape Characters), so that escaped text can also be placed inside template literals.
+     *   </li>
+     *   <li>
      *       The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>, <kbd>U+003E</kbd>)
      *       symbols, which will always be escaped so that escaped text never contains them, and can therefore be
      *       placed inside <kbd>&lt;script&gt;</kbd> tags in HTML. Note there are no <em>Single Escape Characters</em>
@@ -690,6 +746,15 @@ public final class JavaScriptEscape {
      *               (<kbd>U+000B</kbd>) is actually included as a Single Escape
      *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
      *               is not supported by Microsoft Internet Explorer versions &lt; 9.
+     *           </li>
+     *           <li>
+     *               The grave accent or backtick (<kbd>&#96;</kbd>, <kbd>U+0060</kbd>), which will always be escaped;
+     *               the dollar sign (<kbd>$</kbd>, <kbd>U+0024</kbd>), which will be escaped when followed by
+     *               <kbd>{</kbd> or at the end of the text; and the opening curly bracket (<kbd>{</kbd>,
+     *               <kbd>U+007B</kbd>), which will be escaped at the beginning of the text. They will be escaped as
+     *               <kbd>&#92;&#96;</kbd>, <kbd>&#92;$</kbd> and <kbd>&#92;{</kbd> (or using the hexadecimal sequence
+     *               corresponding to the selected escape type, if it does not use Single Escape Characters), so that
+     *               escaped text can also be placed inside template literals.
      *           </li>
      *           <li>
      *               The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>,
@@ -823,6 +888,14 @@ public final class JavaScriptEscape {
      *       is not supported by Microsoft Internet Explorer versions &lt; 9.
      *   </li>
      *   <li>
+     *       The grave accent or backtick (<kbd>&#96;</kbd>, <kbd>U+0060</kbd>), which will always be escaped; the
+     *       dollar sign (<kbd>$</kbd>, <kbd>U+0024</kbd>), which will be escaped when followed by <kbd>{</kbd> or at
+     *       the end of the text; and the opening curly bracket (<kbd>{</kbd>, <kbd>U+007B</kbd>), which will be
+     *       escaped at the beginning of the text. They will be escaped as <kbd>&#92;&#96;</kbd>, <kbd>&#92;$</kbd>
+     *       and <kbd>&#92;{</kbd> (or using the hexadecimal sequence corresponding to the selected escape type, if it
+     *       does not use Single Escape Characters), so that escaped text can also be placed inside template literals.
+     *   </li>
+     *   <li>
      *       The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>, <kbd>U+003E</kbd>)
      *       symbols, which will always be escaped so that escaped text never contains them, and can therefore be
      *       placed inside <kbd>&lt;script&gt;</kbd> tags in HTML. Note there are no <em>Single Escape Characters</em>
@@ -894,6 +967,15 @@ public final class JavaScriptEscape {
      *               (<kbd>U+000B</kbd>) is actually included as a Single Escape
      *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
      *               is not supported by Microsoft Internet Explorer versions &lt; 9.
+     *           </li>
+     *           <li>
+     *               The grave accent or backtick (<kbd>&#96;</kbd>, <kbd>U+0060</kbd>), which will always be escaped;
+     *               the dollar sign (<kbd>$</kbd>, <kbd>U+0024</kbd>), which will be escaped when followed by
+     *               <kbd>{</kbd> or at the end of the text; and the opening curly bracket (<kbd>{</kbd>,
+     *               <kbd>U+007B</kbd>), which will be escaped at the beginning of the text. They will be escaped as
+     *               <kbd>&#92;&#96;</kbd>, <kbd>&#92;$</kbd> and <kbd>&#92;{</kbd> (or using the hexadecimal sequence
+     *               corresponding to the selected escape type, if it does not use Single Escape Characters), so that
+     *               escaped text can also be placed inside template literals.
      *           </li>
      *           <li>
      *               The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>,
