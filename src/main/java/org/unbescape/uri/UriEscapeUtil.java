@@ -235,6 +235,19 @@ final class UriEscapeUtil {
     }
 
 
+    /*
+     * Computes the String to be encoded (into bytes) for a codepoint. Lone (unpaired) surrogates cannot be
+     * encoded, so they are replaced with U+FFFD (REPLACEMENT CHARACTER), as established by the WHATWG URL Standard
+     * (when the encoding cannot represent U+FFFD either, it will apply its own replacement, usually '?').
+     */
+    private static String toEncodableString(final int codepoint) {
+        if (codepoint >= 0xD800 && codepoint <= 0xDFFF) {
+            return String.valueOf((char) 0xFFFD);
+        }
+        return new String(Character.toChars(codepoint));
+    }
+
+
     static byte parseHexa(final char c1, final char c2) {
 
         final int h1 = hexaValue(c1);
@@ -323,7 +336,7 @@ final class UriEscapeUtil {
 
             final byte[] charAsBytes;
             try {
-                charAsBytes = new String(Character.toChars(codepoint)).getBytes(encoding);
+                charAsBytes = toEncodableString(codepoint).getBytes(encoding);
             } catch (final UnsupportedEncodingException e) {
                 throw new IllegalArgumentException("Exception while escaping URI: Bad encoding '" + encoding + "'", e);
             }
@@ -426,7 +439,7 @@ final class UriEscapeUtil {
 
             final byte[] charAsBytes;
             try {
-                charAsBytes = new String(Character.toChars(codepoint)).getBytes(encoding);
+                charAsBytes = toEncodableString(codepoint).getBytes(encoding);
             } catch (final UnsupportedEncodingException e) {
                 throw new IllegalArgumentException("Exception while escaping URI: Bad encoding '" + encoding + "'", e);
             }
@@ -508,7 +521,7 @@ final class UriEscapeUtil {
 
             final byte[] charAsBytes;
             try {
-                charAsBytes = new String(Character.toChars(codepoint)).getBytes(encoding);
+                charAsBytes = toEncodableString(codepoint).getBytes(encoding);
             } catch (final UnsupportedEncodingException e) {
                 throw new IllegalArgumentException("Exception while escaping URI: Bad encoding '" + encoding + "'", e);
             }

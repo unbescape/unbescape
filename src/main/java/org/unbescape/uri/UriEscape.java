@@ -79,6 +79,9 @@ import java.io.Writer;
  *     <dd>The percent-encoding technique for escaping consists of transforming the character that needs to be
  *         escaped into a sequence of bytes using a previously specified encoding (<kbd>UTF-8</kbd> by default), and
  *         then wrinting each byte as <kbd>%HH</kbd>, being <kbd>HH</kbd> its hexadecimal value (of the byte).
+ *         Lone (unpaired) surrogates cannot be encoded, so they are encoded as U+FFFD (REPLACEMENT CHARACTER),
+ *         as established by the WHATWG URL Standard (<kbd>%EF%BF%BD</kbd> in <kbd>UTF-8</kbd>). Characters
+ *         the encoding cannot represent are replaced by the encoding itself (usually with <kbd>?</kbd>).
  *     </dd>
  * </dl>
  *
