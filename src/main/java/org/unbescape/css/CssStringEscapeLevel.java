@@ -50,8 +50,9 @@ package org.unbescape.css;
  *                   the closing of the literal and the <kbd>&lt;style&gt;</kbd> tag itself.
  *               </li>
  *               <li>
- *                   The less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>), which will always be escaped as a
- *                   hexadecimal escape (e.g. <kbd>&#92;3C&nbsp;</kbd>), so that escaped text never contains it.
+ *                   The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>,
+ *                   <kbd>U+003E</kbd>) symbols, which will always be escaped as hexadecimal escapes (e.g.
+ *                   <kbd>&#92;3C&nbsp;</kbd>), so that escaped text never contains them.
  *               </li>
  *             </ul>
  *           </li>

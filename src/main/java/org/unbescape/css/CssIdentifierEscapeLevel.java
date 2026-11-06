@@ -48,7 +48,6 @@ package org.unbescape.css;
  *               <kbd>&#92;&#47;</kbd> (<kbd>U+002F</kbd>),
  *               <kbd>&#92;;</kbd> (<kbd>U+003B</kbd>),
  *               <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>),
- *               <kbd>&#92;&gt;</kbd> (<kbd>U+003E</kbd>),
  *               <kbd>&#92;?</kbd> (<kbd>U+003F</kbd>),
  *               <kbd>&#92;@</kbd> (<kbd>U+0040</kbd>),
  *               <kbd>&#92;[</kbd> (<kbd>U+005B</kbd>),

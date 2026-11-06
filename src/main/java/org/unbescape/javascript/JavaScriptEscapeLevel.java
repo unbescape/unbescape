@@ -56,10 +56,11 @@ package org.unbescape.javascript;
  *               escape type (e.g. <kbd>&#92;u0026</kbd>).
  *           </li>
  *           <li>
- *               The less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>), which will always be escaped so that
- *               escaped text never contains it, and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in
- *               HTML. Note there is no <em>Single Escape Character</em> for this symbol, so it will be escaped using
- *               the sequence corresponding to the selected escape type (e.g. <kbd>&#92;x3C</kbd> or <kbd>&#92;u003C</kbd>).
+ *               The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>,
+ *               <kbd>U+003E</kbd>) symbols, which will always be escaped so that escaped text never contains them,
+ *               and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in HTML. Note there are no
+ *               <em>Single Escape Characters</em> for these symbols, so they will be escaped using the sequence
+ *               corresponding to the selected escape type (e.g. <kbd>&#92;x3C</kbd> or <kbd>&#92;u003C</kbd>).
  *           </li>
  *           <li>
  *               Two ranges of non-displayable, control characters (some of which are already part of the
