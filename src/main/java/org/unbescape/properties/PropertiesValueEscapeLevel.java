@@ -38,6 +38,11 @@ package org.unbescape.properties;
  *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
  *           </li>
  *           <li>
+ *               The first char of the value, if it is a whitespace (<kbd>U+0020</kbd>), <kbd>:</kbd> (<kbd>U+003A</kbd>)
+ *               or <kbd>=</kbd> (<kbd>U+003D</kbd>), as <kbd>&#92;&nbsp;</kbd>, <kbd>&#92;:</kbd> or <kbd>&#92;=</kbd>
+ *               respectively (as otherwise it would be read as part of the key-value separator).
+ *           </li>
+ *           <li>
  *               Two ranges of non-displayable, control characters (some of which are already part of the
  *               <em>single escape characters</em> list): <kbd>U+0000</kbd> to <kbd>U+001F</kbd>
  *               and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.

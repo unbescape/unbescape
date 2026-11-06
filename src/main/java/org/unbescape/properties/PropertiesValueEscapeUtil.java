@@ -206,6 +206,19 @@ final class PropertiesValueEscapeUtil {
 
 
     /*
+     * Determines whether a char needs to be escaped (with a backslash) when it is the first char of a value. When
+     * reading a .properties file, any whitespace (and the first ':' or '=') right after a key is considered part of
+     * the key-value separator, and therefore ignored, so these chars are lost if a value starts with them. Tabs and
+     * form feeds are always escaped anyway (as SECs).
+     */
+    private static boolean isLeadingSpecialChar(final int codepoint) {
+        return codepoint == ' ' || codepoint == ':' || codepoint == '=';
+    }
+
+
+
+
+    /*
      * Perform an escape operation, based on String, according to the specified level.
      */
     static String escape(final String text, final PropertiesValueEscapeLevel escapeLevel) {
@@ -233,6 +246,13 @@ final class PropertiesValueEscapeUtil {
              * all for them
              */
             if (codepoint <= (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[codepoint]) {
+                if (i == offset && isLeadingSpecialChar(codepoint)) {
+                    // The first char is escaped with a backslash, even if the level would not require it
+                    strBuilder = new StringBuilder(max + 20);
+                    strBuilder.append(ESCAPE_PREFIX);
+                    strBuilder.append((char) codepoint);
+                    readOffset = i + 1;
+                }
                 continue;
             }
 
@@ -356,12 +376,17 @@ final class PropertiesValueEscapeUtil {
 
         int c1, c2; // c0: last char, c1: current char, c2: next char
 
+        boolean first = true;
+
         c2 = reader.read();
 
         while (c2 >= 0) {
 
             c1 = c2;
             c2 = reader.read();
+
+            final boolean isFirst = first;
+            first = false;
 
             final int codepoint = codePointAt((char)c1, (char)c2);
 
@@ -371,6 +396,10 @@ final class PropertiesValueEscapeUtil {
              * all for them
              */
             if (codepoint <= (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[codepoint]) {
+                if (isFirst && isLeadingSpecialChar(codepoint)) {
+                    // The first char is escaped with a backslash, even if the level would not require it
+                    writer.write(ESCAPE_PREFIX);
+                }
                 writer.write(c1);
                 continue;
             }
@@ -482,6 +511,12 @@ final class PropertiesValueEscapeUtil {
              * all for them
              */
             if (codepoint <= (ESCAPE_LEVELS_LEN - 2) && level < ESCAPE_LEVELS[codepoint]) {
+                if (i == offset && isLeadingSpecialChar(codepoint)) {
+                    // The first char is escaped with a backslash, even if the level would not require it
+                    writer.write(ESCAPE_PREFIX);
+                    writer.write((char) codepoint);
+                    readOffset = i + 1;
+                }
                 continue;
             }
 
