@@ -51,7 +51,10 @@ import java.io.Writer;
  * <p>
  *   <strong>Unescape</strong> operations need no configuration parameters. Unescape operations
  *   will always perform <em>complete</em> unescape of backslash and hexadecimal escapes, including all
- *   required <em>tweaks</em> (i.e. optional whitespace characters) needed for unescaping.
+ *   required <em>tweaks</em> (i.e. optional whitespace characters) needed for unescaping. As established by the
+ *   CSS Syntax specification, hexadecimal escapes for <kbd>U+0000</kbd>, for lone (unpaired) surrogates or for
+ *   values out of the Unicode range are unescaped as <kbd>U+FFFD</kbd> (REPLACEMENT CHARACTER). Note that this
+ *   also applies to text escaped by this class: <kbd>U+0000</kbd> and lone surrogates cannot be represented in CSS.
  * </p>
  *
  * <strong><u>Features</u></strong>

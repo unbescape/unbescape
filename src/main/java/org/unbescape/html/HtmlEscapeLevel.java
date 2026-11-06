@@ -55,6 +55,14 @@ package org.unbescape.html;
  * </ul>
  *
  * <p>
+ *   Note that, whatever the level, <kbd>U+0000</kbd> and lone (unpaired) surrogates, which are not allowed in HTML,
+ *   are always escaped (browsers and unescape operations read these references as <kbd>U+FFFD</kbd>). Also note
+ *   that the control characters <kbd>U+0080</kbd> to <kbd>U+009F</kbd> cannot be represented by character
+ *   references in HTML (most references to them are read as Windows-1252 characters), so levels 2 and above will
+ *   not preserve them. See the documentation for the {@link org.unbescape.html.HtmlEscape} class.
+ * </p>
+ *
+ * <p>
  *   For further information, see the <em>Glossary</em> and the <em>References</em> sections at the
  *   documentation for the {@link org.unbescape.html.HtmlEscape} class.
  * </p>

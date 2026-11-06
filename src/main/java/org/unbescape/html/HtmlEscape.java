@@ -46,7 +46,9 @@ import java.io.Writer;
  * <p>
  *   <strong>Unescape</strong> operations need no configuration parameters. Unescape operations
  *   will always perform <em>complete</em> unescape of NCRs (whole HTML5 set supported), decimal
- *   and hexadecimal references.
+ *   and hexadecimal references. As established by the HTML5 specification, numerical references to
+ *   <kbd>U+0000</kbd>, to surrogates or to values out of the Unicode range are unescaped as <kbd>U+FFFD</kbd>
+ *   (REPLACEMENT CHARACTER).
  * </p>
  *
  * <strong><u>Features</u></strong>
@@ -63,6 +65,14 @@ import java.io.Writer;
  *   <li>Support for the whole Unicode character set: <kbd>&#92;u0000</kbd> to <kbd>&#92;u10FFFF</kbd>, including
  *       characters not representable by only one <kbd>char</kbd> in Java (<kbd>&gt;&#92;uFFFF</kbd>).</li>
  *   <li>Support for unescape of double-char NCRs in HTML5: <kbd>'&amp;fjlig;'</kbd> &rarr; <kbd>'fj'</kbd>.</li>
+ *   <li><kbd>U+0000</kbd> and lone (unpaired) surrogates, which are not allowed in HTML, are always escaped as
+ *       numerical references, whatever the escape level. Note that browsers (and unescape operations) read these
+ *       references as <kbd>U+FFFD</kbd> (REPLACEMENT CHARACTER).</li>
+ *   <li>The control characters <kbd>U+0080</kbd> to <kbd>U+009F</kbd> cannot be represented by character
+ *       references in HTML: as established by the HTML5 specification, numerical references to the code points 128
+ *       to 159 are read as the Windows-1252 character with that code (e.g. <kbd>'&amp;#128;'</kbd> as '&euro;'),
+ *       except for 129, 141, 143, 144 and 157. Escape levels 2 and above, which escape all non-ASCII characters,
+ *       will therefore not preserve these control characters (levels 0 and 1 leave them unescaped).</li>
  *   <li>Support for a set of HTML5 unescape <em>tweaks</em> included in the HTML5 specification:
  *       <ul>
  *         <li>Unescape of numerical character references not ending in semi-colon
