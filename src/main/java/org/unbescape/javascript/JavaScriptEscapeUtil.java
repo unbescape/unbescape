@@ -233,6 +233,13 @@ final class JavaScriptEscapeUtil {
 
 
 
+    private static boolean isDigit(final int c) {
+        return c >= '0' && c <= '9';
+    }
+
+
+
+
     /*
      * Perform an escape operation, based on String, according to the specified level and type.
      */
@@ -328,7 +335,10 @@ final class JavaScriptEscapeUtil {
 
                 final char sec = SEC_CHARS[codepoint];
 
-                if (sec != SEC_CHARS_NO_SEC) {
+                // '\0' cannot be followed by a digit (they would be read together as an octal escape), so in
+                // that case U+0000 is escaped as hexadecimal instead.
+                if (sec != SEC_CHARS_NO_SEC &&
+                        (codepoint != 0x00 || !isDigit((i + 1 < max) ? text.charAt(i + 1) : -1))) {
                     // SEC found! just write it and go for the next char
                     strBuilder.append(ESCAPE_PREFIX);
                     strBuilder.append(sec);
@@ -488,7 +498,9 @@ final class JavaScriptEscapeUtil {
 
                 final char sec = SEC_CHARS[codepoint];
 
-                if (sec != SEC_CHARS_NO_SEC) {
+                // '\0' cannot be followed by a digit (they would be read together as an octal escape), so in
+                // that case U+0000 is escaped as hexadecimal instead.
+                if (sec != SEC_CHARS_NO_SEC && (codepoint != 0x00 || !isDigit(c2))) {
                     // SEC found! just write it and go for the next char
                     writer.write(ESCAPE_PREFIX);
                     writer.write(sec);
@@ -615,7 +627,10 @@ final class JavaScriptEscapeUtil {
 
                 final char sec = SEC_CHARS[codepoint];
 
-                if (sec != SEC_CHARS_NO_SEC) {
+                // '\0' cannot be followed by a digit (they would be read together as an octal escape), so in
+                // that case U+0000 is escaped as hexadecimal instead.
+                if (sec != SEC_CHARS_NO_SEC &&
+                        (codepoint != 0x00 || !isDigit((i + 1 < max) ? text[i + 1] : -1))) {
                     // SEC found! just write it and go for the next char
                     writer.write(ESCAPE_PREFIX);
                     writer.write(sec);

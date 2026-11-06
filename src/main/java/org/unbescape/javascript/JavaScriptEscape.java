@@ -59,7 +59,7 @@ import java.io.Writer;
  *   <li>The JavaScript basic escape set is supported. This <em>basic set</em> consists of:
  *         <ul>
  *           <li>The <em>Single Escape Characters</em>:
- *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>),
+ *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>, only when not followed by a digit),
  *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
  *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
  *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
@@ -135,7 +135,7 @@ import java.io.Writer;
  * <dl>
  *   <dt>SEC</dt>
  *     <dd>Single Escape Character:
- *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>),
+ *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>, only when not followed by a digit),
  *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
  *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
  *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
@@ -202,7 +202,7 @@ public final class JavaScriptEscape {
      * </p>
      * <ul>
      *   <li>The <em>Single Escape Characters</em>:
-     *       <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>),
+     *       <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>, only when not followed by a digit),
      *       <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
      *       <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
      *       <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
@@ -272,7 +272,7 @@ public final class JavaScriptEscape {
      *   <li>The JavaScript basic escape set:
      *         <ul>
      *           <li>The <em>Single Escape Characters</em>:
-     *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>),
+     *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>, only when not followed by a digit),
      *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
      *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
      *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
@@ -394,7 +394,7 @@ public final class JavaScriptEscape {
      * </p>
      * <ul>
      *   <li>The <em>Single Escape Characters</em>:
-     *       <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>),
+     *       <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>, only when not followed by a digit),
      *       <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
      *       <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
      *       <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
@@ -466,7 +466,7 @@ public final class JavaScriptEscape {
      *   <li>The JavaScript basic escape set:
      *         <ul>
      *           <li>The <em>Single Escape Characters</em>:
-     *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>),
+     *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>, only when not followed by a digit),
      *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
      *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
      *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
@@ -601,7 +601,7 @@ public final class JavaScriptEscape {
      * </p>
      * <ul>
      *   <li>The <em>Single Escape Characters</em>:
-     *       <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>),
+     *       <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>, only when not followed by a digit),
      *       <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
      *       <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
      *       <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
@@ -673,7 +673,7 @@ public final class JavaScriptEscape {
      *   <li>The JavaScript basic escape set:
      *         <ul>
      *           <li>The <em>Single Escape Characters</em>:
-     *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>),
+     *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>, only when not followed by a digit),
      *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
      *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
      *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
@@ -804,7 +804,7 @@ public final class JavaScriptEscape {
      * </p>
      * <ul>
      *   <li>The <em>Single Escape Characters</em>:
-     *       <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>),
+     *       <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>, only when not followed by a digit),
      *       <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
      *       <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
      *       <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
@@ -877,7 +877,7 @@ public final class JavaScriptEscape {
      *   <li>The JavaScript basic escape set:
      *         <ul>
      *           <li>The <em>Single Escape Characters</em>:
-     *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>),
+     *               <kbd>&#92;0</kbd> (<kbd>U+0000</kbd>, only when not followed by a digit),
      *               <kbd>&#92;b</kbd> (<kbd>U+0008</kbd>),
      *               <kbd>&#92;t</kbd> (<kbd>U+0009</kbd>),
      *               <kbd>&#92;n</kbd> (<kbd>U+000A</kbd>),
