@@ -65,6 +65,8 @@ import java.io.Writer;
  *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
  *               Besides,
  *               <kbd>&#92;&nbsp;</kbd> (<kbd>U+0020</kbd>),
+ *               <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
+ *               <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
  *               <kbd>&#92;:</kbd> (<kbd>U+003A</kbd>) and
  *               <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>) will be used in Properties keys (not values).
  *           </li>
@@ -117,6 +119,8 @@ import java.io.Writer;
  *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
  *               Besides,
  *               <kbd>&#92;&nbsp;</kbd> (<kbd>U+0020</kbd>),
+ *               <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
+ *               <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
  *               <kbd>&#92;:</kbd> (<kbd>U+003A</kbd>) and
  *               <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>) will be used in Properties keys (not values).
  *     </dd>
@@ -769,6 +773,8 @@ public final class PropertiesEscape {
      *       <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
      *       <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
      *       <kbd>&#92;&nbsp;</kbd> (<kbd>U+0020</kbd>),
+     *       <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
+     *       <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
      *       <kbd>&#92;:</kbd> (<kbd>U+003A</kbd>),
      *       <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>) and
      *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
@@ -819,6 +825,8 @@ public final class PropertiesEscape {
      *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
      *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
      *               <kbd>&#92;&nbsp;</kbd> (<kbd>U+0020</kbd>),
+     *               <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
+     *               <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
      *               <kbd>&#92;:</kbd> (<kbd>U+003A</kbd>),
      *               <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>) and
      *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
@@ -910,6 +918,8 @@ public final class PropertiesEscape {
      *       <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
      *       <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
      *       <kbd>&#92;&nbsp;</kbd> (<kbd>U+0020</kbd>),
+     *       <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
+     *       <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
      *       <kbd>&#92;:</kbd> (<kbd>U+003A</kbd>),
      *       <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>) and
      *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
@@ -960,6 +970,8 @@ public final class PropertiesEscape {
      *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
      *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
      *               <kbd>&#92;&nbsp;</kbd> (<kbd>U+0020</kbd>),
+     *               <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
+     *               <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
      *               <kbd>&#92;:</kbd> (<kbd>U+003A</kbd>),
      *               <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>) and
      *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
@@ -1060,6 +1072,8 @@ public final class PropertiesEscape {
      *       <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
      *       <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
      *       <kbd>&#92;&nbsp;</kbd> (<kbd>U+0020</kbd>),
+     *       <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
+     *       <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
      *       <kbd>&#92;:</kbd> (<kbd>U+003A</kbd>),
      *       <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>) and
      *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
@@ -1110,6 +1124,8 @@ public final class PropertiesEscape {
      *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
      *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
      *               <kbd>&#92;&nbsp;</kbd> (<kbd>U+0020</kbd>),
+     *               <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
+     *               <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
      *               <kbd>&#92;:</kbd> (<kbd>U+003A</kbd>),
      *               <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>) and
      *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
@@ -1206,6 +1222,8 @@ public final class PropertiesEscape {
      *       <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
      *       <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
      *       <kbd>&#92;&nbsp;</kbd> (<kbd>U+0020</kbd>),
+     *       <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
+     *       <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
      *       <kbd>&#92;:</kbd> (<kbd>U+003A</kbd>),
      *       <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>) and
      *       <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).
@@ -1258,6 +1276,8 @@ public final class PropertiesEscape {
      *               <kbd>&#92;f</kbd> (<kbd>U+000C</kbd>),
      *               <kbd>&#92;r</kbd> (<kbd>U+000D</kbd>),
      *               <kbd>&#92;&nbsp;</kbd> (<kbd>U+0020</kbd>),
+     *               <kbd>&#92;!</kbd> (<kbd>U+0021</kbd>),
+     *               <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
      *               <kbd>&#92;:</kbd> (<kbd>U+003A</kbd>),
      *               <kbd>&#92;=</kbd> (<kbd>U+003D</kbd>) and
      *               <kbd>&#92;&#92;</kbd> (<kbd>U+005C</kbd>).

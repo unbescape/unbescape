@@ -55,6 +55,8 @@ final class PropertiesKeyEscapeUtil {
      *        U+000C -> %f
      *        U+000D -> %r
      *        U+0020 -> %  [ ONLY REQUIRED IN KEYS ]
+     *        U+0021 -> %! [ ONLY REQUIRED IN KEYS ]
+     *        U+0023 -> %# [ ONLY REQUIRED IN KEYS ]
      *        U+003A -> %: [ ONLY REQUIRED IN KEYS ]
      *        U+003D -> %= [ ONLY REQUIRED IN KEYS ]
      *        U+005C -> %%
@@ -68,6 +70,7 @@ final class PropertiesKeyEscapeUtil {
      *   NOTE: In Java .properties files, there is a difference between how keys and values must be escaped. Keys
      *         require the escape of ':', '=' and whitespaces (U+0020), because the first of these characters (or a
      *         combination of them) found in a .properties line is considered part of the key-value separator.
+     *         Keys also require the escape of '#' and '!', because a line starting with any of them is a comment.
      *
      *   ------------------------
      *
@@ -123,6 +126,8 @@ final class PropertiesKeyEscapeUtil {
         SEC_CHARS[0x0C] = 'f';
         SEC_CHARS[0x0D] = 'r';
         SEC_CHARS[0x20] = ' ';
+        SEC_CHARS[0x21] = '!';
+        SEC_CHARS[0x23] = '#';
         SEC_CHARS[0x3A] = ':';
         SEC_CHARS[0x3D] = '=';
         SEC_CHARS[0x5C] = '\\';
@@ -174,6 +179,8 @@ final class PropertiesKeyEscapeUtil {
         ESCAPE_LEVELS[0x0C] = 1;
         ESCAPE_LEVELS[0x0D] = 1;
         ESCAPE_LEVELS[0x20] = 1;
+        ESCAPE_LEVELS[0x21] = 1;
+        ESCAPE_LEVELS[0x23] = 1;
         ESCAPE_LEVELS[0x3A] = 1;
         ESCAPE_LEVELS[0x3D] = 1;
         ESCAPE_LEVELS[0x5C] = 1;
