@@ -110,7 +110,9 @@ final class CssStringEscapeUtil {
         BACKSLASH_CHARS[0x23] = '#';
         BACKSLASH_CHARS[0x24] = '$';
         BACKSLASH_CHARS[0x25] = '%';
-        BACKSLASH_CHARS[0x26] = '&';
+        // ampersand: will not be used for escaping, as it is escaped as hexadecimal instead (so that no '&'
+        // appears in escaped text)
+        // BACKSLASH_CHARS[0x26] = '&';
         BACKSLASH_CHARS[0x27] = '\'';
         BACKSLASH_CHARS[0x28] = '(';
         BACKSLASH_CHARS[0x29] = ')';

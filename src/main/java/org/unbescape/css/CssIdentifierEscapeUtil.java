@@ -140,7 +140,9 @@ final class CssIdentifierEscapeUtil {
         BACKSLASH_CHARS[0x23] = '#';
         BACKSLASH_CHARS[0x24] = '$';
         BACKSLASH_CHARS[0x25] = '%';
-        BACKSLASH_CHARS[0x26] = '&';
+        // ampersand: will not be used for escaping, as it is escaped as hexadecimal instead (so that no '&'
+        // appears in escaped text)
+        // BACKSLASH_CHARS[0x26] = '&';
         BACKSLASH_CHARS[0x27] = '\'';
         BACKSLASH_CHARS[0x28] = '(';
         BACKSLASH_CHARS[0x29] = ')';
@@ -158,7 +160,9 @@ final class CssIdentifierEscapeUtil {
         // appears in escaped text)
         // BACKSLASH_CHARS[0x3C] = '<';
         BACKSLASH_CHARS[0x3D] = '=';
-        BACKSLASH_CHARS[0x3E] = '>';
+        // greater-than: will not be used for escaping, as it is escaped as hexadecimal instead (so that no '>'
+        // appears in escaped text)
+        // BACKSLASH_CHARS[0x3E] = '>';
         BACKSLASH_CHARS[0x3F] = '?';
         BACKSLASH_CHARS[0x40] = '@';
         BACKSLASH_CHARS[0x5B] = '[';

@@ -47,7 +47,8 @@ package org.unbescape.css;
  *                   The ampersand (<kbd>&amp;</kbd>, <kbd>U+0026</kbd>) and semi-colon (<kbd>;</kbd>, <kbd>U+003B</kbd>) symbols,
  *                   which will be escaped in order to protect from code injection in XHTML environments: browsers will
  *                   parse XHTML escape codes inside literals in <kbd>&lt;style&gt;</kbd> tags, therefore allowing
- *                   the closing of the literal and the <kbd>&lt;style&gt;</kbd> tag itself.
+ *                   the closing of the literal and the <kbd>&lt;style&gt;</kbd> tag itself. The ampersand will be
+ *                   escaped as a hexadecimal escape (<kbd>&#92;26&nbsp;</kbd>), so that escaped text never contains it.
  *               </li>
  *               <li>
  *                   The less-than (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>,

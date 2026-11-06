@@ -37,7 +37,6 @@ package org.unbescape.css;
  *               <kbd>&#92;#</kbd> (<kbd>U+0023</kbd>),
  *               <kbd>&#92;$</kbd> (<kbd>U+0024</kbd>),
  *               <kbd>&#92;%</kbd> (<kbd>U+0025</kbd>),
- *               <kbd>&#92;&amp;</kbd> (<kbd>U+0026</kbd>),
  *               <kbd>&#92;&#39;</kbd> (<kbd>U+0027</kbd>),
  *               <kbd>&#92;(</kbd> (<kbd>U+0028</kbd>),
  *               <kbd>&#92;)</kbd> (<kbd>U+0029</kbd>),
@@ -59,8 +58,10 @@ package org.unbescape.css;
  *               <kbd>&#92;|</kbd> (<kbd>U+007C</kbd>),
  *               <kbd>&#92;}</kbd> (<kbd>U+007D</kbd>) and
  *               <kbd>&#92;~</kbd> (<kbd>U+007E</kbd>).
- *               Note that the less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>) will always be escaped as a
- *               hexadecimal escape (e.g. <kbd>&#92;3C&nbsp;</kbd>), so that escaped text never contains it.
+ *               Note that the ampersand (<kbd>&amp;</kbd>, <kbd>U+0026</kbd>), less-than (<kbd>&lt;</kbd>,
+ *               <kbd>U+003C</kbd>) and greater-than (<kbd>&gt;</kbd>, <kbd>U+003E</kbd>) symbols will always be
+ *               escaped as hexadecimal escapes (e.g. <kbd>&#92;3C&nbsp;</kbd>), so that escaped text never
+ *               contains them.
  *               Note that the <kbd>&#92;-</kbd> (<kbd>U+002D</kbd>) escape sequence exists, but will only be used
  *               when an identifier starts with two hyphens or hyphen + digit, or is just a hyphen.
  *               Also, the <kbd>&#92;_</kbd> (<kbd>U+005F</kbd>) escape will only be used at the beginning of
