@@ -47,7 +47,7 @@ git push
 ## 4. Create and deploy the release into the staging repositories
 
 ```shell
-mvn clean compile deploy
+mvn -P releases clean compile deploy
 ```
 
 ## 5. Create tag and set to new development version
@@ -56,7 +56,7 @@ mvn clean compile deploy
 mvn scm:tag -Dtag=unbescape-X.Y.Z
 mvn versions:set -DprocessAllModules=true -DnewVersion=X.Y.[Z+1]-SNAPSHOT
 mvn versions:commit
-git add .;
+git add .
 git commit -m "Prepare for next development iteration"
 git push
 ```
