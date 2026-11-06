@@ -179,6 +179,11 @@ final class JsonEscapeUtil {
         ESCAPE_LEVELS[0x26] = 1;
 
         /*
+         * Less-than (<) will be level 1 (always escaped), so that no '<' appears in escaped text
+         */
+        ESCAPE_LEVELS[0x3C] = 1;
+
+        /*
          * JSON defines one ranges of non-displayable, control characters: U+0000 to U+001F.
          * Additionally, the U+007F to U+009F range is also escaped (which is allowed).
          */

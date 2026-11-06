@@ -187,6 +187,11 @@ final class JavaScriptEscapeUtil {
         ESCAPE_LEVELS[0x26] = 1;
 
         /*
+         * Less-than (<) will be level 1 (always escaped), so that no '<' appears in escaped text
+         */
+        ESCAPE_LEVELS[0x3C] = 1;
+
+        /*
          * JavaScript defines two ranges of non-displayable, control characters (some of which are already part of the
          * Single Escape Characters list): U+0001 to U+001F and U+007F to U+009F.
          */

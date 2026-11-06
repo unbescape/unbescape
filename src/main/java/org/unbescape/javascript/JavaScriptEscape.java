@@ -78,6 +78,12 @@ import java.io.Writer;
  *               is not supported by Microsoft Internet Explorer versions &lt; 9.
  *           </li>
  *           <li>
+ *               The less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>), which will always be escaped so that
+ *               escaped text never contains it, and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in
+ *               HTML. Note there is no <em>Single Escape Character</em> for this symbol, so it will be escaped using
+ *               the sequence corresponding to the selected escape type (e.g. <kbd>&#92;x3C</kbd> or <kbd>&#92;u003C</kbd>).
+ *           </li>
+ *           <li>
  *               Two ranges of non-displayable, control characters (some of which are already part of the
  *               <em>single escape characters</em> list): <kbd>U+0001</kbd> to <kbd>U+001F</kbd> and
  *               <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
@@ -94,6 +100,12 @@ import java.io.Writer;
  *   <li>Support for the whole Unicode character set: <kbd>&#92;u0000</kbd> to <kbd>&#92;u10FFFF</kbd>, including
  *       characters not representable by only one <kbd>char</kbd> in Java (<kbd>&gt;&#92;uFFFF</kbd>).</li>
  * </ul>
+ *
+ * <p>
+ *   Note that escaping only applies to the escaped text itself: when escaped JavaScript literals are placed
+ *   inside <kbd>&lt;script&gt;</kbd> tags in HTML, the (non-escaped) code around them must also be adequate
+ *   for that context.
+ * </p>
  *
  * <strong><u>Input/Output</u></strong>
  *
@@ -208,6 +220,12 @@ public final class JavaScriptEscape {
      *       is not supported by Microsoft Internet Explorer versions &lt; 9.
      *   </li>
      *   <li>
+     *       The less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>), which will always be escaped so that
+     *       escaped text never contains it, and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in
+     *       HTML. Note there is no <em>Single Escape Character</em> for this symbol, so it will be escaped using
+     *       the sequence corresponding to the selected escape type (e.g. <kbd>&#92;x3C</kbd> or <kbd>&#92;u003C</kbd>).
+     *   </li>
+     *   <li>
      *       Two ranges of non-displayable, control characters (some of which are already part of the
      *       <em>single escape characters</em> list): <kbd>U+0001</kbd> to <kbd>U+001F</kbd> and
      *       <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
@@ -269,6 +287,12 @@ public final class JavaScriptEscape {
      *               (<kbd>U+000B</kbd>) is actually included as a Single Escape
      *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
      *               is not supported by Microsoft Internet Explorer versions &lt; 9.
+     *           </li>
+     *           <li>
+     *               The less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>), which will always be escaped so that
+     *               escaped text never contains it, and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in
+     *               HTML. Note there is no <em>Single Escape Character</em> for this symbol, so it will be escaped using
+     *               the sequence corresponding to the selected escape type (e.g. <kbd>&#92;x3C</kbd> or <kbd>&#92;u003C</kbd>).
      *           </li>
      *           <li>
      *               Two ranges of non-displayable, control characters (some of which are already part of the
@@ -385,6 +409,12 @@ public final class JavaScriptEscape {
      *       is not supported by Microsoft Internet Explorer versions &lt; 9.
      *   </li>
      *   <li>
+     *       The less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>), which will always be escaped so that
+     *       escaped text never contains it, and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in
+     *       HTML. Note there is no <em>Single Escape Character</em> for this symbol, so it will be escaped using
+     *       the sequence corresponding to the selected escape type (e.g. <kbd>&#92;x3C</kbd> or <kbd>&#92;u003C</kbd>).
+     *   </li>
+     *   <li>
      *       Two ranges of non-displayable, control characters (some of which are already part of the
      *       <em>single escape characters</em> list): <kbd>U+0001</kbd> to <kbd>U+001F</kbd> and
      *       <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
@@ -448,6 +478,12 @@ public final class JavaScriptEscape {
      *               (<kbd>U+000B</kbd>) is actually included as a Single Escape
      *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
      *               is not supported by Microsoft Internet Explorer versions &lt; 9.
+     *           </li>
+     *           <li>
+     *               The less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>), which will always be escaped so that
+     *               escaped text never contains it, and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in
+     *               HTML. Note there is no <em>Single Escape Character</em> for this symbol, so it will be escaped using
+     *               the sequence corresponding to the selected escape type (e.g. <kbd>&#92;x3C</kbd> or <kbd>&#92;u003C</kbd>).
      *           </li>
      *           <li>
      *               Two ranges of non-displayable, control characters (some of which are already part of the
@@ -577,6 +613,12 @@ public final class JavaScriptEscape {
      *       is not supported by Microsoft Internet Explorer versions &lt; 9.
      *   </li>
      *   <li>
+     *       The less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>), which will always be escaped so that
+     *       escaped text never contains it, and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in
+     *       HTML. Note there is no <em>Single Escape Character</em> for this symbol, so it will be escaped using
+     *       the sequence corresponding to the selected escape type (e.g. <kbd>&#92;x3C</kbd> or <kbd>&#92;u003C</kbd>).
+     *   </li>
+     *   <li>
      *       Two ranges of non-displayable, control characters (some of which are already part of the
      *       <em>single escape characters</em> list): <kbd>U+0001</kbd> to <kbd>U+001F</kbd> and
      *       <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
@@ -640,6 +682,12 @@ public final class JavaScriptEscape {
      *               (<kbd>U+000B</kbd>) is actually included as a Single Escape
      *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
      *               is not supported by Microsoft Internet Explorer versions &lt; 9.
+     *           </li>
+     *           <li>
+     *               The less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>), which will always be escaped so that
+     *               escaped text never contains it, and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in
+     *               HTML. Note there is no <em>Single Escape Character</em> for this symbol, so it will be escaped using
+     *               the sequence corresponding to the selected escape type (e.g. <kbd>&#92;x3C</kbd> or <kbd>&#92;u003C</kbd>).
      *           </li>
      *           <li>
      *               Two ranges of non-displayable, control characters (some of which are already part of the
@@ -765,6 +813,12 @@ public final class JavaScriptEscape {
      *       is not supported by Microsoft Internet Explorer versions &lt; 9.
      *   </li>
      *   <li>
+     *       The less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>), which will always be escaped so that
+     *       escaped text never contains it, and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in
+     *       HTML. Note there is no <em>Single Escape Character</em> for this symbol, so it will be escaped using
+     *       the sequence corresponding to the selected escape type (e.g. <kbd>&#92;x3C</kbd> or <kbd>&#92;u003C</kbd>).
+     *   </li>
+     *   <li>
      *       Two ranges of non-displayable, control characters (some of which are already part of the
      *       <em>single escape characters</em> list): <kbd>U+0001</kbd> to <kbd>U+001F</kbd> and
      *       <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
@@ -829,6 +883,12 @@ public final class JavaScriptEscape {
      *               (<kbd>U+000B</kbd>) is actually included as a Single Escape
      *               Character in the JavaScript (ECMAScript) specification, but will not be used as it
      *               is not supported by Microsoft Internet Explorer versions &lt; 9.
+     *           </li>
+     *           <li>
+     *               The less-than symbol (<kbd>&lt;</kbd>, <kbd>U+003C</kbd>), which will always be escaped so that
+     *               escaped text never contains it, and can therefore be placed inside <kbd>&lt;script&gt;</kbd> tags in
+     *               HTML. Note there is no <em>Single Escape Character</em> for this symbol, so it will be escaped using
+     *               the sequence corresponding to the selected escape type (e.g. <kbd>&#92;x3C</kbd> or <kbd>&#92;u003C</kbd>).
      *           </li>
      *           <li>
      *               Two ranges of non-displayable, control characters (some of which are already part of the
