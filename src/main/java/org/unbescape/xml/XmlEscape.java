@@ -2306,6 +2306,11 @@ public final class XmlEscape {
      *   and hexadecimal references.
      * </p>
      * <p>
+     *   Decimal and hexadecimal references to chars not allowed in XML (U+0000, surrogates, U+FFFE, U+FFFF
+     *   or values out of the Unicode range) are not well-formed, and will raise an
+     *   {@link IllegalArgumentException}.
+     * </p>
+     * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
@@ -2337,6 +2342,11 @@ public final class XmlEscape {
      *   No additional configuration arguments are required. Unescape operations
      *   will always perform <em>complete</em> XML 1.0/1.1 unescape of CERs, decimal
      *   and hexadecimal references.
+     * </p>
+     * <p>
+     *   Decimal and hexadecimal references to chars not allowed in XML (U+0000, surrogates, U+FFFE, U+FFFF
+     *   or values out of the Unicode range) are not well-formed, and will raise an
+     *   {@link IllegalArgumentException}.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.
@@ -2381,6 +2391,11 @@ public final class XmlEscape {
      *   and hexadecimal references.
      * </p>
      * <p>
+     *   Decimal and hexadecimal references to chars not allowed in XML (U+0000, surrogates, U+FFFE, U+FFFF
+     *   or values out of the Unicode range) are not well-formed, and will raise an
+     *   {@link IllegalArgumentException}.
+     * </p>
+     * <p>
      *   This method is <strong>thread-safe</strong>.
      * </p>
      *
@@ -2412,6 +2427,11 @@ public final class XmlEscape {
      *   No additional configuration arguments are required. Unescape operations
      *   will always perform <em>complete</em> XML 1.0/1.1 unescape of CERs, decimal
      *   and hexadecimal references.
+     * </p>
+     * <p>
+     *   Decimal and hexadecimal references to chars not allowed in XML (U+0000, surrogates, U+FFFE, U+FFFF
+     *   or values out of the Unicode range) are not well-formed, and will raise an
+     *   {@link IllegalArgumentException}.
      * </p>
      * <p>
      *   This method is <strong>thread-safe</strong>.

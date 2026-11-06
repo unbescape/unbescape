@@ -534,6 +534,19 @@ final class XmlEscapeUtil {
 
 
     /*
+     * Character references must refer to chars allowed in XML (the 'Legal Character' well-formedness constraint).
+     * As unescape is the same operation for XML 1.0 and XML 1.1, the broadest of both Char productions (the
+     * XML 1.1 one) is checked: [#x1-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]. This leaves out U+0000,
+     * surrogates, U+FFFE, U+FFFF and any value out of the Unicode range.
+     */
+    static boolean isLegalReferencedChar(final int codepoint) {
+        return (codepoint >= 0x1 && codepoint <= 0xD7FF) ||
+               (codepoint >= 0xE000 && codepoint <= 0xFFFD) ||
+               (codepoint >= 0x10000 && codepoint <= Character.MAX_CODE_POINT);
+    }
+
+
+    /*
      * These methods (the two versions) are used instead of Integer.parseInt(str,radix) in order to avoid the need
      * to create substrings of the text being unescaped to feed such method.
      * -  No need to check all chars are within the radix limits - reference parsing code will already have done so.
@@ -749,6 +762,11 @@ final class XmlEscapeUtil {
              *
              * --------------------------
              */
+
+            if (!isLegalReferencedChar(codepoint)) {
+                throw new IllegalArgumentException(
+                        "Not a valid XML char in character reference: 0x" + Integer.toHexString(codepoint).toUpperCase());
+            }
 
             if (codepoint > '\uFFFF') {
                 strBuilder.append(Character.toChars(codepoint));
@@ -1014,6 +1032,11 @@ final class XmlEscapeUtil {
              * --------------------------
              */
 
+            if (!isLegalReferencedChar(codepoint)) {
+                throw new IllegalArgumentException(
+                        "Not a valid XML char in character reference: 0x" + Integer.toHexString(codepoint).toUpperCase());
+            }
+
             if (codepoint > '\uFFFF') {
                 writer.write(Character.toChars(codepoint));
             } else {
@@ -1199,6 +1222,11 @@ final class XmlEscapeUtil {
              *
              * --------------------------
              */
+
+            if (!isLegalReferencedChar(codepoint)) {
+                throw new IllegalArgumentException(
+                        "Not a valid XML char in character reference: 0x" + Integer.toHexString(codepoint).toUpperCase());
+            }
 
             if (codepoint > '\uFFFF') {
                 writer.write(Character.toChars(codepoint));
